@@ -6,6 +6,7 @@ import com.sportshop.Service.AccountService;
 import com.sportshop.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -13,7 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@RestController
+/*@RestController*/
+@Controller
 public class testController {
 
     @Autowired
@@ -45,5 +47,12 @@ public class testController {
     {
         return accountService.findAccountByUserName(username);
     }
+
+    @GetMapping("/dashboard")
+    public String render1()
+    {
+        return "Admin/dashboard";
+    }
+
 
 }
