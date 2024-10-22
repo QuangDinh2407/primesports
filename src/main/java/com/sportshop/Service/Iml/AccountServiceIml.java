@@ -26,8 +26,8 @@ public class AccountServiceIml implements AccountService {
     PasswordEncoder passwordEncoder;
 
     @Override
-    public AccountDTO findAccountByUserName(String username) {
-        AccountEntity acc = accountRepository.findByuserName(username);
+    public AccountDTO findAccountByUserName(String email) {
+        AccountEntity acc = accountRepository.findByemail(email);
         AccountDTO dto = AccountDTO.builder()
                 .password(acc.getPassword())
                 .role(RoleDTO.builder()
@@ -41,7 +41,7 @@ public class AccountServiceIml implements AccountService {
     public AccountEntity createAccount(AccountDTO accountDTO)
     {
         AccountEntity accEntity = new AccountEntity();
-        accEntity.setUserName(accountDTO.getUserName());
+        accEntity.setEmail(accountDTO.getEmail());
         String encodePassword = passwordEncoder.encode(accountDTO.getPassword());
         accEntity.setPassword(encodePassword);
         RoleEntity roleEntity = roleRepository.findByName(accountDTO.getRole().getName());

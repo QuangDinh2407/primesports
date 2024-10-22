@@ -22,7 +22,7 @@ public class CartEntity {
 	private List <CartDetailEntity> cartDetailItems = new ArrayList<CartDetailEntity>();
 	
 	@OneToOne(mappedBy = "cart")
-	@JoinColumn(name = "user_id", unique = true, referencedColumnName = "user_id")
+	@JoinColumn(name = "user_id", unique = true, nullable = false, referencedColumnName = "user_id")
 	private UserInfoEntity user;
 
 }

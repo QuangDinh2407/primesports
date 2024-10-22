@@ -14,8 +14,8 @@ public class AccountEntity {
     @GeneratedValue (strategy = GenerationType.UUID)
     private String account_id;
 
-    @Column(nullable = false)
-    private String userName;
+    @Column(nullable = false, unique = true)
+    private String email;
 
     @Column(nullable = false)
     private String password;
@@ -25,6 +25,7 @@ public class AccountEntity {
     private RoleEntity role;
 
     @OneToOne(mappedBy = "account")
+    @JoinColumn(name = "account_id", unique = true, nullable = false, referencedColumnName = "account_id")
     private UserInfoEntity user;
 
 }

@@ -42,15 +42,13 @@ public class SecurityConfig {
     public UserDetailsService userDetailsService(AccountRepository accountRepository) {
         return username -> {
             // Find user by email (username) in the repository
-            AccountEntity accountEntity = accountRepository.findByuserName(username);
+            AccountEntity accountEntity = accountRepository.findByemail(username);
             if (accountEntity == null) {
                 throw new UsernameNotFoundException(username);
             }
             // Return a User object containing email, password, and roles
-            System.out.println(accountEntity.getUserName());
-            System.out.println(accountEntity.getPassword());
             return new org.springframework.security.core.userdetails.User(
-                    accountEntity.getUserName(),
+                    accountEntity.getEmail(),
                     accountEntity.getPassword(),
                     List.of(new SimpleGrantedAuthority(accountEntity.getRole().getName()))
             );

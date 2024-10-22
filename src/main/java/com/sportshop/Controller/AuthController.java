@@ -34,7 +34,7 @@ public class AuthController {
 
     @PostMapping("/sign-up")
     public String renderSignUp(@ModelAttribute AccountDTO accountDTO) {
-        System.out.println(accountDTO.getUserName());
+        System.out.println(accountDTO.getEmail());
         System.out.println(accountDTO.getPassword());
         System.out.println(accountDTO.getRole());
         accountService.createAccount(accountDTO);
