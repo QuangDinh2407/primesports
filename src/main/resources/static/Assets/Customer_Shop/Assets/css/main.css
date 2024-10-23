@@ -2797,7 +2797,8 @@ html {
   display: flex;
   align-items: center;
 }
-.form__group:has(:invalid):has(.form__input:not(:placeholder-shown)) .form__text-input {
+
+/* .form__group:has(:invalid):has(.form__input:not(:placeholder-shown)) .form__text-input {
   border-color: #ed4337;
   background: rgba(237, 67, 55, 0.1);
 }
@@ -2807,7 +2808,8 @@ html {
 }
 .form__group:has(:invalid):has(.form__input:not(:placeholder-shown)) .form__input-icon {
   display: none;
-}
+} */
+
 .form__text-area, .form__text-input {
   display: flex;
   align-items: center;

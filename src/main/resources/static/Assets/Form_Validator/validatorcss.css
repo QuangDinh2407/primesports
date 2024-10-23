@@ -1,0 +1,25 @@
+.form__group.invalid .form__text-input {
+    border-color: #ed4337;
+    background: rgba(237, 67, 55, 0.1);
+}
+
+.form__group.invalid .form-message{
+    color: #ed4337;
+}
+
+.form__group.invalid img.form__input-icon {
+    display: none;
+}
+
+.form__group.invalid img.form__input-icon-error {
+    display: block;
+}
+
+.form-message{
+    font-family: inherit;
+    text-align: left;
+    font-size: 1.4rem;
+    font-weight: 500;
+    margin-top: 10px;
+
+}

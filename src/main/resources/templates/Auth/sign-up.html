@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sign up | Grocery Mart</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA==" crossorigin="anonymous" />
     <link rel="stylesheet" th:href="@{/Assets/Toast_Message/toastmesscss.css}">
+    <link rel="stylesheet" th:href="@{/Assets/Form_Validator/validatorcss.css}" />
 
     <!-- Favicon -->
     <link rel="apple-touch-icon" sizes="76x76" th:href="@{/Assets/Customer_Shop/Assets/favicon/apple-touch-icon.png}" />
@@ -24,6 +25,7 @@
     <!-- Scripts -->
     <script th:src="@{/Assets/Customer_Shop/Assets/js/scripts.js}" ></script>
     <script th:src="@{/Assets/Toast_Message/toastmessjs.js}"></script>
+
 </head>
 <body>
 <div id="toast"></div>
@@ -53,22 +55,21 @@
             </a>
             <h1 class="auth__heading">Sign Up</h1>
             <p class="auth__desc">Let’s create your account and Shop like a pro and save money.</p>
-            <form th:action="@{/sign-up}" method="post" class="form auth__form">
+            <form th:action="@{/sign-up}" th:object="${accountDTO}" method="post" class="form auth__form" id="form-signup">
                 <div class="form__group">
                     <div class="form__text-input">
                         <input
+                                th:field="*{email}"
                                 type="email"
-                                name="email"
                                 id="email"
                                 placeholder="Email"
                                 class="form__input"
-                                autofocus
-                                required
+                                rule = "required|email"
                         />
                         <img th:src="@{/Assets/Customer_Shop/Assets/icons/message.svg}" alt="" class="form__input-icon" />
                         <img th:src="@{/Assets/Customer_Shop/Assets/icons/form-error.svg}" alt="" class="form__input-icon-error" />
                     </div>
-                    <p class="form__error">Email is not in correct format</p>
+                    <p class="form-message"></p>
                 </div>
                 <div class="form__group">
                     <div class="form__text-input">
@@ -78,29 +79,27 @@
                                 id="password"
                                 placeholder="Password"
                                 class="form__input"
-                                required
-                                minlength="6"
+                                rule = "required|min:8"
                         />
                         <img th:src="@{/Assets/Customer_Shop/Assets/icons/lock.svg}" alt="" class="form__input-icon" />
                         <img th:src="@{/Assets/Customer_Shop/Assets/icons/form-error.svg}" alt="" class="form__input-icon-error" />
                     </div>
-                    <p class="form__error">Password must be at least 6 characters</p>
+                    <p class="form-message"></p>
                 </div>
                 <div class="form__group">
                     <div class="form__text-input">
                         <input
                                 type="password"
-                                name="repassword"
-                                id="repassword"
+                                name="repeatpassword"
+                                id="repeatpassword"
                                 placeholder="Confirm password"
                                 class="form__input"
-                                required
-                                minlength="6"
+                                rule = "required|repeatpassword"
                         />
                         <img th:src="@{/Assets/Customer_Shop/Assets/icons/lock.svg}" alt="" class="form__input-icon" />
                         <img th:src="@{/Assets/Customer_Shop/Assets/icons/form-error.svg}" alt="" class="form__input-icon-error" />
                     </div>
-                    <p class="form__error">Password must be at least 6 characters</p>
+                    <p class="form-message"></p>
                 </div>
                 <div class="form__group form__group--inline">
                     <label class="form__checkbox">
@@ -127,6 +126,11 @@
 
 <script>
     window.dispatchEvent(new Event("template-loaded"));
+</script>
+
+<script th:src="@{/Assets/Form_Validator/validatorjs.js}"></script>
+<script>
+    Validator('#form-signup');
 </script>
 
 <script th:inline="javascript">

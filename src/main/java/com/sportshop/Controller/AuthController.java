@@ -24,14 +24,15 @@ public class AuthController {
         return "Auth/sign-in";
     }
 
-    @GetMapping("/sign-up")
-    public String renderSignUp() {
-        return "Auth/sign-up";
-    }
-
     @GetMapping("/success")
     public String render1() {
         return "Auth/access-denied";
+    }
+
+    @GetMapping("/sign-up")
+    public String renderSignUp(Model model) {
+        model.addAttribute("accountDTO", new AccountDTO());
+        return "Auth/sign-up";
     }
 
     @PostMapping("/sign-up")
@@ -39,6 +40,7 @@ public class AuthController {
         Result rs = accountService.createAccount(accountDTO);
         model.addAttribute("message", rs.getMessage());
         System.out.println(rs.getMessage());
+        model.addAttribute("accountDTO", accountDTO);
         return rs.isSuccess() ? "welcome" : "Auth/sign-up";
     }
 }
