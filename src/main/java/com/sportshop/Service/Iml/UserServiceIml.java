@@ -32,6 +32,7 @@ public class UserServiceIml implements UserService {
                    .created_at(item.getCreated_at())
                    .status(item.getStatus())
                    .account(AccountDTO.builder()
+                           .email(item.getEmail())
                            .password(item.getAccount().getPassword())
                            .role(RoleDTO.builder()
                                    .name(item.getAccount().getRole().getName())

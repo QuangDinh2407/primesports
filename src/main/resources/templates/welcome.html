@@ -2,9 +2,25 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Welcome</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA==" crossorigin="anonymous" />
+    <link rel="stylesheet" th:href="@{/Assets/Toast_Message/toastmesscss.css}">
+    <script th:src="@{/Assets/Toast_Message/toastmessjs.js}"></script>
 </head>
+
 <body>
 <h1> welcome</h1>
+<div id="toast"></div>
 </body>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    const message = /*[[${message}]]*/ 'default';
+    /*]]>*/
+    if (message)
+    {
+        console.log(message);
+        showSuccessToast(message);
+    }
+</script>
 </html>

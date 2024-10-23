@@ -2,6 +2,7 @@ package com.sportshop.Service.Iml;
 
 import com.sportshop.Entity.AccountEntity;
 import com.sportshop.Entity.RoleEntity;
+import com.sportshop.Modal.Result;
 import com.sportshop.ModalDTO.AccountDTO;
 import com.sportshop.ModalDTO.RoleDTO;
 import com.sportshop.Repository.AccountRepository;
@@ -38,15 +39,28 @@ public class AccountServiceIml implements AccountService {
     }
 
     @Override
-    public AccountEntity createAccount(AccountDTO accountDTO)
+    public Result createAccount(AccountDTO accountDTO)
     {
+        boolean checkexist = accountRepository.existsByemail(accountDTO.getEmail());
+        if (checkexist)
+        {
+            return new Result(false,"Email đã được sử dụng");
+        }
         AccountEntity accEntity = new AccountEntity();
         accEntity.setEmail(accountDTO.getEmail());
         String encodePassword = passwordEncoder.encode(accountDTO.getPassword());
         accEntity.setPassword(encodePassword);
-        RoleEntity roleEntity = roleRepository.findByName(accountDTO.getRole().getName());
+        RoleEntity roleEntity = roleRepository.findByName("CUSTOMER");
         accEntity.setRole(roleEntity);
-        return accountRepository.save(accEntity);
+        try {
+            accountRepository.save(accEntity);
+            return new Result(true,"Đăng ký tài khoản thành công");
+        }
+        catch (Exception e)
+        {
+            return new Result(false,"Thêm tài khoản thất bại");
+        }
+
     }
 
 }

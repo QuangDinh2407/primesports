@@ -1,9 +1,11 @@
 package com.sportshop.Controller;
 
+import com.sportshop.Modal.Result;
 import com.sportshop.ModalDTO.AccountDTO;
 import com.sportshop.Service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,11 +35,10 @@ public class AuthController {
     }
 
     @PostMapping("/sign-up")
-    public String renderSignUp(@ModelAttribute AccountDTO accountDTO) {
-        System.out.println(accountDTO.getEmail());
-        System.out.println(accountDTO.getPassword());
-        System.out.println(accountDTO.getRole());
-        accountService.createAccount(accountDTO);
-        return "welcome";
+    public String renderSignUp(@ModelAttribute AccountDTO accountDTO, Model model) {
+        Result rs = accountService.createAccount(accountDTO);
+        model.addAttribute("message", rs.getMessage());
+        System.out.println(rs.getMessage());
+        return rs.isSuccess() ? "welcome" : "Auth/sign-up";
     }
 }

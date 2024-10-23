@@ -10,6 +10,7 @@ import jakarta.persistence.*;
 @Entity
 @Table(name ="Account")
 public class AccountEntity {
+
     @Id
     @GeneratedValue (strategy = GenerationType.UUID)
     private String account_id;

@@ -33,6 +33,12 @@ public class testController {
         return "test";
     }
 
+    @GetMapping("/")
+    public String defaultpage() {
+
+        return "homepage";
+    }
+
     @GetMapping("/repo")
     @ResponseBody
     public List<UserDTO> getAll()
@@ -52,6 +58,12 @@ public class testController {
     public String render1()
     {
         return "Admin/dashboard";
+    }
+
+    @GetMapping("/welcome")
+    public String render2()
+    {
+        return "welcome";
     }
 
 

@@ -4,38 +4,43 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sign up | Grocery Mart</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA==" crossorigin="anonymous" />
+    <link rel="stylesheet" th:href="@{/Assets/Toast_Message/toastmesscss.css}">
 
     <!-- Favicon -->
-    <link rel="apple-touch-icon" sizes="76x76" th:href="@{/Customer_Shop/Assets/favicon/apple-touch-icon.png}" />
-    <link rel="icon" type="image/png" sizes="32x32" th:href="@{/Customer_Shop/Assets/favicon/favicon-32x32.png}" />
-    <link rel="icon" type="image/png" sizes="16x16" th:href="@{/Customer_Shop/Assets/favicon/favicon-16x16.png}" />
-    <link rel="manifest" th:href="@{/Customer_Shop/Assets/favicon/site.webmanifest}" />
+    <link rel="apple-touch-icon" sizes="76x76" th:href="@{/Assets/Customer_Shop/Assets/favicon/apple-touch-icon.png}" />
+    <link rel="icon" type="image/png" sizes="32x32" th:href="@{/Assets/Customer_Shop/Assets/favicon/favicon-32x32.png}" />
+    <link rel="icon" type="image/png" sizes="16x16" th:href="@{/Assets/Customer_Shop/Assets/favicon/favicon-16x16.png}" />
+    <link rel="manifest" th:href="@{/Assets/Customer_Shop/Assets/favicon/site.webmanifest}" />
     <meta name="msapplication-TileColor" content="#da532c" />
     <meta name="theme-color" content="#ffffff" />
 
     <!-- Fonts -->
-    <link rel="stylesheet" th:href="@{/Customer_Shop/Assets/fonts/stylesheet.css}" />
+    <link rel="stylesheet" th:href="@{/Assets/Customer_Shop/Assets/fonts/stylesheet.css}" />
 
     <!-- Styles -->
-    <link rel="stylesheet" th:href="@{/Customer_Shop/Assets/css/main.css}" />
+    <link rel="stylesheet" th:href="@{/Assets/Customer_Shop/Assets/css/main.css}" />
 
     <!-- Scripts -->
-    <script th:src="@{/Customer_Shop/Assets/js/scripts.js}" ></script>
+    <script th:src="@{/Assets/Customer_Shop/Assets/js/scripts.js}" ></script>
+    <script th:src="@{/Assets/Toast_Message/toastmessjs.js}"></script>
 </head>
 <body>
+<div id="toast"></div>
 <main class="auth">
+
     <!-- Auth intro -->
     <div class="auth__intro">
         <a href="./" class="logo auth__intro-logo d-none d-md-flex">
-            <img th:src="@{/Customer_Shop/Assets/icons/logo.svg}" alt="grocerymart" class="logo__img" />
+            <img th:src="@{/Assets/Customer_Shop/Assets/icons/logo.svg}" alt="grocerymart" class="logo__img" />
             <h1 class="logo__title">grocerymart</h1>
         </a>
-        <img th:src="@{/Customer_Shop/Assets/img/auth/intro.svg}" alt="" class="auth__intro-img" />
+        <img th:src="@{/Assets/Customer_Shop/Assets/img/auth/intro.svg}" alt="" class="auth__intro-img" />
         <p class="auth__intro-text">
             The best of luxury brand values, high quality products, and innovative services
         </p>
         <button class="auth__intro-next d-none d-md-flex js-toggle" toggle-target="#auth-content">
-            <img th:src="@{/Customer_Shop/Assets/img/auth/intro-arrow.svg}" alt="" />
+            <img th:src="@{/Assets/Customer_Shop/Assets/img/auth/intro-arrow.svg}" alt="" />
         </button>
     </div>
 
@@ -43,7 +48,7 @@
     <div id="auth-content" class="auth__content hide">
         <div class="auth__content-inner">
             <a href="./" class="logo">
-                <img th:src="@{/Customer_Shop/Assets/icons/logo.svg}" alt="grocerymart" class="logo__img" />
+                <img th:src="@{/Assets/Customer_Shop/Assets/icons/logo.svg}" alt="grocerymart" class="logo__img" />
                 <h1 class="logo__title">grocerymart</h1>
             </a>
             <h1 class="auth__heading">Sign Up</h1>
@@ -60,8 +65,8 @@
                                 autofocus
                                 required
                         />
-                        <img th:src="@{/Customer_Shop/Assets/icons/message.svg}" alt="" class="form__input-icon" />
-                        <img th:src="@{/Customer_Shop/Assets/icons/form-error.svg}" alt="" class="form__input-icon-error" />
+                        <img th:src="@{/Assets/Customer_Shop/Assets/icons/message.svg}" alt="" class="form__input-icon" />
+                        <img th:src="@{/Assets/Customer_Shop/Assets/icons/form-error.svg}" alt="" class="form__input-icon-error" />
                     </div>
                     <p class="form__error">Email is not in correct format</p>
                 </div>
@@ -76,8 +81,8 @@
                                 required
                                 minlength="6"
                         />
-                        <img th:src="@{/Customer_Shop/Assets/icons/lock.svg}" alt="" class="form__input-icon" />
-                        <img th:src="@{/Customer_Shop/Assets/icons/form-error.svg}" alt="" class="form__input-icon-error" />
+                        <img th:src="@{/Assets/Customer_Shop/Assets/icons/lock.svg}" alt="" class="form__input-icon" />
+                        <img th:src="@{/Assets/Customer_Shop/Assets/icons/form-error.svg}" alt="" class="form__input-icon-error" />
                     </div>
                     <p class="form__error">Password must be at least 6 characters</p>
                 </div>
@@ -92,12 +97,11 @@
                                 required
                                 minlength="6"
                         />
-                        <img th:src="@{/Customer_Shop/Assets/icons/lock.svg}" alt="" class="form__input-icon" />
-                        <img th:src="@{/Customer_Shop/Assets/icons/form-error.svg}" alt="" class="form__input-icon-error" />
+                        <img th:src="@{/Assets/Customer_Shop/Assets/icons/lock.svg}" alt="" class="form__input-icon" />
+                        <img th:src="@{/Assets/Customer_Shop/Assets/icons/form-error.svg}" alt="" class="form__input-icon-error" />
                     </div>
                     <p class="form__error">Password must be at least 6 characters</p>
                 </div>
-                <input type="hidden" id="rolename" name="role.name" value="CUSTOMER"/>
                 <div class="form__group form__group--inline">
                     <label class="form__checkbox">
                         <input type="checkbox" name="" id="" class="form__checkbox-input d-none" />
@@ -107,7 +111,7 @@
                 <div class="form__group auth__btn-group">
                     <button type="submit" class="btn btn--primary auth__btn form__submit-btn">Sign Up</button>
                     <button class="btn btn--outline auth__btn btn--no-margin">
-                        <img th:src="@{/Customer_Shop/Assets/icons/google.svg}" alt="" class="btn__icon icon" />
+                        <img th:src="@{/Assets/Customer_Shop/Assets/icons/google.svg}" alt="" class="btn__icon icon" />
                         Sign in with Google
                     </button>
                 </div>
@@ -120,8 +124,20 @@
         </div>
     </div>
 </main>
+
 <script>
     window.dispatchEvent(new Event("template-loaded"));
+</script>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    const message = /*[[${message}]]*/ 'default';
+    /*]]>*/
+    if (message)
+    {
+        console.log(message);
+        showErrorToast(message);
+    }
 </script>
 </body>
 </html>
