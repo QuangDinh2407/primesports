@@ -21,6 +21,9 @@ public class AccountEntity {
     @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false)
+    private String isDisable;
+
     @ManyToOne
     @JoinColumn(name="role_id", referencedColumnName = "role_id")
     private RoleEntity role;

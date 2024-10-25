@@ -25,7 +25,7 @@ public class UserInfoEntity {
     private String name;
 
     @Column(nullable = false)
-    private String age;
+    private Integer age;
 
     @Column(nullable = false)
     private String gender;

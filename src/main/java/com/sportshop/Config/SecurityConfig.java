@@ -4,10 +4,14 @@ import com.sportshop.Entity.AccountEntity;
 import com.sportshop.Repository.AccountRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -19,6 +23,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.List;
+import java.util.Objects;
 
 @Configuration
 @EnableWebSecurity
@@ -26,9 +31,13 @@ import java.util.List;
 public class SecurityConfig {
     private static final String[] WHITE_LIST_URL = {
             "/",                  // Home page
+            "/mail",
+            "/confirm-signup",
             "/sign-in",       // Sign-in page
             "/sign-up",       // Sign-up page
-            "/success",
+            "/access-denied",
+            "/page-not-found",
+            "/server-error",
             "/Assets/**"    // Static assets like CSS, JS, etc.
     };
 
@@ -42,7 +51,7 @@ public class SecurityConfig {
         return username -> {
             // Find user by email (username) in the repository
             AccountEntity accountEntity = accountRepository.findByemail(username);
-            if (accountEntity == null) {
+            if (accountEntity == null || Objects.equals(accountEntity.getIsDisable(), "0")) {
                 throw new UsernameNotFoundException(username);
             }
             // Return a User object containing email, password, and roles
@@ -61,11 +70,10 @@ public class SecurityConfig {
         return Base64.getUrlEncoder().withoutPadding().encodeToString(randomBytes);
     }
 
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         //CSRF protection and configure request authorization
-        http.csrf(Customizer.withDefaults())
+       http.csrf(Customizer.withDefaults())
                 .authorizeHttpRequests(req -> req
                         .requestMatchers(WHITE_LIST_URL).permitAll()            // Permit requests to the whitelist URLs
                         .requestMatchers("/admin/**").hasAuthority("ADMIN")
@@ -102,6 +110,7 @@ public class SecurityConfig {
                 );
         return http.build();
     }
+
 
 
 }

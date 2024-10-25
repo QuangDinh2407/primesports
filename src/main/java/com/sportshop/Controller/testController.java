@@ -1,17 +1,20 @@
 package com.sportshop.Controller;
 
+import com.sportshop.Modal.Mail;
 import com.sportshop.ModalDTO.AccountDTO;
 import com.sportshop.ModalDTO.UserDTO;
 import com.sportshop.Service.AccountService;
+import com.sportshop.Service.MailService;
 import com.sportshop.Service.UserService;
+import jakarta.mail.MessagingException;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 /*@RestController*/
@@ -23,6 +26,9 @@ public class testController {
 
     @Autowired
     AccountService accountService;
+
+    @Autowired
+    MailService mailService;
 
     @GetMapping("/test")
     public String test() {
@@ -65,6 +71,5 @@ public class testController {
     {
         return "welcome";
     }
-
 
 }
