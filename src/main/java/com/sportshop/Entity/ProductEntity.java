@@ -44,7 +44,7 @@ public class ProductEntity {
 	private String status;
 	
 	@OneToMany (mappedBy = "product", fetch = FetchType.LAZY)
-	private List <ProductTypeDetailEntity> productTypeDatailItems = new ArrayList<ProductTypeDetailEntity>();
+	private List <ProductTypeDetailEntity> productTypeDetailItems = new ArrayList<ProductTypeDetailEntity>();
 	
 	@OneToMany (mappedBy = "product", fetch = FetchType.LAZY)
 	private List <ProductImageEntity> productImageItems = new ArrayList<ProductImageEntity>();

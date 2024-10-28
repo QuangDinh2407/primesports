@@ -3,6 +3,9 @@ package com.sportshop.Entity;
 import lombok.*;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Data
 @NoArgsConstructor
@@ -31,5 +34,8 @@ public class AccountEntity {
     @OneToOne(mappedBy = "account")
     @JoinColumn(name = "account_id", unique = true, nullable = false, referencedColumnName = "account_id")
     private UserInfoEntity user;
+
+    @OneToMany (mappedBy = "account", fetch = FetchType.LAZY)
+    private List<OTPEntity> OTPItems = new ArrayList<OTPEntity>();
 
 }

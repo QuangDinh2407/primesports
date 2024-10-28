@@ -9,7 +9,9 @@ import java.io.UnsupportedEncodingException;
 
 public interface MailService {
 
-    void sendMail(Mail mail ) throws MessagingException, UnsupportedEncodingException;
+    void sendMail(Mail mail) throws MessagingException, UnsupportedEncodingException;
 
     void sendConfirmSignUp(String email,  HttpServletRequest request) throws MessagingException, UnsupportedEncodingException;
+
+    void sendOTPtoResetPass(String email, String otp, HttpServletRequest request) throws MessagingException, UnsupportedEncodingException;
 }

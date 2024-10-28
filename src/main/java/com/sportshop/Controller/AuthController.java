@@ -31,6 +31,16 @@ public class AuthController {
         return "Auth/sign-up";
     }
 
+    @GetMapping("/reset-password")
+    public String renderResetPassword() {
+        return "Auth/reset-password";
+    }
+
+    @GetMapping("/verify-otp")
+    public String renderverifyotp() {
+        return "Auth/verify-rs-pass";
+    }
+
     @PostMapping("/sign-up")
     public String renderSignUp(@ModelAttribute AccountDTO accountDTO, Model model, HttpServletRequest request) {
         Result rs = accountService.createAccount(accountDTO,request);
@@ -44,5 +54,7 @@ public class AuthController {
         accountService.confirmSignup(email);
         return "redirect:/sign-in";
     }
+
+
 
 }
