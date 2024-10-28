@@ -31,12 +31,8 @@ import java.util.Objects;
 public class SecurityConfig {
     private static final String[] WHITE_LIST_URL = {
             "/",                  // Home page
-            "/mail",
-            "/confirm-signup",
-            "/sign-in",       // Sign-in page
-            "/sign-up",       // Sign-up page
-            "/access-denied",
-            "/page-not-found",
+            "/auth/**",      // Sign-up page
+            "/error/**",
             "/server-error",
             "/Assets/**"    // Static assets like CSS, JS, etc.
     };

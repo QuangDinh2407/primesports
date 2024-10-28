@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reset your password | Grocery Mart</title>
+
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="76x76" th:href="@{/Assets/Customer_Shop/Assets/favicon/apple-touch-icon.png}"  />
+    <link rel="icon" type="image/png" sizes="32x32" th:href="@{/Assets/Customer_Shop/Assets/favicon/favicon-32x32.png}" />
+    <link rel="icon" type="image/png" sizes="16x16" th:href="@{/Assets/Customer_Shop/Assets/favicon/favicon-16x16.png}" />
+    <link rel="manifest" th:href="@{/Assets/Customer_Shop/Assets/favicon/site.webmanifest}" />
+    <meta name="msapplication-TileColor" content="#da532c" />
+    <meta name="theme-color" content="#ffffff" />
+
+    <!-- Fonts -->
+    <link rel="stylesheet" th:href="@{/Assets/Customer_Shop/Assets/fonts/stylesheet.css}"/>
+
+    <!-- Styles -->
+    <link rel="stylesheet" th:href="@{/Assets/Customer_Shop/Assets/css/main.css}"/>
+
+    <!-- Scripts -->
+    <script  th:src="@{/Assets/Customer_Shop/Assets/js/scripts.js}"></script>
+</head>
+<style>
+    .form__otp{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .form__otp input{
+        height: 80px;
+        width: 60px;
+        background-color: #f8f7f7;
+        border-radius: 10px;
+        text-align: center;
+        font-size: 30px;
+        font-weight: 700;
+    }
+
+    .form__otp input:focus{
+        border: 3px rgb(12, 185, 238) solid;
+    }
+
+</style>
+<body>
+<main class="auth">
+    <!-- Auth intro -->
+    <div class="auth__intro d-md-none">
+        <img src="./assets/img/auth/forgot-password.png" alt="" class="auth__intro-img" />
+    </div>
+
+    <!-- Auth content -->
+    <div class="auth__content">
+        <div class="auth__content-inner">
+            <a href="./" class="logo">
+                <img src="./assets/icons/logo.svg" alt="grocerymart" class="logo__img" />
+                <h2 class="logo__title">grocerymart</h2>
+            </a>
+            <h1 class="auth__heading">Reset your password</h1>
+            <p class="auth__desc">Chúng tôi đã gửi mã OTP qua email của bạn</p>
+            <p class="auth__desc">Vui lòng kiểm tra và nhập mã OTP!</p>
+            <form action="./reset-password-emailed.html" class="form auth__form auth__form-forgot">
+                <div class="form__group">
+                    <div class="form__otp">
+                        <input class="otp_text" maxlength="1" type="text" />
+                        <input class="otp_text" maxlength="1" type="text" />
+                        <input class="otp_text" maxlength="1" type="text" />
+                        <input class="otp_text" maxlength="1" type="text" />
+                        <input class="otp_text" maxlength="1" type="text" />
+                        <input class="otp_text" maxlength="1" type="text" />
+                    </div>
+                </div>
+                <div class="form__group auth__btn-group">
+                    <button class="btn btn--primary auth__btn form__submit-btn">Reset password</button>
+                </div>
+            </form>
+            <p class="auth__text">
+                <a href="./sign-in.html" class="auth__link auth__text-link">Back to Sign In</a>
+            </p>
+        </div>
+    </div>
+</main>
+<script>
+    window.dispatchEvent(new Event("template-loaded"));
+</script>
+</body>
+<script>
+    const otpInputs = document.querySelectorAll('.form__otp input');
+    otpInputs.forEach((input, index) => {
+        input.addEventListener('input', (event) => {
+            if (input.value) {
+                if (index < otpInputs.length - 1) {
+                    otpInputs[index + 1].focus();
+                }
+            }
+            if (input.value === '' && index > 0) {
+                otpInputs[index - 1].focus();
+            }
+        });
+    });
+</script>
+
+</html>

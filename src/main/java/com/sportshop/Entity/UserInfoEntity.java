@@ -41,6 +41,8 @@ public class UserInfoEntity {
 
     private Date birth;
 
+    private String image_path;
+    
     @Temporal(TemporalType.TIMESTAMP)
     @DateTimeFormat(pattern = FomatDate.FM_DATE)
     @Column(nullable = false)
