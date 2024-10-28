@@ -55,7 +55,7 @@ public class MailServiceIml implements MailService {
         // Thiết lập ngữ cảnh cho Thymeleaf
         Context context = new Context();
         context.setVariable("email", email);
-        String confirmationLink = "http://" + request.getServerName() + ":" + request.getServerPort() + "/confirm-signup";
+        String confirmationLink = "http://" + request.getServerName() + ":" + request.getServerPort() + "/auth/confirm-signup";
         context.setVariable("confirmationLink", confirmationLink);
 
         // Tạo nội dung HTML từ template

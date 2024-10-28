@@ -55,7 +55,7 @@
             </a>
             <h1 class="auth__heading">Sign Up</h1>
             <p class="auth__desc">Let’s create your account and Shop like a pro and save money.</p>
-            <form th:action="@{/sign-up}" th:object="${accountDTO}" method="post" class="form auth__form" id="form-signup">
+            <form th:action="@{/auth/sign-up}" th:object="${accountDTO}" method="post" class="form auth__form" id="form-signup">
                 <div class="form__group">
                     <div class="form__text-input">
                         <input

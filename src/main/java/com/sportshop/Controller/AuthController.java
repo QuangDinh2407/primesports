@@ -55,6 +55,13 @@ public class AuthController {
         return "redirect:/sign-in";
     }
 
+    @PostMapping("/reset-password")
+    public String rspass(@ModelAttribute AccountDTO accountDTO, Model model, HttpServletRequest request) {
+        Result rs = accountService.createAccount(accountDTO,request);
+        model.addAttribute("message", rs.getMessage());
+        model.addAttribute("accountDTO", accountDTO);
+        return rs.isSuccess() ? "welcome" : "Auth/sign-up";
+    }
 
 
 }
