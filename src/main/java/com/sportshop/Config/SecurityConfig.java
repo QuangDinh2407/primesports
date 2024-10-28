@@ -79,9 +79,9 @@ public class SecurityConfig {
                 )
                 // Configure form-based login
                 .formLogin((form) -> form
-                        .loginPage("/sign-in")                             // Custom login page URL
-                        .loginProcessingUrl("/sign-in")                    // URL to submit login credentials
-                        .failureUrl("/sign-in?error=true")                      // Redirect on login failure
+                        .loginPage("/auth/sign-in")                             // Custom login page URL
+                        .loginProcessingUrl("/auth/sign-in")                    // URL to submit login credentials
+                        .failureUrl("/auth/sign-in?error=true")                      // Redirect on login failure
 //                        .defaultSuccessUrl("/success", true)                           // Redirect to home on successful login
                         .successHandler(new AuthSuccessHandler()) // Custom success handler for additional actions after login
                         .permitAll()                                            // Allow everyone to access the login page
@@ -93,8 +93,8 @@ public class SecurityConfig {
                         .rememberMeCookieName("userAuth")
                 )
                 .logout((logout) -> logout
-                        .logoutRequestMatcher(new AntPathRequestMatcher("/sign-out", "GET")) // Allow GET for logout                                           // URL for logging out
-                        .logoutSuccessUrl("/sign-in")                                          // Redirect to home page after logout
+                        .logoutRequestMatcher(new AntPathRequestMatcher("/auth/sign-out", "GET")) // Allow GET for logout                                           // URL for logging out
+                        .logoutSuccessUrl("/auth/sign-in")                                          // Redirect to home page after logout
                         .deleteCookies("JSESSIONID", "userAuth")                // Delete cookies on logout
                         .invalidateHttpSession(true)                                               // Invalidate session on logout
                         .clearAuthentication(true)                                                  // Clear authentication on logout
