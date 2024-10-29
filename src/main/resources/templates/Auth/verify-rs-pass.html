@@ -63,15 +63,15 @@
             <h1 class="auth__heading">Reset your password</h1>
             <p class="auth__desc">Chúng tôi đã gửi mã OTP qua email của bạn</p>
             <p class="auth__desc">Vui lòng kiểm tra và nhập mã OTP!</p>
-            <form action="./reset-password-emailed.html" class="form auth__form auth__form-forgot">
+            <form th:action="@{/auth/verify-otp}" method="post"  class="form auth__form auth__form-forgot">
                 <div class="form__group">
                     <div class="form__otp">
-                        <input class="otp_text" maxlength="1" type="text" />
-                        <input class="otp_text" maxlength="1" type="text" />
-                        <input class="otp_text" maxlength="1" type="text" />
-                        <input class="otp_text" maxlength="1" type="text" />
-                        <input class="otp_text" maxlength="1" type="text" />
-                        <input class="otp_text" maxlength="1" type="text" />
+                        <input class="otp_text" name="otp" maxlength="1" type="text" />
+                        <input class="otp_text" name="otp" maxlength="1" type="text" />
+                        <input class="otp_text" name="otp" maxlength="1" type="text" />
+                        <input class="otp_text" name="otp" maxlength="1" type="text" />
+                        <input class="otp_text" name="otp" maxlength="1" type="text" />
+                        <input class="otp_text" name="otp" maxlength="1" type="text" />
                     </div>
                 </div>
                 <div class="form__group auth__btn-group">

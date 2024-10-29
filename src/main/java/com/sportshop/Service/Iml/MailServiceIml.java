@@ -77,7 +77,7 @@ public class MailServiceIml implements MailService {
         // Thiết lập ngữ cảnh cho Thymeleaf
         Context context = new Context();
         context.setVariable("email", email);
-        context.setVariable("otp", otp);
+        context.setVariable("otpCode", otp);
 
         // Tạo nội dung HTML từ template
         String htmlContent = templateEngine.process("Auth/send-otp", context);

@@ -4,7 +4,6 @@ import com.sportshop.Modal.Result;
 import com.sportshop.ModalDTO.AccountDTO;
 import com.sportshop.Service.AccountService;
 import com.sportshop.Service.MailService;
-import com.sportshop.Service.OTPService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,9 +20,6 @@ public class AuthController {
     @Autowired
     MailService mailService;
 
-    @Autowired
-    OTPService otpService;
-
     @GetMapping("/sign-in")
     public String renderSignIn() {
         return "Auth/sign-in";
@@ -36,7 +32,8 @@ public class AuthController {
     }
 
     @GetMapping("/reset-password")
-    public String renderResetPassword() {
+    public String renderResetPassword(Model model) {
+        model.addAttribute("email", new String());
         return "Auth/reset-password";
     }
 
@@ -58,14 +55,5 @@ public class AuthController {
         accountService.confirmSignup(email);
         return "redirect:/auth/sign-in";
     }
-
-    @PostMapping("/reset-password")
-    public String rspass(@RequestParam("email") String email, Model model, HttpServletRequest request) {
-        Result rs = otpService.generateRandomOTP(email,request);
-        model.addAttribute("message", rs.getMessage());
-        model.addAttribute("email", email);
-        return rs.isSuccess() ? "Auth/send-otp" : "Auth/reset-password";
-    }
-
 
 }
