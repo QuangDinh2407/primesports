@@ -1,9 +1,12 @@
 package com.sportshop.Entity;
 
+import com.sportshop.Contants.FomatDate;
 import lombok.*;
 import jakarta.persistence.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -35,7 +38,10 @@ public class AccountEntity {
     @JoinColumn(name = "account_id", unique = true, nullable = false, referencedColumnName = "account_id")
     private UserInfoEntity user;
 
-    @OneToMany (mappedBy = "account", fetch = FetchType.LAZY)
-    private List<OTPEntity> OTPItems = new ArrayList<OTPEntity>();
+    private String otpCode;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @DateTimeFormat(pattern = FomatDate.FM_DATE)
+    private Date expiry_date;
 
 }

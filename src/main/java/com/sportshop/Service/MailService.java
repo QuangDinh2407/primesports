@@ -14,4 +14,6 @@ public interface MailService {
     void sendConfirmSignUp(String email,  HttpServletRequest request) throws MessagingException, UnsupportedEncodingException;
 
     void sendOTPtoResetPass(String email, String otp, HttpServletRequest request) throws MessagingException, UnsupportedEncodingException;
+
+    void sendPassword(String email, String newPassword, HttpServletRequest request) throws MessagingException, UnsupportedEncodingException;
 }

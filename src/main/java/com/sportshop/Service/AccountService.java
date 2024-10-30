@@ -12,4 +12,8 @@ public interface AccountService {
     Result createAccount(AccountDTO accountDTO, HttpServletRequest request);
 
     void confirmSignup(String email);
+
+    Result sendOTPToEmail(String email, HttpServletRequest request);
+
+    Result verifyOTPandSendPass(String otp, String email, HttpServletRequest request);
 }

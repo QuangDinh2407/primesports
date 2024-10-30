@@ -77,10 +77,31 @@ public class MailServiceIml implements MailService {
         // Thiết lập ngữ cảnh cho Thymeleaf
         Context context = new Context();
         context.setVariable("email", email);
-        context.setVariable("otp", otp);
+        context.setVariable("otpCode", otp);
 
         // Tạo nội dung HTML từ template
         String htmlContent = templateEngine.process("Auth/send-otp", context);
+        helper.setText(htmlContent, true);
+
+        mailSender.send(message);
+    }
+
+    @Override
+    public void sendPassword(String email, String newPassword, HttpServletRequest request) throws MessagingException, UnsupportedEncodingException {
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+        helper.setFrom(from, personal);
+        helper.setTo(email);
+        helper.setSubject("Khôi phục mật khẩu");
+
+        // Thiết lập ngữ cảnh cho Thymeleaf
+        Context context = new Context();
+        context.setVariable("email", email);
+        context.setVariable("newPassword", newPassword);
+
+        // Tạo nội dung HTML từ template
+        String htmlContent = templateEngine.process("Auth/send-password", context);
         helper.setText(htmlContent, true);
 
         mailSender.send(message);

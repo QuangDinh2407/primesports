@@ -18,9 +18,12 @@
 
     <!-- Styles -->
     <link rel="stylesheet" th:href="@{/Assets/Customer_Shop/Assets/css/main.css}"/>
+    <link rel="stylesheet" th:href="@{/Assets/Toast_Message/toastmesscss.css}">
 
     <!-- Scripts -->
     <script  th:src="@{/Assets/Customer_Shop/Assets/js/scripts.js}"></script>
+    <script th:src="@{/Assets/Toast_Message/toastmessjs.js}"></script>
+
 </head>
 <style>
     .form__otp{
@@ -34,7 +37,7 @@
     .form__otp input{
         height: 80px;
         width: 60px;
-        background-color: #f8f7f7;
+        background-color: #eae8e8;
         border-radius: 10px;
         text-align: center;
         font-size: 30px;
@@ -48,6 +51,7 @@
 </style>
 <body>
 <main class="auth">
+    <div id="toast"></div>
     <!-- Auth intro -->
     <div class="auth__intro d-md-none">
         <img th:src="@{/Assets/Customer_Shop/Assets/img/auth/forgot-password.png}" alt="" class="auth__intro-img" />
@@ -63,19 +67,26 @@
             <h1 class="auth__heading">Reset your password</h1>
             <p class="auth__desc">Chúng tôi đã gửi mã OTP qua email của bạn</p>
             <p class="auth__desc">Vui lòng kiểm tra và nhập mã OTP!</p>
-            <form action="./reset-password-emailed.html" class="form auth__form auth__form-forgot">
+            <form th:action="@{/auth/verify-otp}" method="post" class="form auth__form auth__form-forgot">
+                <input type="hidden" name ="email" th:value="${email}">
                 <div class="form__group">
                     <div class="form__otp">
-                        <input class="otp_text" maxlength="1" type="text" />
-                        <input class="otp_text" maxlength="1" type="text" />
-                        <input class="otp_text" maxlength="1" type="text" />
-                        <input class="otp_text" maxlength="1" type="text" />
-                        <input class="otp_text" maxlength="1" type="text" />
-                        <input class="otp_text" maxlength="1" type="text" />
+                        <input class="otp_text" name="otp" maxlength="1" type="text" />
+                        <input class="otp_text" name="otp" maxlength="1" type="text" />
+                        <input class="otp_text" name="otp" maxlength="1" type="text" />
+                        <input class="otp_text" name="otp" maxlength="1" type="text" />
+                        <input class="otp_text" name="otp" maxlength="1" type="text" />
+                        <input class="otp_text" name="otp" maxlength="1" type="text" />
                     </div>
                 </div>
                 <div class="form__group auth__btn-group">
-                    <button class="btn btn--primary auth__btn form__submit-btn">Reset password</button>
+                    <button type="submit" class="btn btn--primary auth__btn form__submit-btn">Reset password</button>
+                </div>
+            </form>
+            <form th:action="@{/auth/send-otp}" method="post" class="form auth__form auth__form-forgot">
+                <input type="hidden" name ="email" th:value="${email}">
+                <div class="form__group auth__btn-group">
+                    <button type="submit" class="btn btn--primary auth__btn form__submit-btn">Gửi lại mã</button>
                 </div>
             </form>
             <p class="auth__text">
@@ -103,5 +114,14 @@
         });
     });
 </script>
-
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    const message = /*[[${message}]]*/ 'default';
+    /*]]>*/
+    if (message)
+    {
+        console.log(message);
+        showErrorToast(message);
+    }
+</script>
 </html>

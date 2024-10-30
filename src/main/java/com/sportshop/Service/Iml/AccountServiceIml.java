@@ -10,6 +10,7 @@ import com.sportshop.Repository.RoleRepository;
 import com.sportshop.Service.AccountService;
 
 import com.sportshop.Service.MailService;
+import com.sportshop.Utils.randomStringUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -17,6 +18,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+import java.util.Objects;
 
 
 @Service
@@ -82,4 +85,50 @@ public class AccountServiceIml implements AccountService {
         accountRepository.save(accEntity);
     }
 
+    @Override
+    public Result sendOTPToEmail(String email, HttpServletRequest request) {
+        boolean checkexist = accountRepository.existsByemail(email);
+        if (!checkexist)
+        {
+            return new Result(false,"Email chưa được đăng ký tài khoản");
+        }
+
+        String otpCode = randomStringUtil.randomOTP(6);
+        AccountEntity accEntity = accountRepository.findByemail(email);
+        accEntity.setOtpCode(otpCode);
+        accEntity.setExpiry_date(new Date(System.currentTimeMillis() + 5 * 60 * 1000));
+        accountRepository.save(accEntity);
+        try {
+            mailService.sendOTPtoResetPass(email,otpCode, request);
+            return new Result(true,"Đã gửi mã OTP qua email");
+        }
+        catch (Exception e)
+        {
+            return new Result(false,"Gửi mã OTP thất bại");
+        }
+    }
+
+    @Override
+    public Result verifyOTPandSendPass(String otp, String email, HttpServletRequest request) {
+        AccountEntity accEntity = accountRepository.findByemail(email);
+        Date expyri_date = accEntity.getExpiry_date();
+        Date currentTime = new Date();
+        if (!Objects.equals(otp, accEntity.getOtpCode()))
+        {
+            return new Result(false,"Mã OTP không đúng!");
+        } else if (currentTime.after(expyri_date)) {
+            return new Result(false,"Mã OTP đã hết hạn!");
+        }
+        String newPassword = randomStringUtil.randomPassword(12);
+        accEntity.setPassword(passwordEncoder.encode(newPassword));
+        accountRepository.save(accEntity);
+        try {
+            mailService.sendPassword(email,newPassword, request);
+            return new Result(true,"Đã gửi mật khẩu qua email");
+        }
+        catch (Exception e)
+        {
+            return new Result(false,"Gửi mật khẩu thất bại");
+        }
+    }
 }

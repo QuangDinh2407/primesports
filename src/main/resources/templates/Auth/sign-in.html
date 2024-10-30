@@ -18,11 +18,16 @@
 
     <!-- Styles -->
     <link rel="stylesheet" th:href="@{/Assets/Customer_Shop/Assets/css/main.css}"/>
+    <link rel="stylesheet" th:href="@{/Assets/Toast_Message/toastmesscss.css}">
+
 
     <!-- Scripts -->
     <script th:src="@{/Assets/Customer_Shop/Assets/js/scripts.js}"></script>
+    <script th:src="@{/Assets/Toast_Message/toastmessjs.js}"></script>
+
 </head>
 <body>
+<div id="toast"></div>
 <main class="auth">
     <!-- Auth intro -->
     <div class="auth__intro d-md-none">
@@ -99,6 +104,16 @@
 </main>
 <script>
     window.dispatchEvent(new Event("template-loaded"));
+</script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    const message = /*[[${message}]]*/ 'default';
+    /*]]>*/
+    if (message)
+    {
+        console.log(message);
+        showErrorToast(message);
+    }
 </script>
 </body>
 </html>
