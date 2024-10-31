@@ -44,4 +44,17 @@ public class UserServiceIml implements UserService {
         }
         return userDTOS;
     }
+
+    @Override
+    public UserDTO findbyEmail(String email) {
+        UserInfoEntity user = userInfoRepo.findByEmail(email);
+        UserDTO userDTO = UserDTO.builder()
+                .birth(user.getBirth())
+                .name(user.getName())
+                .email(user.getEmail())
+                .phone(user.getPhone())
+                .imagePath(user.getImage_path())
+                .build();
+        return userDTO;
+    }
 }

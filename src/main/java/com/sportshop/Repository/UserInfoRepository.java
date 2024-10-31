@@ -10,6 +10,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserInfoRepository extends JpaRepository<UserInfoEntity, String>, AccountRepositoryCustom {
 	List<UserInfoEntity> findAll();
-
 	Optional<UserInfoEntity> findById(String id);
+	UserInfoEntity findByEmail (String email);
 }

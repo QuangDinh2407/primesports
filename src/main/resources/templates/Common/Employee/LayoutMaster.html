@@ -26,7 +26,7 @@
 <body>
 <div class="container-scroller">
   <!-- partial:partials/_navbar.html -->
-  <nav th:replace="/Common/Admin_Employee/Navbar :: navbar" > </nav>
+  <nav th:replace="/Common/Employee/Navbar :: navbar" > </nav>
   <!-- partial -->
   <div class="container-fluid page-body-wrapper">
     <!-- partial:partials/_settings-panel.html -->
@@ -52,7 +52,7 @@
 
     <!-- partial -->
     <!-- partial:partials/_sidebar.html -->
-    <nav th:replace="/Common/Admin_Employee/Sidebar :: sidebar"></nav>
+    <nav th:replace="/Common/Employee/Sidebar :: sidebar"></nav>
     <!-- partial -->
     <div class="main-panel">
       <div class="content-wrapper">
@@ -70,8 +70,7 @@
       <!-- partial:partials/_footer.html -->
       <footer class="footer">
         <div class="d-sm-flex justify-content-center justify-content-sm-between">
-          <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Premium <a href="https://www.bootstrapdash.com/" target="_blank">Bootstrap admin template</a> from BootstrapDash.</span>
-          <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Copyright © 2021. All rights reserved.</span>
+          <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">PRIMESPORTS</span>
         </div>
       </footer>
       <!-- partial -->
@@ -103,6 +102,17 @@
 <script th:src="@{/Assets/Admin_Employee/Assets/js/Chart.roundedBarCharts.js}"></script>
 <!-- End custom js for this page-->
 </body>
-
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const currentPath = window.location.pathname;
+    const navLinks = document.querySelectorAll('.nav-link');
+    navLinks.forEach(link => {
+      const linkPath = link.getAttribute('href');
+      if (currentPath === linkPath) {
+        link.parentElement.classList.add('active');
+      }
+    });
+  });
+</script>
 </html>
 

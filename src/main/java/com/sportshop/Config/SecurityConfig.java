@@ -71,8 +71,8 @@ public class SecurityConfig {
                         .requestMatchers("/admin/**").hasAuthority("ADMIN")
                         .requestMatchers("/employee/**").hasAuthority("EMPLOYEE")
                         .requestMatchers("/customer/**").hasAuthority("CUSTOMER")  // Only users with 'ADMIN' role can access admin routes
-                        //.anyRequest().authenticated()
-                        .anyRequest().permitAll()
+                        .anyRequest().authenticated()
+                        //.anyRequest().permitAll()
                 )
                 .exceptionHandling(exception -> exception
                         .accessDeniedPage("/access-denied") // URL cho trang từ chối quyền truy cập

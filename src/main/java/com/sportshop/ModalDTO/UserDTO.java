@@ -20,6 +20,8 @@ public class UserDTO {
 
     private String phone;
 
+    private String imagePath;
+
     private Date created_at;
 
     private String status;
