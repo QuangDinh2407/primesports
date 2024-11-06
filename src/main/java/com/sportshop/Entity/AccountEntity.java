@@ -1,13 +1,11 @@
 package com.sportshop.Entity;
 
-import com.sportshop.Contants.FomatDate;
+import com.sportshop.Contants.FormatDate;
 import lombok.*;
 import jakarta.persistence.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 
 @Data
@@ -28,7 +26,7 @@ public class AccountEntity {
     private String password;
 
     @Column(nullable = false)
-    private String isDisable;
+    private String is_disable;
 
     @ManyToOne
     @JoinColumn(name="role_id", referencedColumnName = "role_id")
@@ -38,10 +36,10 @@ public class AccountEntity {
     @JoinColumn(name = "account_id", unique = true, nullable = false, referencedColumnName = "account_id")
     private UserInfoEntity user;
 
-    private String otpCode;
+    private String otp_code;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @DateTimeFormat(pattern = FomatDate.FM_DATE)
+    @DateTimeFormat(pattern = FormatDate.FM_DATE)
     private Date expiry_date;
 
 }

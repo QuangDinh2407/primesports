@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import com.sportshop.Contants.FomatDate;
+import com.sportshop.Contants.FormatDate;
 import lombok.*;
 import jakarta.persistence.*;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -26,12 +26,12 @@ public class UserOrderEntity {
 	private String status; 
 	
 	@Temporal(TemporalType.TIMESTAMP)
-	@DateTimeFormat(pattern = FomatDate.FM_DATE)
+	@DateTimeFormat(pattern = FormatDate.FM_DATE)
 	@Column(nullable = false)
 	private Date created_at;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@DateTimeFormat(pattern = FomatDate.FM_DATE)
+	@DateTimeFormat(pattern = FormatDate.FM_DATE)
 	private Date updated_at;
 	
 	@ManyToOne

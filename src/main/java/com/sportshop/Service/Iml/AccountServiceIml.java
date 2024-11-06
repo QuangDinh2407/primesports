@@ -63,7 +63,7 @@ public class AccountServiceIml implements AccountService {
         accEntity.setEmail(accountDTO.getEmail());
         String encodePassword = passwordEncoder.encode(accountDTO.getPassword());
         accEntity.setPassword(encodePassword);
-        accEntity.setIsDisable("0");
+        accEntity.setIs_disable("0");
         RoleEntity roleEntity = roleRepository.findByName("CUSTOMER");
         accEntity.setRole(roleEntity);
         try {
@@ -81,7 +81,7 @@ public class AccountServiceIml implements AccountService {
     @Override
     public void confirmSignup(String email) {
         AccountEntity accEntity = accountRepository.findByemail(email);
-        accEntity.setIsDisable("1");
+        accEntity.setIs_disable("1");
         accountRepository.save(accEntity);
     }
 
@@ -95,7 +95,7 @@ public class AccountServiceIml implements AccountService {
 
         String otpCode = randomStringUtil.randomOTP(6);
         AccountEntity accEntity = accountRepository.findByemail(email);
-        accEntity.setOtpCode(otpCode);
+        accEntity.setOtp_code(otpCode);
         accEntity.setExpiry_date(new Date(System.currentTimeMillis() + 5 * 60 * 1000));
         accountRepository.save(accEntity);
         try {
@@ -113,7 +113,7 @@ public class AccountServiceIml implements AccountService {
         AccountEntity accEntity = accountRepository.findByemail(email);
         Date expyri_date = accEntity.getExpiry_date();
         Date currentTime = new Date();
-        if (!Objects.equals(otp, accEntity.getOtpCode()))
+        if (!Objects.equals(otp, accEntity.getOtp_code()))
         {
             return new Result(false,"Mã OTP không đúng!");
         } else if (currentTime.after(expyri_date)) {

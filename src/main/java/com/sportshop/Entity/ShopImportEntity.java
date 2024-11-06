@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.sportshop.Contants.FomatDate;
+import com.sportshop.Contants.FormatDate;
 import lombok.*;
 import jakarta.persistence.*;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -22,16 +22,16 @@ public class ShopImportEntity {
 	private String shopImport_id;
 	
 	@Temporal(TemporalType.TIMESTAMP)
-	@DateTimeFormat(pattern = FomatDate.FM_DATE)
+	@DateTimeFormat(pattern = FormatDate.FM_DATE)
 	private Date import_date;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@DateTimeFormat(pattern = FomatDate.FM_DATE)
+	@DateTimeFormat(pattern = FormatDate.FM_DATE)
 	@Column(nullable = false)
 	private Date created_at;
 	
 	@Temporal(TemporalType.TIMESTAMP)
-	@DateTimeFormat(pattern = FomatDate.FM_DATE)
+	@DateTimeFormat(pattern = FormatDate.FM_DATE)
 	private Date updated_at;
 
 	@Column(nullable = false)

@@ -1,3 +1,4 @@
+/*
 (function($) {
   showSuccessToast = function() {
     'use strict';
@@ -83,4 +84,4 @@
       "right": ""
     }); //to remove previous position style
   }
-})(jQuery);
+})(jQuery);*/

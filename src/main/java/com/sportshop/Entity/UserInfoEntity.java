@@ -1,6 +1,6 @@
 package com.sportshop.Entity;
 
-import com.sportshop.Contants.FomatDate;
+import com.sportshop.Contants.FormatDate;
 import lombok.*;
 import jakarta.persistence.*;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -21,13 +21,13 @@ public class UserInfoEntity {
     @GeneratedValue (strategy = GenerationType.UUID)
     private String userInfo_id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "nvarchar(255)")
     private String name;
 
     @Column(nullable = false)
     private Integer age;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "nvarchar(255)")
     private String gender;
 
     @Column(nullable = false)
@@ -36,15 +36,17 @@ public class UserInfoEntity {
     @Column(nullable = false)
     private String phone;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "nvarchar(255)")
     private String address;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    @DateTimeFormat(pattern = FormatDate.FM_DATE)
     private Date birth;
 
     private String image_path;
     
     @Temporal(TemporalType.TIMESTAMP)
-    @DateTimeFormat(pattern = FomatDate.FM_DATE)
+    @DateTimeFormat(pattern = FormatDate.FM_DATE)
     @Column(nullable = false)
     private Date created_at;
 

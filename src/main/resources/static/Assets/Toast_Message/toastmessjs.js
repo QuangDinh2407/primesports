@@ -60,7 +60,7 @@ function showSuccessToast(message) {
         title: "Thành công!",
         message: message,
         type: "success",
-        duration: 50000
+        duration: 5000
     });
 }
 

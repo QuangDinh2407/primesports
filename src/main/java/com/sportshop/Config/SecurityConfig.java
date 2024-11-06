@@ -43,7 +43,7 @@ public class SecurityConfig {
         return username -> {
             // Find user by email (username) in the repository
             AccountEntity accountEntity = accountRepository.findByemail(username);
-            if (accountEntity == null || Objects.equals(accountEntity.getIsDisable(), "0")) {
+            if (accountEntity == null || Objects.equals(accountEntity.getIs_disable(), "0")) {
                 throw new UsernameNotFoundException(username);
             }
             // Return a User object containing email, password, and roles
@@ -71,8 +71,8 @@ public class SecurityConfig {
                         .requestMatchers("/admin/**").hasAuthority("ADMIN")
                         .requestMatchers("/employee/**").hasAuthority("EMPLOYEE")
                         .requestMatchers("/customer/**").hasAuthority("CUSTOMER")  // Only users with 'ADMIN' role can access admin routes
-                        .anyRequest().authenticated()
-                        //.anyRequest().permitAll()
+                        //.anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 )
                 .exceptionHandling(exception -> exception
                         .accessDeniedPage("/access-denied") // URL cho trang từ chối quyền truy cập
