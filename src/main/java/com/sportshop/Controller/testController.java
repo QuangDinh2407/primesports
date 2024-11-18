@@ -7,6 +7,7 @@ import com.sportshop.Service.AccountService;
 import com.sportshop.Service.MailService;
 import com.sportshop.Service.UserService;
 import jakarta.mail.MessagingException;
+import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -73,9 +74,13 @@ public class testController {
         return "Admin/dashboard";
     }
 
+    @Autowired
+    ServletContext context;
+
     @GetMapping("/welcome")
     public String render2()
     {
+        System.out.println(context.getRealPath("/static"));
         return "welcome";
     }
 
