@@ -19,43 +19,43 @@ import java.util.Date;
 @RequestMapping("/employee")
 public class employeeController {
 
-    @Autowired
-    UserService userService;
-
-    @ModelAttribute
-    public void getUser(HttpSession session, Model model) {
-        String email = (String) session.getAttribute("email");
-        if (email != null) {
-            UserDTO userDTO = userService.findbyEmail(email);
-            model.addAttribute("userDTO", userDTO);
-        }
-    }
-
-    @GetMapping("")
-    public String render (HttpSession session, Model model){
-        return "redirect:/employee/home";
-    }
-
-    @GetMapping("/employee-info")
-    public String renderuserInfo (HttpSession session, Model model){
-        return "Employee/employee-info";
-    }
-
-    @GetMapping("/home")
-    public String renderHome (HttpSession session, Model model){
-        return "Employee/home";
-    }
-
-    @GetMapping("/dashboard")
-    public String renderdashboard (HttpSession session, Model model){
-        return "Employee/dashboard";
-    }
-
-    @PostMapping("/employee-info")
-    public String updateInfo (UserDTO userDTO,Model model){
-        System.out.println(userDTO);
-        Result rs = userService.updateInfoEmployee(userDTO);
-        model.addAttribute("rs",rs);
-        return "Employee/employee-info";
-    }
+//    @Autowired
+//    UserService userService;
+//
+//    @ModelAttribute
+//    public void getUser(HttpSession session, Model model) {
+//        String email = (String) session.getAttribute("email");
+//        if (email != null) {
+//            UserDTO userDTO = userService.findbyEmail(email);
+//            model.addAttribute("userDTO", userDTO);
+//        }
+//    }
+//
+//    @GetMapping("")
+//    public String render (HttpSession session, Model model){
+//        return "redirect:/employee/home";
+//    }
+//
+//    @GetMapping("/employee-info")
+//    public String renderuserInfo (HttpSession session, Model model){
+//        return "Employee/employee-info";
+//    }
+//
+//    @GetMapping("/home")
+//    public String renderHome (HttpSession session, Model model){
+//        return "Employee/home";
+//    }
+//
+//    @GetMapping("/dashboard")
+//    public String renderdashboard (HttpSession session, Model model){
+//        return "Employee/dashboard";
+//    }
+//
+//    @PostMapping("/employee-info")
+//    public String updateInfo (UserDTO userDTO,Model model){
+//        System.out.println(userDTO);
+//        Result rs = userService.updateInfoEmployee(userDTO);
+//        model.addAttribute("rs",rs);
+//        return "Employee/employee-info";
+//    }
 }

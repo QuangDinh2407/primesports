@@ -69,7 +69,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(req -> req
                         .requestMatchers(WHITE_LIST_URL).permitAll()            // Permit requests to the whitelist URLs
                         .requestMatchers("/admin/**").hasAuthority("ADMIN")
-                        .requestMatchers("/employee/**").hasAuthority("EMPLOYEE")
+                        //.requestMatchers("/employee/**").hasAuthority("EMPLOYEE")
                         .requestMatchers("/customer/**").hasAuthority("CUSTOMER")  // Only users with 'ADMIN' role can access admin routes
                         //.anyRequest().authenticated()
                         .anyRequest().permitAll()

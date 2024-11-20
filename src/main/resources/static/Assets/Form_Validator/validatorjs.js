@@ -18,6 +18,10 @@ function Validator(formSelector){
             var regex =  /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
             return regex.test(value) ? undefined : 'Vui lòng nhập email'
         },
+        password: value => {
+            const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[~!@#$%^&*()_+{}|:"<>?[\];',./\-=`])[A-Za-z\d~!@#$%^&*()_+{}|:"<>?[\];',./\-=`]{8,}$/;
+            return regex.test(value) ? undefined : 'Vui lòng nhập đúng yêu cầu mật khẩu bao gồm chữ hoa, thường, kí tự đặc biệt'
+        },
         min: min => {
             return value => {
                 return value.length >= min ? undefined :`Vui lòng nhập tối thiểu ${min} ký tự `

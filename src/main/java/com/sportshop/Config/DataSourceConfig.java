@@ -51,16 +51,16 @@ public class DataSourceConfig {
         return dataSourceProperties.initializeDataSourceBuilder().type(HikariDataSource.class).build();
     }
 
-    @Bean(name = "employeeDataSourceProperties")
-    @ConfigurationProperties("spring.datasource.employee")
-    public DataSourceProperties employeeDataSourceProperties() {
-        return new DataSourceProperties();
-    }
-
-    @Bean(name = "employeeDataSource")
-    public DataSource employeeDataSource(@Qualifier("employeeDataSourceProperties") DataSourceProperties dataSourceProperties) {
-        return dataSourceProperties.initializeDataSourceBuilder().type(HikariDataSource.class).build();
-    }
+//    @Bean(name = "employeeDataSourceProperties")
+//    @ConfigurationProperties("spring.datasource.employee")
+//    public DataSourceProperties employeeDataSourceProperties() {
+//        return new DataSourceProperties();
+//    }
+//
+//    @Bean(name = "employeeDataSource")
+//    public DataSource employeeDataSource(@Qualifier("employeeDataSourceProperties") DataSourceProperties dataSourceProperties) {
+//        return dataSourceProperties.initializeDataSourceBuilder().type(HikariDataSource.class).build();
+//    }
 
     @Bean(name = "customerDataSourceProperties")
     @ConfigurationProperties("spring.datasource.customer")
@@ -100,13 +100,13 @@ public class DataSourceConfig {
     public DataSource routingDataSource(
             @Qualifier("authDataSource") DataSource authDataSource,
             @Qualifier("adminDataSource") DataSource adminDataSource,
-            @Qualifier("employeeDataSource") DataSource employeeDataSource,
+            //@Qualifier("employeeDataSource") DataSource employeeDataSource,
             @Qualifier("customerDataSource") DataSource customerDataSource) {
         RoutingDataSource routingDataSource = new RoutingDataSource();
         Map<Object, Object> dataSources = new HashMap<>();
         dataSources.put("auth", authDataSource);
         dataSources.put("admin", adminDataSource);
-        dataSources.put("employee", employeeDataSource);
+        //dataSources.put("employee", employeeDataSource);
         dataSources.put("customer", customerDataSource);
         routingDataSource.setTargetDataSources(dataSources);
         routingDataSource.setDefaultTargetDataSource(authDataSource);

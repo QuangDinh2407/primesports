@@ -16,7 +16,7 @@ public class AuthSuccessHandler implements AuthenticationSuccessHandler {
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         boolean isAdmin = authentication.getAuthorities().contains(new SimpleGrantedAuthority("ADMIN"));
-        boolean isEmployee = authentication.getAuthorities().contains(new SimpleGrantedAuthority("EMPLOYEE"));
+       // boolean isEmployee = authentication.getAuthorities().contains(new SimpleGrantedAuthority("EMPLOYEE"));
         boolean isCustomer = authentication.getAuthorities().contains(new SimpleGrantedAuthority("CUSTOMER"));
 
         String email = authentication.getName();
@@ -24,14 +24,23 @@ public class AuthSuccessHandler implements AuthenticationSuccessHandler {
         HttpSession session = request.getSession();
         session.setAttribute("email", email);
 
+//        if (isAdmin)
+//        {
+//            response.sendRedirect("/admin");
+//        } else if (isEmployee) {
+//            response.sendRedirect("/employee");
+//        }
+//        else {
+//            response.sendRedirect("/customer");
+//        }
+
         if (isAdmin)
         {
             response.sendRedirect("/admin");
-        } else if (isEmployee) {
-            response.sendRedirect("/employee");
         }
         else {
             response.sendRedirect("/customer");
         }
+
     }
 }
