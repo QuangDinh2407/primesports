@@ -69,7 +69,7 @@ public class UserServiceIml implements UserService {
     }
 
     @Override
-    public Result updateInfoEmployee(UserDTO userDTO) {
+    public Result updateInfoUser(UserDTO userDTO) {
 
         try{
             UserInfoEntity userInfoEntity = userInfoRepo.findByEmail(userDTO.getEmail());
@@ -94,4 +94,5 @@ public class UserServiceIml implements UserService {
             return new Result(false,"Thay đổi thông tin thất bại");
         }
     }
+
 }
