@@ -21,12 +21,13 @@ public class ShopVoucherEntity {
 	@GeneratedValue (strategy = GenerationType.UUID)
 	private String shopVoucher_id;
 
-	@Column(nullable = false)
+	@Column(nullable = false, columnDefinition = "nvarchar(255)")
 	private String name;
 
 	@Column(nullable = false)
 	private String code;
-	
+
+	@Column(columnDefinition = "nvarchar(MAX)")
 	private String description;
 
 	@Column(nullable = false)
@@ -55,7 +56,7 @@ public class ShopVoucherEntity {
 	@DateTimeFormat(pattern = FormatDate.FM_DATE)
 	private Date deleted_at;
 
-	@Column(nullable = false)
+	@Column(nullable = false, columnDefinition = "nvarchar(255)")
 	private String status;
 	
 	@OneToMany (mappedBy = "shopVoucher", fetch = FetchType.LAZY)

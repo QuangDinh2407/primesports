@@ -18,7 +18,7 @@ public class RoleEntity {
 	@GeneratedValue (strategy = GenerationType.UUID)
 	private String role_id;
 
-	@Column(nullable = false)
+	@Column(nullable = false, columnDefinition = "nvarchar(255)")
 	private String name;
 	
 	@OneToMany(mappedBy = "role", fetch = FetchType.LAZY)

@@ -21,7 +21,8 @@ public class ProductReviewEntity {
 
 	@Column(nullable = false)
 	private Float rating;
-	
+
+	@Column(columnDefinition = "nvarchar(MAX)")
 	private String comment;
 	
 	@Temporal(TemporalType.TIMESTAMP)

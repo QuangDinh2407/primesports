@@ -21,7 +21,7 @@ public class ProductEntity {
 	@GeneratedValue (strategy = GenerationType.UUID)
 	private String product_id;
 
-	@Column(nullable = false)
+	@Column(nullable = false, columnDefinition = "nvarchar(255)")
 	private String name;
 
 	@Column(nullable = false)
@@ -30,6 +30,7 @@ public class ProductEntity {
 	@Column(nullable = false)
 	private float rating;
 
+	@Column(columnDefinition = "nvarchar(MAX)")
 	private String description;
 	
 	@Temporal(TemporalType.TIMESTAMP)
@@ -40,7 +41,7 @@ public class ProductEntity {
 	@DateTimeFormat(pattern = FormatDate.FM_DATE)
 	private Date deleted_at;
 
-	@Column(nullable = false)
+	@Column(nullable = false, columnDefinition = "nvarchar(255)")
 	private String status;
 	
 	@OneToMany (mappedBy = "product", fetch = FetchType.LAZY)

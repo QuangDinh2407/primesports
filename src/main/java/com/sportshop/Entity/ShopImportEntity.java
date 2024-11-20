@@ -34,7 +34,7 @@ public class ShopImportEntity {
 	@DateTimeFormat(pattern = FormatDate.FM_DATE)
 	private Date updated_at;
 
-	@Column(nullable = false)
+	@Column(nullable = false, columnDefinition = "nvarchar(255)")
 	private String status;
 	
 	@OneToMany (mappedBy = "shopImport", fetch = FetchType.LAZY)

@@ -17,7 +17,7 @@ public class ProductTypeEntity {
 	@GeneratedValue (strategy = GenerationType.UUID)
 	private String productType_id;
 
-	@Column(nullable = false)
+	@Column(nullable = false, columnDefinition = "nvarchar(255)")
 	private String name;
 
 	private String parent_id;
