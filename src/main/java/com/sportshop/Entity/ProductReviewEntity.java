@@ -2,7 +2,7 @@ package com.sportshop.Entity;
 
 import java.util.Date;
 
-import com.sportshop.Contants.FomatDate;
+import com.sportshop.Contants.FormatDate;
 import lombok.*;
 import jakarta.persistence.*;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -21,15 +21,16 @@ public class ProductReviewEntity {
 
 	@Column(nullable = false)
 	private Float rating;
-	
+
+	@Column(columnDefinition = "nvarchar(MAX)")
 	private String comment;
 	
 	@Temporal(TemporalType.TIMESTAMP)
-	@DateTimeFormat(pattern = FomatDate.FM_DATE)
+	@DateTimeFormat(pattern = FormatDate.FM_DATE)
 	private Date created_at;
 	
 	@Temporal(TemporalType.TIMESTAMP)
-	@DateTimeFormat(pattern = FomatDate.FM_DATE)
+	@DateTimeFormat(pattern = FormatDate.FM_DATE)
 	private Date updated_at;
 	
 	@ManyToOne

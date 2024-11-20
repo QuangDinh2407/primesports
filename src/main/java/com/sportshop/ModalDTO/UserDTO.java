@@ -1,9 +1,11 @@
 package com.sportshop.ModalDTO;
 
+import com.sportshop.Contants.FormatDate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -14,9 +16,12 @@ import java.util.Date;
 public class UserDTO {
     private String name;
 
+    @DateTimeFormat(pattern = FormatDate.FM_DATE)
     private Date birth;
 
     private String email;
+
+    private String address;
 
     private String phone;
 

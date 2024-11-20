@@ -7,14 +7,22 @@ import com.sportshop.Service.AccountService;
 import com.sportshop.Service.MailService;
 import com.sportshop.Service.UserService;
 import jakarta.mail.MessagingException;
+import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 /*@RestController*/
@@ -66,10 +74,50 @@ public class testController {
         return "Admin/dashboard";
     }
 
+    @Autowired
+    ServletContext context;
+
     @GetMapping("/welcome")
     public String render2()
     {
+        System.out.println(context.getRealPath("/static"));
         return "welcome";
+    }
+
+
+
+    private static String UPLOAD_DIRECTORY = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\Assets\\image\\Employee";
+
+    @GetMapping("/upload")
+    public String render3()
+    {
+        System.out.println(UPLOAD_DIRECTORY);
+        return "homepage";
+    }
+
+    @PostMapping("/upload")
+    public String handleFileUpload(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
+
+        if (file.isEmpty()) {
+            redirectAttributes.addFlashAttribute("message", "Please select a file to upload.");
+            return "redirect:/upload";
+        }
+
+        try {
+            Path path = Paths.get(UPLOAD_DIRECTORY + File.separator + file.getOriginalFilename());
+            System.out.println(path);
+            file.transferTo(new File(String.valueOf(path)));
+
+            Thread.sleep(8000);
+
+            redirectAttributes.addFlashAttribute("message", "You successfully uploaded '" + file.getOriginalFilename() + "'");
+            redirectAttributes.addFlashAttribute("path", "/Assets/image/Employee/" + file.getOriginalFilename());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return "redirect:/upload";
     }
 
 }

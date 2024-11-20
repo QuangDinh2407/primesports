@@ -1,22 +1,31 @@
 package com.sportshop.Service.Iml;
 
+import com.sportshop.Entity.AccountEntity;
 import com.sportshop.Entity.UserInfoEntity;
+import com.sportshop.Modal.Result;
 import com.sportshop.ModalDTO.AccountDTO;
 import com.sportshop.ModalDTO.UserDTO;
 import com.sportshop.ModalDTO.RoleDTO;
+import com.sportshop.Repository.AccountRepository;
 import com.sportshop.Repository.UserInfoRepository;
 import com.sportshop.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class UserServiceIml implements UserService {
 
     @Autowired
     UserInfoRepository userInfoRepo;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private AccountRepository accountRepository;
 
     @Override
     public List <UserDTO> findAll() {
@@ -50,6 +59,7 @@ public class UserServiceIml implements UserService {
         UserInfoEntity user = userInfoRepo.findByEmail(email);
         UserDTO userDTO = UserDTO.builder()
                 .birth(user.getBirth())
+                .address(user.getAddress())
                 .name(user.getName())
                 .email(user.getEmail())
                 .phone(user.getPhone())
@@ -57,4 +67,32 @@ public class UserServiceIml implements UserService {
                 .build();
         return userDTO;
     }
+
+    @Override
+    public Result updateInfoUser(UserDTO userDTO) {
+
+        try{
+            UserInfoEntity userInfoEntity = userInfoRepo.findByEmail(userDTO.getEmail());
+            userInfoEntity.setName(userDTO.getName());
+            userInfoEntity.setPhone(userDTO.getPhone());
+            userInfoEntity.setAddress(userDTO.getAddress());
+            userInfoEntity.setBirth(userDTO.getBirth());
+            userInfoRepo.save(userInfoEntity);
+            if (!Objects.equals(userDTO.getAccount().getPassword(), ""))
+            {
+                String passEncrypt = passwordEncoder.encode(userDTO.getAccount().getPassword());
+                AccountEntity accountEntity = accountRepository.findByemail(userDTO.getEmail());
+                accountEntity.setPassword(passEncrypt);
+                accountRepository.save(accountEntity);
+
+            }
+            return new Result(true,"Thay đổi thông tin thành công");
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            return new Result(false,"Thay đổi thông tin thất bại");
+        }
+    }
+
 }
