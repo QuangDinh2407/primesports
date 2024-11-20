@@ -8,7 +8,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class customerController {
 
     @RequestMapping("")
-    public String render (){
-        return "Customer/home";
+
+    public String render() {
+        return "Common/Customer_Shop/personal-info-begin";
     }
+
+    @RequestMapping("edit-personal")
+    public String editPersional() {
+        return "Common/Customer_Shop/edit-personal-info";
+    }
+
 }
