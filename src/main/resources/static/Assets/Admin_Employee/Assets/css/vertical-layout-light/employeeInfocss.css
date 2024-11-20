@@ -17,8 +17,8 @@
 .info-setting{
     width: auto;
     margin-top: 50px;
+    min-width: 260px;
 }
-
 
 .info-display
 {
@@ -26,7 +26,6 @@
     width: 25%;
     overflow: hidden;
     max-width: 280px;
-
 }
 
 .user-avatar{
@@ -35,7 +34,7 @@
     align-items: center;
     padding: 0;
     background-image: linear-gradient(rgba(26, 22, 46, 0) 0%, rgba(26, 22, 46, 1) 100%),
-    url("./backgroundimg.jpg");
+    url("/Assets/image/Admin/backgroundimg.jpg");
     background-position: center center;
     background-size: cover;
     background-repeat: no-repeat;
@@ -59,6 +58,7 @@
 
 .user-display{
     margin-top: 40px;
+
 }
 
 .user-name {
@@ -132,7 +132,7 @@
 }
 
 .input-setting:focus {
-    border: 1px solid black;
+    border: 2px solid black;
 }
 
 .input-setting[type="file"] {
@@ -179,4 +179,55 @@
     font-size: 18px !important;
     padding: 20px 30px !important;
     font-weight: 600 !important;
+}
+
+@media (max-width: 768px) {
+    .user-display {
+        margin: 20px 0;
+        padding: 0 10px;
+    }
+
+    .user-info {
+        font-size: 1rem; /* Điều chỉnh kích thước chữ cho màn hình nhỏ */
+        line-height: 1.5;
+    }
+
+    .user-info i {
+        font-size: 1.2rem; /* Điều chỉnh kích thước biểu tượng */
+    }
+
+    .user-info span {
+        font-size: 0.9rem; /* Thu nhỏ thông tin chi tiết */
+    }
+}
+
+@media (max-width: 768px) {
+    .user-display {
+        max-width: 100%;
+        min-width: 250px; /* Giảm kích thước tối thiểu cho màn hình nhỏ */
+        padding: 0 15px;
+    }
+
+    .user-info {
+        font-size: 1.2rem;
+        line-height: 1.4;
+    }
+
+    .user-info span {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .user-display {
+        min-width: 220px; /* Giảm nữa để phù hợp với điện thoại rất nhỏ */
+    }
+
+    .user-info {
+        font-size: 1rem;
+    }
+
+    .user-info span {
+        font-size: 0.9rem;
+    }
 }

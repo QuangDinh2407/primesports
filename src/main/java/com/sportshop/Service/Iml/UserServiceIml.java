@@ -1,5 +1,6 @@
 package com.sportshop.Service.Iml;
 
+import com.sportshop.Contants.StringContant;
 import com.sportshop.Entity.AccountEntity;
 import com.sportshop.Entity.UserInfoEntity;
 import com.sportshop.Modal.Result;
@@ -9,10 +10,15 @@ import com.sportshop.ModalDTO.RoleDTO;
 import com.sportshop.Repository.AccountRepository;
 import com.sportshop.Repository.UserInfoRepository;
 import com.sportshop.Service.UserService;
+import jakarta.servlet.ServletContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -26,6 +32,9 @@ public class UserServiceIml implements UserService {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private AccountRepository accountRepository;
+
+    @Autowired
+    ServletContext context;
 
     @Override
     public List <UserDTO> findAll() {
@@ -69,7 +78,7 @@ public class UserServiceIml implements UserService {
     }
 
     @Override
-    public Result updateInfoUser(UserDTO userDTO) {
+    public Result updateInfoUser(UserDTO userDTO, MultipartFile file) {
 
         try{
             UserInfoEntity userInfoEntity = userInfoRepo.findByEmail(userDTO.getEmail());
@@ -77,15 +86,22 @@ public class UserServiceIml implements UserService {
             userInfoEntity.setPhone(userDTO.getPhone());
             userInfoEntity.setAddress(userDTO.getAddress());
             userInfoEntity.setBirth(userDTO.getBirth());
-            userInfoRepo.save(userInfoEntity);
             if (!Objects.equals(userDTO.getAccount().getPassword(), ""))
             {
                 String passEncrypt = passwordEncoder.encode(userDTO.getAccount().getPassword());
                 AccountEntity accountEntity = accountRepository.findByemail(userDTO.getEmail());
                 accountEntity.setPassword(passEncrypt);
                 accountRepository.save(accountEntity);
-
             }
+            if (!file.isEmpty())
+            {
+                Path path = Paths.get(StringContant.ADMINIMAGE_URL + File.separator + file.getOriginalFilename());
+                file.transferTo(new File(String.valueOf(path)));
+                System.out.println(path);
+                userInfoEntity.setImage_path(file.getOriginalFilename());
+                Thread.sleep(5000);
+            }
+            userInfoRepo.save(userInfoEntity);
             return new Result(true,"Thay đổi thông tin thành công");
         }
         catch (Exception e)

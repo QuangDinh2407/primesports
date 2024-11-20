@@ -1,0 +1,57 @@
+<nav th:fragment="sidebar" class="sidebar sidebar-offcanvas" id="sidebar">
+    <ul class="nav">
+        <li class="nav-item">
+            <a class="nav-link" th:href="@{/admin/dashboard}">
+                <i class="mdi mdi-grid-large menu-icon"></i>
+                <span class="menu-title">Dashboard</span>
+            </a>
+        </li>
+        <li class="nav-item nav-category">UI Elements</li>
+        <li class="nav-item">
+            <a class="nav-link" th:href="@{/admin/home}">
+                <i class="menu-icon mdi mdi-floor-plan"></i>
+                <span class="menu-title">UI Elements</span>
+
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" >
+                <i class="menu-icon mdi mdi-card-text-outline"></i>
+                <span class="menu-title">Form elements</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" >
+                <i class="menu-icon mdi mdi-chart-line"></i>
+                <span class="menu-title">Charts</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link">
+                <i class="menu-icon mdi mdi-table"></i>
+                <span class="menu-title">Tables</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link">
+                <i class="menu-icon mdi mdi-layers-outline"></i>
+                <span class="menu-title">Icons</span>
+            </a>
+        </li>
+        <li class="nav-item nav-category">pages</li>
+        <li class="nav-item">
+                <a class="nav-link" th:href="@{/admin/admin-info}">
+                <i class="menu-icon mdi mdi-account-circle-outline"></i>
+                <span class="menu-title">Thông tin cá nhân</span>
+            </a>
+        </li>
+        <li class="nav-item nav-category">help</li>
+        <li class="nav-item">
+            <a class="nav-link" href="http://bootstrapdash.com/demo/star-admin2-free/docs/documentation.html">
+                <i class="menu-icon mdi mdi-file-document"></i>
+                <span class="menu-title">Documentation</span>
+            </a>
+        </li>
+    </ul>
+</nav>
+
