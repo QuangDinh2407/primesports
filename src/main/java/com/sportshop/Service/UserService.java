@@ -8,5 +8,7 @@ import java.util.List;
 public interface UserService {
     List<UserDTO> findAll ();
     UserDTO findbyEmail (String email);
-    Result updateInfoEmployee (UserDTO userDTO);
+    Result updateInfoUser (UserDTO userDTO);
+
+    Result updateInfoAdmin(UserDTO userDTO);
 }
