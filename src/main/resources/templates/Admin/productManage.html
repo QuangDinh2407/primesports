@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/Common/Employee/LayoutMaster.html}">
+<head>
+    <title>Product Manage</title>
+
+    <link rel="stylesheet" th:href="@{/Assets/Admin_Employee/Assets/css/vertical-layout-light/employeeInfocss.css}"/>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <style>
+        .flatpickr-current-month .flatpickr-monthDropdown-months {
+            padding: 0 !important;
+        }
+
+        #dateIcon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-size: 20px;
+            color: rgba(0, 0, 0, .8);
+            z-index: 1;
+        }
+
+    </style>
+</head>
+
+<body>
+<div class="content" layout:fragment="content">
+    <div class="product-manage-container">
+        <div class="product-info-content">
+            <div class="product-show-display">
+                <div class="col-lg-12 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <h4 class="card-title">Quản lý sản phẩm</h4>
+                                <a href="/admin/product/add-product">Thêm sản phẩm</a>
+                            </div>
+
+                            <p class="card-description">
+                                Sản phẩm<code>.primesports</code>
+                            </p>
+                            <div class="table-responsive pt-3">
+                                <table class="table table-bordered">
+                                    <thead>
+                                    <tr>
+                                        <th>
+                                            #
+                                        </th>
+                                        <th>
+                                            Tên sản phẩm
+                                        </th>
+                                        <th>
+                                            Ảnh
+                                        </th>
+                                        <th>
+                                            Giá
+                                        </th>
+                                        <th>
+                                            Số lượng
+                                        </th>
+                                        <th>
+                                            Trạng thái
+                                        </th>
+                                        <th>
+                                            Thời gian tạo
+                                        </th>
+                                        <th>
+                                            Hành động
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>
+                                            1
+                                        </td>
+                                        <td>
+                                            FFF (Men's Team) 2024/25 Stadium Away
+                                        </td>
+                                        <td>
+                                            <div class="progress-image">
+                                                <img th:src="@{/Assets/Customer_Shop/Assets/img/product/item-1.png}"
+                                                     alt="" class="product-card__thumb"/>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            355.000
+                                            VNĐ
+                                        </td>
+                                        <td>
+                                            124
+                                        </td>
+                                        <td>
+                                            <label class="badge badge-success">Còn hàng</label>
+                                        </td>
+                                        <td>
+                                            5:12 21/11/2024
+                                        </td>
+                                        <td>
+                                            Xóa
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            2
+                                        </td>
+                                        <td>
+                                            FFF (Men's Team) 2024/25 Stadium Away
+                                        </td>
+                                        <td>
+                                            <div class="progress-image">
+                                                <img th:src="@{/Assets/Customer_Shop/Assets/img/product/item-2.png}"
+                                                     alt="" class="product-card__thumb"/>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            345.000
+                                            VNĐ
+                                        </td>
+                                        <td>
+                                            0
+                                        </td>
+                                        <td>
+                                            <label class="badge badge-danger">Hết hàng</label>
+                                        </td>
+                                        <td>
+                                            4:12 21/11/2024
+                                        </td>
+                                        <td>
+                                            Xóa
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            3
+                                        </td>
+                                        <td>
+                                            FFF (Men's Team) 2024/25 Stadium Away
+                                        </td>
+                                        <td>
+                                            <div class="progress-image">
+                                                <img th:src="@{/Assets/Customer_Shop/Assets/img/product/item-3.png}"
+                                                     alt="" class="product-card__thumb"/>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            355.000
+                                            VNĐ
+                                        </td>
+                                        <td>
+                                            124
+                                        </td>
+                                        <td>
+                                            <label class="badge badge-success">Còn hàng</label>
+                                        </td>
+                                        <td>
+                                            5:12 21/11/2024
+                                        </td>
+                                        <td>
+                                            Xóa
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            4
+                                        </td>
+                                        <td>
+                                            FFF (Men's Team) 2024/25 Stadium Away
+                                        </td>
+                                        <td>
+                                            <div class="progress-image">
+                                                <img th:src="@{/Assets/Customer_Shop/Assets/img/product/item-4.png}"
+                                                     alt="" class="product-card__thumb"/>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            355.000
+                                            VNĐ
+                                        </td>
+                                        <td>
+                                            10
+                                        </td>
+                                        <td>
+                                            <label class="badge badge-warning">Còn ít</label>
+                                        </td>
+                                        <td>
+                                            5:12 21/11/2024
+                                        </td>
+                                        <td>
+                                            Xóa
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            5
+                                        </td>
+                                        <td>
+                                            FFF (Men's Team) 2024/25 Stadium Away
+                                        </td>
+                                        <td>
+                                            <div class="progress-image">
+                                                <img th:src="@{/Assets/Customer_Shop/Assets/img/product/item-5.png}"
+                                                     alt="" class="product-card__thumb"/>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            355.000
+                                            VNĐ
+                                        </td>
+                                        <td>
+                                            124
+                                        </td>
+                                        <td>
+                                            <label class="badge badge-success">Còn hàng</label>
+                                        </td>
+                                        <td>
+                                            5:12 21/11/2024
+                                        </td>
+                                        <td>
+                                            Xóa
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            6
+                                        </td>
+                                        <td>
+                                            FFF (Men's Team) 2024/25 Stadium Away
+                                        </td>
+                                        <td>
+                                            <div class="progress-image">
+                                                <img th:src="@{/Assets/Customer_Shop/Assets/img/product/item-6.png}"
+                                                     alt="" class="product-card__thumb"/>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            355.000
+                                            VNĐ
+                                        </td>
+                                        <td>
+                                            124
+                                        </td>
+                                        <td>
+                                            <label class="badge badge-success">Còn hàng</label>
+                                        </td>
+                                        <td>
+                                            5:12 21/11/2024
+                                        </td>
+                                        <td>
+                                            Xóa
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+<!--THÊM-->
+<div layout:fragment="script">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/flatpickr.min.js"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/vn.js"></script>
+    <script>
+        document.getElementById("avatar-upload").addEventListener("change", function () {
+            const fileName = this.files.length > 0 ? this.files[0].name : "Chưa có file nào được chọn";
+            document.getElementById("file-name").textContent = fileName;
+        });
+    </script>
+    <script>
+        const datePicker = flatpickr("#dateInput", {
+            dateFormat: "d-m-Y",
+            locale: "vn",
+            onChange: function (selectedDates, dateStr, instance) {
+                document.getElementById('dateInput').value = dateStr;
+            }
+        });
+
+        const dateIcon = document.querySelector('#dateIcon');
+        dateIcon.addEventListener('click', function () {
+            datePicker.open();
+        });
+
+    </script>
+</div>
+
+</body>
+
+</html>

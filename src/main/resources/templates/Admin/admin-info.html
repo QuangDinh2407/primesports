@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/Common/Employee/LayoutMaster.html}">
+<head>
+    <title>Employee Info</title>
+
+    <link rel="stylesheet" th:href="@{/Assets/Admin_Employee/Assets/css/vertical-layout-light/employeeInfocss.css}" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <style>
+        .flatpickr-current-month .flatpickr-monthDropdown-months {
+            padding: 0 !important;
+        }
+        #dateIcon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-size: 20px;
+            color: rgba(0, 0, 0, .8);
+            z-index: 1;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="content" layout:fragment="content" >
+            <div class="user-info-container">
+                <div class="user-info-content">
+                    <div class="info-display">
+                        <div class="user-avatar">
+                            <img src="images/faces/face15.jpg" alt="profile">
+                            <p class="user-name" th:text="${userDTO.name}"></p>
+                        </div>
+                        <div class="user-display">
+                            <p class="user-info"><i class="mdi mdi-cellphone-android"></i>Số điện thoại: <span  th:text="${userDTO.phone}">0921231351</span></p>
+                            <p class="user-info"><i class="mdi mdi-home"></i>Địa chỉ: <span th:text="${userDTO.address}">0921231351</span></p>
+                            <p class="user-info"><i class="mdi mdi-email-outline"></i>Email: <span th:text="${userDTO.email}"></span></p>
+                            <p class="user-info"><i class="mdi mdi-calendar-text"></i>Ngày sinh: <span th:text="${#dates.format(userDTO.birth, 'dd-MM-yyyy')}"></span></p>
+                        </div>
+
+                    </div>
+                    <div class="info-setting">
+                        <p class="title">Thông tin cá nhân</p>
+                        <form th:action="@{/admin/admin-info}" th:object="${userDTO}" method="post" >
+                            <div class="form-container">
+                                <div class="form__group">
+                                    <label for="">Tên</label>
+                                    <div class="text-input">
+                                        <input type="text" class="input-setting" th:field="*{name}">
+                                    </div>
+                                </div>
+                                <div class="form__group">
+                                    <label for="">Số điện thoại</label>
+                                    <div class="text-input">
+                                        <input type="text" class="input-setting" th:field="*{phone}">
+                                    </div>
+                                </div>
+                                <div class="form__group">
+                                    <label for="">Địa chỉ</label>
+                                    <div class="text-input">
+                                        <input type="text" class="input-setting" th:field="*{address}">
+                                    </div>
+                                </div>
+                                <div class="form__group">
+                                    <label for="">Email</label>
+                                    <div class="text-input">
+                                        <input type="text" class="input-setting" readonly th:field="*{email}">
+                                    </div>
+                                </div>
+                                <div class="form__group">
+                                    <label for="">Password</label>
+                                    <div class="text-input">
+                                        <input type="text" class="input-setting" th:field="*{account.password}">
+                                    </div>
+                                </div>
+                                <div class="form__group">
+                                    <label for="">Ngày sinh</label>
+                                    <div class="text-input date-input">
+                                        <i class="fa-regular fa-calendar-days calendar-icon" id="dateIcon"></i>
+                                        <input id="dateInput" class="input-setting" type="text" th:field="*{birth}">
+                                    </div>
+                                </div>
+                                <div class="form__group">
+                                    <label for="" >Ảnh đại diện</label>
+                                    <div class="text-input">
+                                        <input type="file" id="avatar-upload" placeholder="" class="input-setting">
+                                        <label class="custom-file-label" for="avatar-upload">Chọn ảnh</label>
+                                        <span id="file-name">Chưa có file nào được chọn</span>
+                                    </div>
+                                </div>
+                                <div class="button-container">
+                                    <button type="submit" class="btn btn-success btn-rounded btn-fw">Lưu</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+    </div>
+<!--THÊM-->
+    <div layout:fragment="script">
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+        <script src="https://npmcdn.com/flatpickr/dist/flatpickr.min.js"></script>
+        <script src="https://npmcdn.com/flatpickr/dist/l10n/vn.js"></script>
+        <script>
+            document.getElementById("avatar-upload").addEventListener("change", function() {
+                const fileName = this.files.length > 0 ? this.files[0].name : "Chưa có file nào được chọn";
+                document.getElementById("file-name").textContent = fileName;
+            });
+        </script>
+        <script>
+            const datePicker = flatpickr("#dateInput", {
+                dateFormat: "d-m-Y",
+                locale: "vn",
+                onChange: function(selectedDates, dateStr, instance) {
+                    document.getElementById('dateInput').value = dateStr;
+                }
+            });
+
+            const dateIcon = document.querySelector('#dateIcon');
+            dateIcon.addEventListener('click', function (){
+                datePicker.open();
+            });
+
+        </script>
+    </div>
+
+</body>
+
+</html>

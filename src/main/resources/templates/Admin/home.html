@@ -1,10 +1,23 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/Common/Employee/LayoutMaster.html}">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Employee Manager</title>
 </head>
 <body>
-<h1>ADMIN home page</h1>
+<div class="container" layout:fragment="content">
+    <div class="content" >
+        <div class="d-sm-flex align-items-center justify-content-end border-bottom">
+            <div>
+                <div class="btn-wrapper">
+                    <a href="#" class="btn btn-otline-dark align-items-center"><i class="icon-share"></i> Share</a>
+                    <a href="#" class="btn btn-otline-dark"><i class="icon-printer"></i> Print</a>
+                    <a href="#" class="btn btn-primary text-white me-0"><i class="icon-download"></i> Export</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

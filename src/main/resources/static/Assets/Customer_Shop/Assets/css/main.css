@@ -1,4 +1,4 @@
-/* http://meyerweb.com/eric/tools/css/reset/ 
+/* http://meyerweb.com/eric/tools/css/reset/
    v2.0 | 20110126
    License: none (public domain)
 */
@@ -1357,7 +1357,7 @@ strong {
 html.dark {
   --text-color: #fff;
   --icon-color: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(7482%) hue-rotate(72deg) brightness(99%)
-      contrast(99%);
+  contrast(99%);
   --body-bg: #292e39;
   --header-bg-color: #171c28;
   --footer-bg-color: var(--header-bg-color);
@@ -1371,10 +1371,10 @@ html.dark {
   --dropdown-bg-color: #2f3441;
   --dropdown-shadow-color: rgba(23, 28, 40, 0.4);
   --dropdown-arrow-color: brightness(0) saturate(100%) invert(17%) sepia(27%) saturate(487%) hue-rotate(185deg)
-      brightness(89%) contrast(88%);
+  brightness(89%) contrast(88%);
   --top-menu-border-color: #171c28;
   --menu-column-icon-color: brightness(0) saturate(100%) invert(95%) sepia(6%) saturate(527%) hue-rotate(180deg)
-      brightness(107%) contrast(96%);
+  brightness(107%) contrast(96%);
   --sidebar-bg: #292e39;
   --sidebar-shadow: rgba(23, 28, 40, 0.4);
   --cate-item-bg: #171c28;
@@ -1441,7 +1441,7 @@ html.dark {
 html {
   --text-color: #1a162e;
   --icon-color: brightness(0) saturate(100%) invert(8%) sepia(10%) saturate(4042%) hue-rotate(212deg) brightness(90%)
-      contrast(95%);
+  contrast(95%);
   --body-bg: #f6f6f6;
   --header-bg-color: #eee;
   --footer-bg-color: var(--header-bg-color);
@@ -1534,7 +1534,9 @@ html {
 }
 
 .header {
-  position: relative;
+  top: 0;
+  width: 100%;
+  position: fixed;
   z-index: 2;
   background: var(--header-bg-color);
 }
@@ -2300,10 +2302,12 @@ html {
   position: relative;
 }
 .slideshow__inner {
+  height: 644px;
   display: flex;
   overflow: hidden;
 }
 .slideshow__item {
+  margin-top: 90px;
   position: relative;
   flex-shrink: 0;
   width: 100%;
@@ -2326,8 +2330,8 @@ html {
 .slideshow__page {
   --color: #fff;
   position: absolute;
-  bottom: 15%;
-  left: 5.2%;
+  bottom: 4%;
+  left: 3.2%;
   width: 12.8%;
   display: flex;
   align-items: center;
@@ -2383,6 +2387,16 @@ html {
   border-radius: 16px;
   background: var(--cate-item-bg);
 }
+
+.favourite-clubs {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  height: 100%;
+  padding: 20px;
+  border-radius: 16px;
+}
+
 @media (max-width: 1199.98px) {
   .cate-item {
     flex-direction: column;
@@ -2401,6 +2415,15 @@ html {
   border-radius: 8px;
   background: var(--cate-item-thumb-bg);
 }
+
+.favourite__club__thumb {
+  display: block;
+  width: 80px;
+  object-fit: contain;
+  border-radius: 8px;
+  background: var(--body-bg);
+}
+
 @media (max-width: 1199.98px) {
   .cate-item__thumb {
     width: 100%;
@@ -2532,8 +2555,7 @@ html {
   display: flex;
   flex-direction: column;
   height: 100%;
-  padding: 16px;
-  border-radius: 20px;
+  border-radius: 15px;
   background: var(--product-card-bg);
   box-shadow: 0px 20px 60px 10px var(--product-card-shadow);
 }
@@ -2545,6 +2567,7 @@ html {
   position: absolute;
   top: 0;
   left: 0;
+  border-radius: 15px 15px 0px 0px;
   width: 100%;
   height: 100%;
   object-fit: contain;
@@ -2558,23 +2581,26 @@ html {
   margin-top: 16px;
 }
 .product-card__title, .product-card__price, .product-card__score {
+  padding: 0px 14px;
   font-size: 1.6rem;
   font-weight: 500;
   line-height: 150%;
 }
 .product-card__brand {
-  margin: 16px 0;
+  margin-top: 14px;
+  padding: 0 18px;
   color: #9e9da8;
   font-size: 1.5rem;
   line-height: 146.667%;
 }
 .product-card__row {
+  padding: 16px 5px;
   display: flex;
   align-items: center;
   margin-top: auto;
 }
 .product-card__star {
-  margin: 0 6px 0 auto;
+  margin: -2px -11px 0 auto;
 }
 
 .filter-wrap {
@@ -2797,7 +2823,6 @@ html {
   display: flex;
   align-items: center;
 }
-
 /* .form__group:has(:invalid):has(.form__input:not(:placeholder-shown)) .form__text-input {
   border-color: #ed4337;
   background: rgba(237, 67, 55, 0.1);
@@ -2809,13 +2834,13 @@ html {
 .form__group:has(:invalid):has(.form__input:not(:placeholder-shown)) .form__input-icon {
   display: none;
 } */
-
 .form__text-area, .form__text-input {
   display: flex;
   align-items: center;
   padding: 0 12px;
   border-radius: 10px;
   border: 1px solid #d2d1d6;
+
 }
 .form__text-area:focus-within, .form__text-input:focus-within {
   border-color: #77dae6;
@@ -2976,6 +3001,16 @@ html {
   color: #ed4337;
   display: none;
 }
+
+.form__error {
+  text-align: left;
+  font-size: 1.4rem;
+  font-weight: 500;
+  margin-top: 10px;
+  color: #ed4337;
+  display: none;
+}
+
 .form__input-icon-error {
   display: none;
   margin-left: 12px;
@@ -4608,4 +4643,4 @@ html {
   margin-top: 30px;
 }
 
-/*# sourceMappingURL=main.css.map  */
+/*# sourceMappingURL=main.css.map */

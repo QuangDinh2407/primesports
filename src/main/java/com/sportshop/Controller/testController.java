@@ -47,11 +47,6 @@ public class testController {
         return "test";
     }
 
-    @GetMapping("/")
-    public String defaultpage() {
-
-        return "homepage";
-    }
 
     @GetMapping("/repo")
     @ResponseBody
