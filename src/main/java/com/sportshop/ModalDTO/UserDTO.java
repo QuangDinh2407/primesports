@@ -32,4 +32,8 @@ public class UserDTO {
     private String status;
 
     private AccountDTO account;
+
+    private String gender;
+
+    private String card_id;
 }

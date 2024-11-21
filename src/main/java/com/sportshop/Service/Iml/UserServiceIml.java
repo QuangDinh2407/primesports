@@ -40,6 +40,7 @@ public class UserServiceIml implements UserService {
                    .birth(item.getBirth())
                    .created_at(item.getCreated_at())
                    .status(item.getStatus())
+                   .gender(item.getGender())
                    .account(AccountDTO.builder()
                            .email(item.getEmail())
                            .password(item.getAccount().getPassword())
@@ -63,6 +64,7 @@ public class UserServiceIml implements UserService {
                 .name(user.getName())
                 .email(user.getEmail())
                 .phone(user.getPhone())
+                .gender(user.getGender())
                 .imagePath(user.getImage_path())
                 .build();
         return userDTO;
@@ -77,6 +79,7 @@ public class UserServiceIml implements UserService {
             userInfoEntity.setPhone(userDTO.getPhone());
             userInfoEntity.setAddress(userDTO.getAddress());
             userInfoEntity.setBirth(userDTO.getBirth());
+            userInfoEntity.setGender(userDTO.getGender());
             userInfoRepo.save(userInfoEntity);
             if (!Objects.equals(userDTO.getAccount().getPassword(), ""))
             {
@@ -84,7 +87,6 @@ public class UserServiceIml implements UserService {
                 AccountEntity accountEntity = accountRepository.findByemail(userDTO.getEmail());
                 accountEntity.setPassword(passEncrypt);
                 accountRepository.save(accountEntity);
-
             }
             return new Result(true,"Thay đổi thông tin thành công");
         }
@@ -94,5 +96,4 @@ public class UserServiceIml implements UserService {
             return new Result(false,"Thay đổi thông tin thất bại");
         }
     }
-
 }
