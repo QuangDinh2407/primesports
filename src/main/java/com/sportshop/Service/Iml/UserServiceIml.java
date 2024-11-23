@@ -4,6 +4,7 @@ import com.sportshop.Entity.AccountEntity;
 import com.sportshop.Entity.UserInfoEntity;
 import com.sportshop.Modal.Result;
 import com.sportshop.ModalDTO.AccountDTO;
+import com.sportshop.ModalDTO.CartDTO;
 import com.sportshop.ModalDTO.UserDTO;
 import com.sportshop.ModalDTO.RoleDTO;
 import com.sportshop.Repository.AccountRepository;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+//import javax.smartcardio.Card;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -41,13 +43,14 @@ public class UserServiceIml implements UserService {
                    .created_at(item.getCreated_at())
                    .status(item.getStatus())
                    .gender(item.getGender())
-                   .account(AccountDTO.builder()
-                           .email(item.getEmail())
-                           .password(item.getAccount().getPassword())
-                           .role(RoleDTO.builder()
-                                   .name(item.getAccount().getRole().getName())
-                                   .build())
-                           .build())
+                   .cart(new CartDTO(item.getCart().getCart_id()))
+//                   .account(AccountDTO.builder()
+//                           .email(item.getEmail())
+//                           .password(item.getAccount().getPassword())
+//                           .role(RoleDTO.builder()
+//                                   .name(item.getAccount().getRole().getName())
+//                                   .build())
+//                           .build())
                    .build();
 
            userDTOS.add(userDTO);
@@ -65,6 +68,7 @@ public class UserServiceIml implements UserService {
                 .email(user.getEmail())
                 .phone(user.getPhone())
                 .gender(user.getGender())
+                .cart(new CartDTO(user.getCart().getCart_id()))
                 .imagePath(user.getImage_path())
                 .build();
         return userDTO;
@@ -81,13 +85,13 @@ public class UserServiceIml implements UserService {
             userInfoEntity.setBirth(userDTO.getBirth());
             userInfoEntity.setGender(userDTO.getGender());
             userInfoRepo.save(userInfoEntity);
-            if (!Objects.equals(userDTO.getAccount().getPassword(), ""))
-            {
-                String passEncrypt = passwordEncoder.encode(userDTO.getAccount().getPassword());
-                AccountEntity accountEntity = accountRepository.findByemail(userDTO.getEmail());
-                accountEntity.setPassword(passEncrypt);
-                accountRepository.save(accountEntity);
-            }
+//            if (!Objects.equals(userDTO.getAccount().getPassword(), ""))
+//            {
+//                String passEncrypt = passwordEncoder.encode(userDTO.getAccount().getPassword());
+//                AccountEntity accountEntity = accountRepository.findByemail(userDTO.getEmail());
+//                accountEntity.setPassword(passEncrypt);
+//                accountRepository.save(accountEntity);
+//            }
             return new Result(true,"Thay đổi thông tin thành công");
         }
         catch (Exception e)

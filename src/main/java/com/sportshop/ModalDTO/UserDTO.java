@@ -35,5 +35,5 @@ public class UserDTO {
 
     private String gender;
 
-    private String card_id;
+    private CartDTO cart;
 }

@@ -16,4 +16,6 @@ public interface AccountService {
     Result sendOTPToEmail(String email, HttpServletRequest request);
 
     Result verifyOTPandSendPass(String otp, String email, HttpServletRequest request);
+
+    Result changePassword(String email, String oldPassword, String newPassword);
 }
