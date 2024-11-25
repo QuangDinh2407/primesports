@@ -49,13 +49,13 @@ public class UserServiceIml implements UserService {
                    .birth(item.getBirth())
                    .created_at(item.getCreated_at())
                    .status(item.getStatus())
-                   .account(AccountDTO.builder()
-                           .email(item.getEmail())
-                           .password(item.getAccount().getPassword())
-                           .role(RoleDTO.builder()
-                                   .name(item.getAccount().getRole().getName())
-                                   .build())
-                           .build())
+//                   .account(AccountDTO.builder()
+//                           .email(item.getEmail())
+//                           .password(item.getAccount().getPassword())
+//                           .role(RoleDTO.builder()
+//                                   .name(item.getAccount().getRole().getName())
+//                                   .build())
+//                           .build())
                    .build();
 
            userDTOS.add(userDTO);
@@ -72,6 +72,8 @@ public class UserServiceIml implements UserService {
                 .name(user.getName())
                 .email(user.getEmail())
                 .phone(user.getPhone())
+                .gender(user.getGender())
+                .status(user.getStatus())
                 .imagePath(user.getImage_path())
                 .build();
         return userDTO;
@@ -79,7 +81,6 @@ public class UserServiceIml implements UserService {
 
     @Override
     public Result updateInfoUser(UserDTO userDTO, MultipartFile file) {
-
         try{
             UserInfoEntity userInfoEntity = userInfoRepo.findByEmail(userDTO.getEmail());
             userInfoEntity.setName(userDTO.getName());

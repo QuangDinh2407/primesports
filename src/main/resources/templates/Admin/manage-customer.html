@@ -4,20 +4,449 @@
 <head>
     <meta charset="UTF-8">
     <title>ADMIN SHOP</title>
+    <link rel="stylesheet" th:href="@{/Assets/Admin_Employee/Assets/css/vertical-layout-light/employeeInfocss.css}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <style>
+        table.table {
+            table-layout: fixed;
+            width: 100%;
+        }
+
+        table.table tbody tr td {
+            padding: 0px 20px !important;
+        }
+
+        table.table tbody tr td:first-child,
+        table.table thead tr th:first-child,
+        table.table tbody tr td:nth-child(3),
+        table.table thead tr th:nth-child(3),
+        table.table tbody tr td:last-child,
+        table.table thead tr th:last-child {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        table.table thead tr th:first-child,
+        table.table tbody tr td:first-child {
+            width: 100px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+
+        table.table thead tr th:last-child,
+        table.table tbody tr td:last-child {
+            width: 450px;
+            max-width: 600px !important;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .btn-container{
+            display: inline-block;
+        }
+
+        a.button{
+            text-decoration: none;
+            font-size: 16px;
+            margin: 10px;
+            padding: 5px 20px;
+            border: 1px solid;
+            border-radius: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        a.button:hover{
+            background-color: #c7c7c7 !important;
+        }
+
+         a i{
+             margin-right: 10px;
+         }
+
+         a.add-button{
+             text-decoration: none;
+         }
+         .edit-button{
+             color: blue;
+         }
+
+        .view-button{
+            color: #c9c921;
+        }
+
+         .delete-button{
+             color: red;
+         }
+
+        .delete-button:hover{
+            color: red !important;
+        }
+
+        .view-button:hover{
+            color: #c9c921 !important;
+        }
+
+        .size-page{
+            width: 40%;
+            margin: 0 20px;
+            padding: 20px 0 0 0;
+        }
+
+        #pageSize{
+            background-color: white;
+            color: black;
+            border-radius: 10px;
+        }
+
+        .form-group label{
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .table-head{
+            margin: 0 40px 20px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .search-container{
+            width: 85%;
+            max-height: 45px;
+            display: flex;
+            justify-content: flex-start;
+            position: relative;
+        }
+
+        .search-container i{
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 2;
+        }
+
+        .search-container input {
+            width: 100%;
+            padding: 0 10px 0 40px;
+            margin-right: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        .search-container select {
+            text-align: center;
+            margin-right: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        .search-container select:focus,
+        .search-container input:focus {
+            border: 1px solid black;
+        }
+
+        .add-container {
+            text-align: center;
+        }
+
+        .search-container button,
+        .add-container button,
+        .add-button{
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            gap: 10px;
+            white-space: nowrap;
+        }
+
+        .search-container button:hover,
+        .add-container button:hover,
+        .add-button:hover{
+            opacity: 0.5;
+        }
+
+        .add-container button i {
+            font-size: 1.2em;
+            display: flex;
+            align-items: center;
+        }
+
+        .pagination-container{
+            margin: 20px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .user-detail p{
+            font-size: 16px;
+        }
+    </style>
 </head>
+
 <body>
 <div class="container" layout:fragment="content">
     <div class="content" >
-        <div class="d-sm-flex align-items-center justify-content-end border-bottom">
-            <div>
-                <div class="btn-wrapper">
-                    <a href="#" class="btn btn-otline-dark align-items-center"><i class="icon-share"></i> Share</a>
-                    <a href="#" class="btn btn-otline-dark"><i class="icon-printer"></i> Print</a>
-                    <a href="#" class="btn btn-primary text-white me-0"><i class="icon-download"></i> Export</a>
+
+        <div class="size-page">
+            <form method="get" th:action="@{/admin/manage-customer}">
+                <div class="form-group">
+                    <label for="pageSize">Số lượng tài khoản hiển thị:</label>
+                    <select id="pageSize" name="pageSize" class="form-control" onchange="this.form.submit()">
+                        <option th:selected="${pageSize == 5}" value="5">5</option>
+                        <option th:selected="${pageSize == 10}" value="10">10</option>
+                        <option th:selected="${pageSize == 20}" value="20">20</option>
+                        <option th:selected="${pageSize == 1}" value="1">1</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+
+        <div class="table-head">
+            <form method="get" th:action="@{/admin/manage-customer}" class="search-container">
+                <div class="search-container">
+                        <i class="mdi mdi-magnify"></i>
+                        <input name="search" placeholder="Nhập email" th:value="${search}" />
+                        <select name="status" id="status">
+                            <option value="">Tất cả trạng thái</option>
+                            <option value="1" th:selected="${status == '1'}">Đã kích hoạt</option>
+                            <option value="0" th:selected="${status == '0'}">Chưa kích hoạt</option>
+                        </select>
+                        <button type="submit" >Tìm kiếm</button>
+                </div>
+            </form>
+
+            <div class="add-container">
+                <a class="add-button" th:href="@{/admin/manage-customer/add}" ><i class="mdi mdi-account-plus" ></i>Thêm tài khoản</a>
+            </div>
+
+        </div>
+
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>STT</th>
+                <th>Email</th>
+                <th>Trạng thái tài khoản</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="account, iterStat : ${accountPage.content}">
+                <td th:text="${iterStat.index + 1}"></td>
+                <td th:text="${account.email}"></td>
+                <td>
+                    <label th:class="${account.is_disable.equals('0')} ? 'badge badge-danger' : 'badge badge-success'"
+                           th:text="${account.is_disable.equals('0')} ? 'Chưa kích hoạt' : 'Đã kích hoạt'">
+                    </label>
+                </td>
+                <td>
+                    <div class="btn-container">
+                        <a class="button view-button" th:data-email="${account.email}">
+                        <i class="mdi mdi-eye"></i>
+                            <span>Chi tiết</span>
+                        </a>
+                    </div>
+                    <div class="btn-container">
+                        <a class="button edit-button" th:href="@{/admin/manage-customer/edit-{email}(email=${account.email})}">
+                            <i class="mdi mdi-lead-pencil"></i>
+                            <span>Sửa</span>
+                        </a>
+                    </div>
+                    <div class="btn-container">
+                        <a class="button delete-button" th:data-email="${account.email}" >
+                            <i class="mdi mdi-delete"></i>
+                            <span>Xóa</span>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div th:if="${#lists.isEmpty(accountPage.content)}">
+            <div th:replace="~{/Common/Admin/NoData :: NoData}"></div>
+        </div>
+
+        <!-- Phân trang -->
+        <div th:if="${!#lists.isEmpty(accountPage.content)}"  class="pagination-container">
+            <ul class="pagination">
+                <!-- Nút Previous -->
+                <li th:class="${accountPage.hasPrevious()} ? 'page-item' : 'page-item disabled'">
+                    <a class="page-link"
+                       th:href="@{/admin/manage-customer(search=${search}, status=${status}, page=${accountPage.number}, pageSize=${pageSize})}">&laquo;</a>
+                </li>
+
+                <!-- Trang đầu tiên -->
+                <li th:if="${accountPage.totalPages > 0}" th:class="${accountPage.number == 0} ? 'page-item active' : 'page-item'">
+                    <a class="page-link"
+                       th:href="@{/admin/manage-customer(search=${search}, status=${status}, page=1, pageSize=${pageSize})}">1</a>
+                </li>
+
+                <!-- Dấu "..." trước các trang giữa -->
+                <li th:if="${accountPage.number > 2}">
+                    <span class="page-link">...</span>
+                </li>
+
+                <!-- Các trang ở giữa -->
+                <li th:each="i : ${#numbers.sequence(accountPage.number - 1, accountPage.number + 1)}"
+                    th:if="${i > 0 and i < accountPage.totalPages - 1}"
+                    th:class="${accountPage.number == i} ? 'page-item active' : 'page-item'">
+                    <a class="page-link"
+                       th:href="@{/admin/manage-customer(search=${search}, status=${status}, page=${i+1}, pageSize=${pageSize})}"
+                       th:text="${i + 1}"></a>
+                </li>
+
+                <!-- Dấu "..." sau các trang giữa -->
+                <li th:if="${accountPage.number < accountPage.totalPages - 3}">
+                    <span class="page-link">...</span>
+                </li>
+
+                <!-- Trang cuối cùng -->
+                <li th:if="${accountPage.totalPages > 1}" th:class="${accountPage.number == accountPage.totalPages - 1} ? 'page-item active' : 'page-item'">
+                    <a class="page-link"
+                       th:href="@{/admin/manage-customer(search=${search}, status=${status}, page=${accountPage.totalPages}, pageSize=${pageSize})}"
+                       th:text="${accountPage.totalPages}"></a>
+                </li>
+
+                <!-- Nút Next -->
+                <li th:class="${accountPage.hasNext()} ? 'page-item' : 'page-item disabled'">
+                    <a class="page-link"
+                       th:href="@{/admin/manage-customer(search=${search}, status=${status}, page=${accountPage.number + 2}, pageSize=${pageSize})}">&raquo;</a>
+                </li>
+            </ul>
+        </div>
+
+
+
+        <!-- Modal Chi Tiết -->
+        <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="detailModalLabel">Chi Tiết Tài Khoản</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" id="modal-body-content">
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    </div>
                 </div>
             </div>
         </div>
+
+        <!-- Modal Xóa -->
+        <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deleteModalLabel">Xác Nhận Xóa</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Bạn có chắc chắn muốn xóa tài khoản này không?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                        <a type="button" class="btn btn-danger" id="confirmDelete">Xóa</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
     </div>
 </div>
+
+<div layout:fragment="script">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/flatpickr.min.js"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/vn.js"></script>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        const accounts = /*[[${accountPage.content}]]*/ 'default';
+        /*]]>*/
+
+        console.log(accounts);
+
+        document.querySelectorAll('.view-button').forEach(button => {
+            button.addEventListener('click', function(event) {
+                const email = this.dataset.email;
+                const accountFound = accounts.find(account => account.email === email);
+                    const birthDate = new Date(accountFound.userInfo.birth);
+                    const formattedDate = (birthDate.getDate()).toString().padStart(2, '0') + "/" +
+                        (birthDate.getMonth() + 1).toString().padStart(2, '0') + "/" +
+                        birthDate.getFullYear();
+                    const disabledStatus = accountFound.is_disable === "1" ? 'Đã kích hoạt' : 'Chưa kích hoạt';
+                    const userInfoHTML = `
+                        <div class="user-detail">
+                            <p><strong>Tên khách hàng:</strong> ${accountFound.userInfo.name}</p>
+                             <p><strong>Giới tính:</strong> ${accountFound.userInfo.gender}</p>
+                            <p><strong>Số điện thoại:</strong> ${accountFound.userInfo.phone}</p>
+                            <p><strong>Địa chỉ:</strong> ${accountFound.userInfo.address}</p>
+                            <p><strong>Email:</strong> ${accountFound.email}</p>
+                            <p><strong>Ngày sinh:</strong> ${formattedDate}</p>
+                            <p><strong>Trạng thái tài khoản:</strong> ${disabledStatus}</p>
+                            <p><strong>Trạng thái khách hàng:</strong> ${accountFound.userInfo.status}</p>
+                        </div>
+                    `;
+                    document.getElementById('modal-body-content').innerHTML = userInfoHTML;
+                    new bootstrap.Modal(document.getElementById('detailModal')).show();
+
+            });
+        });
+
+        document.querySelectorAll('.delete-button').forEach(button => {
+            button.addEventListener('click', function(event) {
+                const email = this.dataset.email;
+                document.getElementById('confirmDelete').setAttribute('href','/admin/manage-customer/delete-'+ email)
+                new bootstrap.Modal(document.getElementById('deleteModal')).show();
+
+            });
+        });
+
+        document.querySelectorAll('.add-button').forEach(button => {
+            button.addEventListener('click', function(event) {
+
+                new bootstrap.Modal(document.getElementById('addModal')).show();
+
+            });
+        });
+
+        const datePicker = flatpickr("#dateInput", {
+            dateFormat: "d-m-Y",
+            locale: "vn",
+            onChange: function(selectedDates, dateStr, instance) {
+                document.getElementById('dateInput').value = dateStr;
+            }
+        });
+
+        const dateIcon = document.querySelector('#dateIcon');
+        dateIcon.addEventListener('click', function (){
+            datePicker.open();
+        });
+    </script>
+</div>
 </body>
+
 </html>

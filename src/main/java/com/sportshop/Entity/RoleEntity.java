@@ -3,6 +3,7 @@ package com.sportshop.Entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import jakarta.persistence.*;
 
@@ -22,6 +23,8 @@ public class RoleEntity {
 	private String name;
 	
 	@OneToMany(mappedBy = "role", fetch = FetchType.LAZY)
+	@JsonIgnore
+	@ToString.Exclude
 	private List <AccountEntity> accountItems = new ArrayList<AccountEntity>();
 	
 }

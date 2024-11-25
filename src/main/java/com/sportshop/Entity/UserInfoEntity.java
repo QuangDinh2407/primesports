@@ -1,6 +1,7 @@
 package com.sportshop.Entity;
 
 import com.sportshop.Contants.FormatDate;
+import com.sportshop.ModalDTO.UserDTO;
 import lombok.*;
 import jakarta.persistence.*;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -13,6 +14,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Entity
 @Table (name = "UserInfo")
 public class UserInfoEntity {
@@ -21,22 +23,20 @@ public class UserInfoEntity {
     @GeneratedValue (strategy = GenerationType.UUID)
     private String userInfo_id;
 
-    @Column(nullable = false, columnDefinition = "nvarchar(255)")
+    @Column(columnDefinition = "nvarchar(255)")
     private String name;
 
-    @Column(nullable = false)
     private Integer age;
 
-    @Column(nullable = false, columnDefinition = "nvarchar(255)")
+    @Column(columnDefinition = "nvarchar(255)")
     private String gender;
 
     @Column(nullable = false)
     private String email;
 
-    @Column(nullable = false)
     private String phone;
 
-    @Column(nullable = false, columnDefinition = "nvarchar(255)")
+    @Column(columnDefinition = "nvarchar(255)")
     private String address;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -47,14 +47,14 @@ public class UserInfoEntity {
     
     @Temporal(TemporalType.TIMESTAMP)
     @DateTimeFormat(pattern = FormatDate.FM_DATE)
-    @Column(nullable = false)
     private Date created_at;
 
-    @Column(nullable = false)
+    @Column(columnDefinition = "nvarchar(255)")
     private String status;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id", unique = true, referencedColumnName = "account_id")
+    @ToString.Exclude
     private AccountEntity account;
 
     // USER - EMPLOYEE

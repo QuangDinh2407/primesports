@@ -1,25 +1,39 @@
 package com.sportshop.Service.Iml;
 
+import com.sportshop.Contants.StringContant;
+import com.sportshop.Converter.AccountConverter;
 import com.sportshop.Entity.AccountEntity;
 import com.sportshop.Entity.RoleEntity;
+import com.sportshop.Entity.UserInfoEntity;
 import com.sportshop.Modal.Result;
 import com.sportshop.ModalDTO.AccountDTO;
 import com.sportshop.ModalDTO.RoleDTO;
 import com.sportshop.Repository.AccountRepository;
+import com.sportshop.Repository.Custom.UserRepositoryCustom;
 import com.sportshop.Repository.RoleRepository;
+import com.sportshop.Repository.UserInfoRepository;
 import com.sportshop.Service.AccountService;
 
 import com.sportshop.Service.MailService;
 import com.sportshop.Utils.randomStringUtil;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -32,22 +46,21 @@ public class AccountServiceIml implements AccountService {
     RoleRepository roleRepository;
 
     @Autowired
+    UserInfoRepository userInfoRepository;
+
+    @Autowired
     PasswordEncoder passwordEncoder;
 
     @Autowired
     MailService mailService;
 
-
+    @Autowired
+    private AccountConverter accountConverter;
 
     @Override
     public AccountDTO findAccountByUserName(String email) {
         AccountEntity acc = accountRepository.findByemail(email);
-        AccountDTO dto = AccountDTO.builder()
-                .password(acc.getPassword())
-                .role(RoleDTO.builder()
-                        .name(acc.getRole().getName())
-                        .build())
-                        .build();
+        AccountDTO dto = accountConverter.toDTO(acc);
         return dto;
     }
 
@@ -66,6 +79,9 @@ public class AccountServiceIml implements AccountService {
         accEntity.setIs_disable("0");
         RoleEntity roleEntity = roleRepository.findByName("CUSTOMER");
         accEntity.setRole(roleEntity);
+        UserInfoEntity userInfoEntity = new UserInfoEntity();
+        userInfoEntity.setEmail(accountDTO.getEmail());
+        accEntity.setUser(userInfoEntity);
         try {
             accountRepository.save(accEntity);
             mailService.sendConfirmSignUp(accountDTO.getEmail(),request);
@@ -129,6 +145,99 @@ public class AccountServiceIml implements AccountService {
         catch (Exception e)
         {
             return new Result(false,"Gửi mật khẩu thất bại");
+        }
+    }
+
+    @Override
+    public List<AccountDTO> getAll() {
+        List<AccountEntity> accountEntities  = accountRepository.findAll();
+        return accountEntities.stream()
+                .map(accountConverter::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public Page<AccountDTO> getAllCustomer(Pageable pageable, String search, String status) {
+        Page<AccountEntity> accountEntities = accountRepository.findBySearchAndStatus(search,status,pageable);
+        return accountEntities.map(accountConverter::toDTO);
+    }
+
+    @Override
+    public Result deleteByEmail(String email) {
+        try {
+            AccountEntity account = accountRepository.findByemail(email);
+            account.setIs_disable("0");
+            accountRepository.save(account);
+            UserInfoEntity userInfo = userInfoRepository.findByEmail(email);
+            userInfo.setStatus("Ngừng hoạt động");
+            userInfoRepository.save(userInfo);
+            return new Result(true,"Xóa tài khoản thành công!");
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            return new Result(false,"Xóa tài khoản thất bại");
+        }
+    }
+
+    @Override
+    public Result updateAccountCustomer(AccountDTO accountDTO, MultipartFile file) {
+        try{
+            AccountEntity accountEntity = accountRepository.findByemail(accountDTO.getEmail());
+            UserInfoEntity userInfoEntity = userInfoRepository.findByEmail(accountDTO.getEmail());
+            userInfoEntity.setName(accountDTO.getUserInfo().getName());
+            userInfoEntity.setGender(accountDTO.getUserInfo().getGender());
+            userInfoEntity.setPhone(accountDTO.getUserInfo().getPhone());
+            userInfoEntity.setAddress(accountDTO.getUserInfo().getAddress());
+            userInfoEntity.setBirth(accountDTO.getUserInfo().getBirth());
+            userInfoEntity.setStatus(accountDTO.getUserInfo().getStatus());
+            if (!accountDTO.getPassword().isEmpty())
+            {
+                String passEncrypt = passwordEncoder.encode(accountDTO.getPassword());
+                accountEntity.setPassword(passEncrypt);
+            }
+            if (!file.isEmpty())
+            {
+                Path path = Paths.get(StringContant.CUSTOMERIMAGE_URL + File.separator + file.getOriginalFilename());
+                file.transferTo(new File(String.valueOf(path)));
+                System.out.println(path);
+                userInfoEntity.setImage_path(file.getOriginalFilename());
+                Thread.sleep(5000);
+            }
+            accountRepository.save(accountEntity);
+            userInfoRepository.save(userInfoEntity);
+            return new Result(true,"Thay đổi thông tin khách hàng thành công");
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            return new Result(false,"Thay đổi thông tin khách hàng thất bại");
+        }
+    }
+
+    @Override
+    public Result addAccountCustomer(AccountDTO accountDTO, MultipartFile file) {
+        try{
+            if (accountRepository.existsByemail(accountDTO.getEmail())){
+                return new Result(false,"Email đã được sử dụng!");
+            }
+            // Tạo AccountEntity và thiết lập các giá trị bằng setter
+            AccountEntity accountEntity = accountConverter.toEntity(accountDTO);
+//            if (!file.isEmpty())
+//            {
+//                Path path = Paths.get(StringContant.CUSTOMERIMAGE_URL + File.separator + file.getOriginalFilename());
+//                file.transferTo(new File(String.valueOf(path)));
+//                accountEntity.getUser().setImage_path(file.getOriginalFilename());
+//                Thread.sleep(5000);
+//            }
+//            System.out.println(accountEntity);
+            accountRepository.save(accountEntity);
+            return new Result(true,"Thêm khách hàng thành công");
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            return new Result(false,"Thêm khách hàng thất bại");
         }
     }
 }

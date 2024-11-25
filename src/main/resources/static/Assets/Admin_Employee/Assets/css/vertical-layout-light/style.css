@@ -14111,6 +14111,11 @@ fieldset:disabled .swal2-modal .swal2-buttonswrapper .swal2-styled,
 .modal-open .modal {
   overflow-x: hidden;
   overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.modal-open .modal::-webkit-scrollbar {
+  display: none;
 }
 
 .modal {
@@ -14246,7 +14251,7 @@ fieldset:disabled .swal2-modal .swal2-buttonswrapper .swal2-styled,
 
 @media (min-width: 576px) {
   .modal-dialog {
-    max-width: 500px;
+    max-width: 1000px;
     margin: 30px auto;
   }
   .modal-dialog-scrollable {
@@ -24217,7 +24222,7 @@ dl li {
 
 /* Modals */
 .modal .modal-dialog {
-  margin-top: 100px;
+  margin-top: 50px;
 }
 
 .modal .modal-dialog .modal-content .modal-header {
@@ -24236,7 +24241,7 @@ dl li {
 }
 
 .modal .modal-dialog .modal-content .modal-body {
-  padding: 35px 26px;
+  padding: 10px 26px;
 }
 
 .modal .modal-dialog .modal-content .modal-footer {
