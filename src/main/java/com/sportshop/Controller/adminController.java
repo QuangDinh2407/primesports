@@ -121,6 +121,7 @@ public class adminController {
     public String renderEditAccount1(@Valid AccountDTO accountDTO , BindingResult bindingResult, @RequestParam("avatar") MultipartFile file,
                                     RedirectAttributes redirectAttribute ){
 
+        System.out.println(accountDTO);
         if (bindingResult.hasErrors()) {
             redirectAttribute.addFlashAttribute("org.springframework.validation.BindingResult.accountDTO", bindingResult);
             redirectAttribute.addFlashAttribute("accountDTO", accountDTO);
