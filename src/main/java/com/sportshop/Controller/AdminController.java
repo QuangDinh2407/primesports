@@ -4,11 +4,14 @@ import com.sportshop.Entity.ProductEntity;
 import com.sportshop.Entity.ProductTypeEntity;
 import com.sportshop.Modal.Result;
 import com.sportshop.ModalDTO.ProductDTO;
+import com.sportshop.ModalDTO.ProductTypeDTO;
 import com.sportshop.ModalDTO.UserDTO;
 import com.sportshop.Repository.ProductRepository;
 import com.sportshop.Repository.ProductTypeRepository;
 import com.sportshop.Service.Iml.ProductServiceIml;
+import com.sportshop.Service.Iml.ProductTypeServiceIml;
 import com.sportshop.Service.ProductService;
+import com.sportshop.Service.ProductTypeService;
 import com.sportshop.Service.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +38,8 @@ public class AdminController {
     private ProductTypeRepository productTypeRepository;
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private ProductTypeService productTypeService;
 
     @ModelAttribute
     public void getUser(HttpSession session, Model model) {
@@ -75,7 +80,10 @@ public class AdminController {
 
     @GetMapping("/product")
     public String renderProductManage (HttpSession session, Model model){
-        List<ProductEntity> products = productRepository.findAll();
+        List<ProductDTO> products = productService.showProducts();
+        for (ProductDTO productDTO : products) {
+            System.out.println(productDTO.getImagePaths());
+        }
         model.addAttribute("products",products);
         return "Admin/productManage";
     }
@@ -85,11 +93,10 @@ public class AdminController {
         ProductDTO productDTO = new ProductDTO();
         model.addAttribute("productDTO", productDTO);
 
-        List<ProductTypeEntity> productTypes = productTypeRepository.findAll();
+        List<ProductTypeDTO> productTypes = productTypeService.showAllProductTypes();
         model.addAttribute("productTypes", productTypes);
 
-        // Lọc danh mục cha (parent_id == NULL)
-        List<ProductTypeEntity> productTypesParent = productTypes.stream()
+        List<ProductTypeDTO> productTypesParent = productTypes.stream()
                 .filter(type -> type.getParent_id() == null)
                 .toList();
 

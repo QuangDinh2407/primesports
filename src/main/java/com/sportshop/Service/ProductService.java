@@ -9,4 +9,5 @@ import java.util.List;
 
 public interface ProductService {
     Result addProduct(ProductDTO productDTO, List<MultipartFile> files );
+    List<ProductDTO> showProducts();
 }

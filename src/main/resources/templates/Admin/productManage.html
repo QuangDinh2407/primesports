@@ -289,12 +289,12 @@
                                         <td th:text="${product.name}"></td> <!-- Tên sản phẩm -->
                                         <td>
                                             <!-- Hiển thị danh sách hình ảnh -->
-                                            <div class="image-gallery">
-                                                <img th:each="image : ${product.productImageItems}"
-                                                     th:src="@{|/Assets/Customer_Shop/Assets/img/product/${image.image_path}|}"
-                                                     alt="Ảnh sản phẩm" class="product-thumb"
-                                                     style="max-width: 50px; margin-right: 5px;" />
-                                            </div>
+<!--                                            <div class="image-gallery" th:each="image : ${product.productImageItems}">-->
+<!--                                                <img-->
+<!--                                                     th:src="@{'/Assets/Customer_Shop/Assets/img/product/' + ${image.image_path}}"-->
+<!--                                                     alt="Ảnh sản phẩm" class="product-thumb"-->
+<!--                                                     style="max-width: 50px; margin-right: 5px;" />-->
+<!--                                            </div>-->
                                         </td>
                                         <td th:text="${#numbers.formatDecimal(product.price, 1, 'COMMA', 'DOT')} + ' VNĐ'"></td> <!-- Giá -->
                                         <td th:text="${product.quantity}"></td> <!-- Số lượng -->

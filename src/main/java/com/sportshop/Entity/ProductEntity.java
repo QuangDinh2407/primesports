@@ -9,7 +9,7 @@ import lombok.*;
 import jakarta.persistence.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
-
+@Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

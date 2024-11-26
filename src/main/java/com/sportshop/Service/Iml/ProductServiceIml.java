@@ -1,6 +1,7 @@
 package com.sportshop.Service.Iml;
 
 import com.sportshop.Contants.StringConstant;
+import com.sportshop.Converter.ProductConverter;
 import com.sportshop.Modal.Result;
 import com.sportshop.ModalDTO.ProductDTO;
 import com.sportshop.Entity.*;
@@ -12,12 +13,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceIml implements ProductService {
@@ -33,6 +37,8 @@ public class ProductServiceIml implements ProductService {
 
     // Đường dẫn lưu file ảnh (cấu hình trong application.properties)
     private final String uploadDir = StringConstant.PRODUCTIMAGE_URL;
+    @Autowired
+    private ProductConverter productConverter;
 
     @Transactional
     @Override
@@ -57,7 +63,7 @@ public class ProductServiceIml implements ProductService {
                     if (!file.isEmpty()) {
                         // Tạo tên file duy nhất
                         String filename = System.currentTimeMillis() + "_" + file.getOriginalFilename();
-                        Path filePath = Paths.get(uploadDir + filename);
+                        Path filePath = Paths.get(uploadDir + File.separator+ filename);
                         System.out.println(filePath);
 
                         // Lưu file vào thư mục
@@ -66,7 +72,7 @@ public class ProductServiceIml implements ProductService {
 
                         // Lưu thông tin hình ảnh vào ProductImageEntity
                         ProductImageEntity image = new ProductImageEntity();
-                        image.setImage_path(uploadDir + filename);
+                        image.setImage_path(filename);
                         image.setProduct(product);
                         productImageRepository.save(image);
                     } else {
@@ -95,5 +101,13 @@ public class ProductServiceIml implements ProductService {
             e.printStackTrace();
             return new Result(false, "Thêm sản phẩm không thành công: " + e.getMessage());
         }
+    }
+
+    @Override
+    public List<ProductDTO> showProducts(){
+        List<ProductEntity> productEntityList = productRepository.findAll();
+        return productEntityList.stream()
+                .map(productConverter::toDTO)
+                .collect(Collectors.toList());
     }
 }
