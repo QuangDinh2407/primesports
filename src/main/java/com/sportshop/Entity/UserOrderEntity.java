@@ -20,7 +20,7 @@ public class UserOrderEntity {
 	
 	@Id
 	@GeneratedValue (strategy = GenerationType.UUID)
-	private UUID userOrder_id;
+	private String userOrder_id;
 
 	@Column(nullable = false)
 	private String status; 

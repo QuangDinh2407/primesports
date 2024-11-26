@@ -3,7 +3,13 @@ package com.sportshop.Service;
 import com.sportshop.Entity.AccountEntity;
 import com.sportshop.Modal.Result;
 import com.sportshop.ModalDTO.AccountDTO;
+import com.sportshop.ModalDTO.UserDTO;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 
 public interface AccountService {
@@ -16,4 +22,15 @@ public interface AccountService {
     Result sendOTPToEmail(String email, HttpServletRequest request);
 
     Result verifyOTPandSendPass(String otp, String email, HttpServletRequest request);
+
+    List <AccountDTO> getAll ();
+
+    Page<AccountDTO> getAllCustomer(Pageable pageable, String search, String status);
+
+    Result deleteByEmail(String email);
+
+    Result updateAccountCustomer (AccountDTO accountDTO, MultipartFile file);
+
+    Result addAccountCustomer (AccountDTO accountDTO, MultipartFile file);
+
 }

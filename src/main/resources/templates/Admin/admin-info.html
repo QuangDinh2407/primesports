@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{/Common/Employee/LayoutMaster.html}">
+      layout:decorate="~{/Common/Admin/LayoutMaster.html}">
 <head>
-    <title>Employee Info</title>
+    <title>Admin Info</title>
 
     <link rel="stylesheet" th:href="@{/Assets/Admin_Employee/Assets/css/vertical-layout-light/employeeInfocss.css}" />
 
@@ -32,7 +32,7 @@
                 <div class="user-info-content">
                     <div class="info-display">
                         <div class="user-avatar">
-                            <img src="images/faces/face15.jpg" alt="profile">
+                        <img th:src="@{'/Assets/image/Admin/' + ${userDTO.imagePath}}" alt="profile">
                             <p class="user-name" th:text="${userDTO.name}"></p>
                         </div>
                         <div class="user-display">
@@ -45,7 +45,7 @@
                     </div>
                     <div class="info-setting">
                         <p class="title">Thông tin cá nhân</p>
-                        <form th:action="@{/admin/admin-info}" th:object="${userDTO}" method="post" >
+                        <form th:action="@{/admin/admin-info}" th:object="${userDTO}" method="post" enctype="multipart/form-data">
                             <div class="form-container">
                                 <div class="form__group">
                                     <label for="">Tên</label>
@@ -74,7 +74,7 @@
                                 <div class="form__group">
                                     <label for="">Password</label>
                                     <div class="text-input">
-                                        <input type="text" class="input-setting" th:field="*{account.password}">
+                                        <input type="password" class="input-setting" th:field="*{account.password}">
                                     </div>
                                 </div>
                                 <div class="form__group">
@@ -87,7 +87,7 @@
                                 <div class="form__group">
                                     <label for="" >Ảnh đại diện</label>
                                     <div class="text-input">
-                                        <input type="file" id="avatar-upload" placeholder="" class="input-setting">
+                                        <input type="file" id="avatar-upload" name="avatar" placeholder="" class="input-setting">
                                         <label class="custom-file-label" for="avatar-upload">Chọn ảnh</label>
                                         <span id="file-name">Chưa có file nào được chọn</span>
                                     </div>

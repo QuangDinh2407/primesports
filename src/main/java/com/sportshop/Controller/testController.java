@@ -1,15 +1,25 @@
 package com.sportshop.Controller;
 
+import com.sportshop.Converter.AccountConverter;
+import com.sportshop.Entity.AccountEntity;
+import com.sportshop.Entity.RoleEntity;
 import com.sportshop.Modal.Mail;
 import com.sportshop.ModalDTO.AccountDTO;
 import com.sportshop.ModalDTO.UserDTO;
+import com.sportshop.Repository.AccountRepository;
+import com.sportshop.Repository.RoleRepository;
+import com.sportshop.Repository.UserInfoRepository;
 import com.sportshop.Service.AccountService;
 import com.sportshop.Service.MailService;
 import com.sportshop.Service.UserService;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -25,8 +35,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
-/*@RestController*/
-@Controller
+@RestController
+//@Controller
 public class testController {
 
     @Autowired
@@ -36,7 +46,16 @@ public class testController {
     AccountService accountService;
 
     @Autowired
+    RoleRepository roleRepository;
+
+    @Autowired
     MailService mailService;
+    @Autowired
+    private UserInfoRepository userInfoRepository;
+    @Autowired
+    private AccountRepository accountRepository;
+    @Autowired
+    private AccountConverter accountConverter;
 
     @GetMapping("/test")
     public String test() {
@@ -115,4 +134,20 @@ public class testController {
         return "redirect:/upload";
     }
 
+
+    @GetMapping("/findall")
+    public Page<AccountDTO> getAllCustomer(@RequestParam(defaultValue = "0") int page,
+                                           @RequestParam(defaultValue = "5") int size,
+                                           @RequestParam(value = "search", required = false) String search,
+                                           @RequestParam(value = "status", required = false) String status) {
+        Pageable pageable = PageRequest.of(page, size);
+        return accountService.getAllCustomer(pageable, search, status);
+    }
+
+
+    @GetMapping("/hehe")
+    public RoleEntity render11(AccountDTO accountDTO)
+    {
+        return roleRepository.findByName("CUSTOMER");
+    }
 }
