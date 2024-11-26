@@ -6,10 +6,10 @@
     <title>Sign in | Grocery Mart</title>
 
     <!-- Favicon -->
-    <link rel="apple-touch-icon" sizes="76x76" th:href="@{/Assets/Customer_Shop/Assets/favicon/apple-touch-icon.png}"  />
-    <link rel="icon" type="image/png" sizes="32x32" th:href="@{/Assets/Customer_Shop/Assets/favicon/favicon-32x32.png}" />
-    <link rel="icon" type="image/png" sizes="16x16" th:href="@{/Assets/Customer_Shop/Assets/favicon/favicon-16x16.png}" />
-    <link rel="manifest" th:href="@{/Assets/Customer_Shop/Assets/favicon/site.webmanifest}" />
+    <link rel="apple-touch-icon" sizes="76x76" th:href="@{/Assets/Customer_Shop/Assets/favicon/logo.png}" />
+    <link rel="icon" type="image/png" sizes="32x32" th:href="@{/Assets/Customer_Shop/Assets/favicon/logo.png}" />
+    <link rel="icon" type="image/png" sizes="16x16" th:href="@{/Assets/Customer_Shop/Assets/favicon/logo.png}" />
+    <link rel="manifest" th:href="@{/Assets/Customer_Shop/Assets/favicon/logo.png}" />
     <meta name="msapplication-TileColor" content="#da532c" />
     <meta name="theme-color" content="#ffffff" />
 
@@ -34,18 +34,16 @@
 <main class="auth">
     <!-- Auth intro -->
     <div class="auth__intro d-md-none">
-        <img th:src="@{/Assets/Customer_Shop/Assets/img/auth/intro.svg}" alt="" class="auth__intro-img" />
-        <p class="auth__intro-text">
-            The best of luxury brand values, high quality products, and innovative services
-        </p>
+        <img th:src="@{/Assets/Customer_Shop/Assets/img/auth/intro2.png}" alt="" class="auth__intro-img" />
+
     </div>
 
     <!-- Auth content -->
     <div class="auth__content">
         <div class="auth__content-inner">
             <a href="./" class="logo">
-                <img th:src="@{/Assets/Customer_Shop/Assets/icons/logo.svg}" alt="grocerymart" class="logo__img" />
-                <h2 class="logo__title">grocerymart</h2>
+                <img th:src="@{/Assets/Customer_Shop/Assets/icons/logo.png}" alt="primesports" class="logo__img" />
+                <h2 class="logo__title" style= "margin-left: -14px;">primesports</h2>
             </a>
             <h1 class="auth__heading">Hello Again!</h1>
             <p class="auth__desc">
@@ -99,7 +97,7 @@
 
             <p class="auth__text">
                 Don’t have an account yet?
-                <button type="submit" class="auth__link auth__text-link">Sign Up</button>
+                <a href="./sign-up" type="submit" class="auth__link auth__text-link">Sign Up</a>
             </p>
         </div>
     </div>

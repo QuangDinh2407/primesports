@@ -17,9 +17,10 @@ public class ProductImageEntity {
 
 	@Column(nullable = false)
 	private String image_path;
-	
-	@ManyToOne
+
+	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name="product_id",nullable = false, referencedColumnName = "product_id")
 	private ProductEntity product;
+
 
 }

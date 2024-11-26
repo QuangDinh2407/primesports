@@ -14,7 +14,6 @@ import jakarta.persistence.*;
 @Table (name = "ProductType")
 public class ProductTypeEntity {
 	@Id
-	@GeneratedValue (strategy = GenerationType.UUID)
 	private String productType_id;
 
 	@Column(nullable = false, columnDefinition = "nvarchar(255)")

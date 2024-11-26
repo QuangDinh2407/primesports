@@ -167,6 +167,10 @@ button {
   cursor: pointer;
 }
 
+.logo__img{
+  height: 50px;
+}
+
 a,
 img,
 button,
@@ -2128,7 +2132,7 @@ html {
   position: absolute;
   left: 0;
   width: min(1240px, 100%);
-  padding-top: 54px;
+  padding-top: 10px;
   display: none;
 }
 @media (max-width: 991.98px) {
@@ -3655,9 +3659,8 @@ html {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   gap: 50px;
-  background: var(--auth-intro-bg);
+  background: black;
 }
 .auth__intro-logo, .auth__intro-next {
   position: absolute;
@@ -3671,7 +3674,8 @@ html {
   bottom: 50px;
 }
 .auth__intro-img {
-  width: min(424px, 100%);
+  margin-top: 22px;
+  width: min(500px, 100%);
 }
 .auth__intro-text {
   max-width: 412px;
@@ -3707,8 +3711,7 @@ html {
   align-items: center;
   text-align: center;
   width: min(460px, 100%);
-  margin: 0 auto;
-  padding: 50px 0;
+  margin: 35px auto;
 }
 @media (max-width: 767.98px) {
   .auth__content-inner {
@@ -3716,7 +3719,7 @@ html {
   }
 }
 .auth__heading {
-  margin-top: 50px;
+  margin-top: 20px;
   font-size: 3rem;
   font-weight: 500;
   line-height: 146.667%;
@@ -3746,7 +3749,7 @@ html {
 }
 .auth__form {
   width: 100%;
-  margin-top: 30px;
+  margin-top: 9px;
 }
 .auth__form-forgot {
   margin-top: 10px;
@@ -3771,7 +3774,7 @@ html {
   display: flex;
   flex-direction: column;
   gap: 30px;
-  margin-top: 50px;
+  margin-top: 29px;
 }
 @media (max-width: 767.98px) {
   .auth__btn-group {
@@ -3783,7 +3786,7 @@ html {
   width: 100%;
 }
 .auth__text {
-  margin-top: 108px;
+  margin-top: 34px;
   color: #9e9da8;
   font-size: 1.8rem;
   line-height: 144.444%;

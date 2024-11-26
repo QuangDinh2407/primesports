@@ -25,6 +25,9 @@ public class ProductEntity {
 	private String name;
 
 	@Column(nullable = false)
+	private int quantity;
+
+	@Column(nullable = false)
 	private float price;
 
 	@Column(nullable = false)

@@ -37,7 +37,7 @@
                         <div class="card-body">
                             <div style="display: flex; justify-content: space-between; align-items: center;">
                                 <h4 class="card-title">Quản lý sản phẩm</h4>
-                                <a href="/admin/product/add-product">Thêm sản phẩm</a>
+                                <a href="/admin/product/add-product" >Thêm sản phẩm</a>
                             </div>
 
                             <p class="card-description">
@@ -251,7 +251,59 @@
                                             5:12 21/11/2024
                                         </td>
                                         <td>
-                                            Xóa
+                                            <i class="mdi mdi-delete"></i>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            6
+                                        </td>
+                                        <td>
+                                            FFF (Men's Team) 2024/25 Stadium Away
+                                        </td>
+                                        <td>
+                                            <div class="progress-image">
+                                                <img th:src="@{/Assets/Customer_Shop/Assets/img/product/item-6.png}"
+                                                     alt="" class="product-card__thumb"/>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            355.000
+                                            VNĐ
+                                        </td>
+                                        <td>
+                                            124
+                                        </td>
+                                        <td>
+                                            <label class="badge badge-success">Còn hàng</label>
+                                        </td>
+                                        <td>
+                                            5:12 21/11/2024
+                                        </td>
+                                        <td>
+                                            <i class="mdi mdi-delete"></i>
+                                        </td>
+                                    </tr>
+                                    <tr th:each="product, stat : ${products}">
+                                        <td th:text="${stat.index + 1}"></td> <!-- Thứ tự -->
+                                        <td th:text="${product.name}"></td> <!-- Tên sản phẩm -->
+                                        <td>
+                                            <!-- Hiển thị danh sách hình ảnh -->
+                                            <div class="image-gallery">
+                                                <img th:each="image : ${product.productImageItems}"
+                                                     th:src="@{|/Assets/Customer_Shop/Assets/img/product/${image.image_path}|}"
+                                                     alt="Ảnh sản phẩm" class="product-thumb"
+                                                     style="max-width: 50px; margin-right: 5px;" />
+                                            </div>
+                                        </td>
+                                        <td th:text="${#numbers.formatDecimal(product.price, 1, 'COMMA', 'DOT')} + ' VNĐ'"></td> <!-- Giá -->
+                                        <td th:text="${product.quantity}"></td> <!-- Số lượng -->
+                                        <td>
+                                            <span th:if="${product.status == 'ACTIVE'}" class="badge badge-success">Hoạt động</span>
+                                            <span th:if="${product.status != 'ACTIVE'}" class="badge badge-danger">Không hoạt động</span>
+                                        </td>
+                                        <td>
+                                            <a href="#" class="btn btn-danger btn-sm">Xóa</a>
                                         </td>
                                     </tr>
                                     </tbody>

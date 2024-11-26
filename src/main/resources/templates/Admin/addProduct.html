@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/Common/Employee/LayoutMaster.html}">
+<head>
+    <title>Product Manage</title>
+
+    <link rel="stylesheet" th:href="@{/Assets/Admin_Employee/Assets/css/vertical-layout-light/employeeInfocss.css}"/>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <style>
+        .flatpickr-current-month .flatpickr-monthDropdown-months {
+            padding: 0 !important;
+        }
+
+        #dateIcon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-size: 20px;
+            color: rgba(0, 0, 0, .8);
+            z-index: 1;
+        }
+
+    </style>
+</head>
+
+<body>
+<div class="content" layout:fragment="content">
+    <div class="product-manage-container">
+        <div class="product-info-content">
+            <div class="product-show-display">
+                <div class="col-lg-12 grid-margin stretch-card">
+                    <div class="card">
+                        <form class="form" th:action="@{/admin/product/add-product}" th:object="${productDTO}"
+                              enctype="multipart/form-data" method="post">
+                            <div class="form-container-custom">
+                                <div>
+                                <div class="form__group form__group__custom">
+                                    <label for="">Tên sản phẩm: </label>
+                                    <div class="text-input">
+                                        <input type="text" id="name" class="input-setting-custom input-name-product" th:field="*{name}">
+                                    </div>
+                                </div>
+                                <div class="form__group form__group__custom">
+                                     <label for="">Giá tiền</label>
+                                     <div class="text-input">
+                                         <input type="number" class="input-setting-custom" th:field="*{price}">
+                                     </div>
+                                </div>
+                                <div class="form__group form__group__custom">
+                                    <label for="">Số lượng</label>
+                                    <div class="text-input">
+                                        <input type="number" class="input-setting-custom" th:field="*{quantity}">
+                                    </div>
+                                </div>
+                                <div class="form__group form__group__custom">
+                                    <label for="">Mô tả</label>
+                                    <div class="text-input">
+                                        <textarea  type="number" class="input-setting-custom textarea" th:field="*{description}"></textarea>
+                                    </div>
+                                </div>
+                                </div>
+                                <div style="margin-left: 33px; ">
+                                    <div class="group-selected ">
+                                        <div th:each="parentType : ${productTypesParent}" >
+                                            <div >
+                                                <div class="group__select">
+                                                <div><label th:for="'productType_' + ${parentType.productType_id}" th:text="${parentType.name}"></label></div>
+                                                <select class="select-type-id" th:id="'productType_' + ${parentType.productType_id}" th:field="*{productTypeIds}">
+                                                    <option value=""  selected >Chọn</option>
+                                                    <option th:each="childType : ${productTypes}"
+                                                            th:if="${childType.parent_id == parentType.productType_id}"
+                                                            th:value="${childType.productType_id}"
+                                                            th:text="${childType.name}"></option>
+                                                </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <div class="form__group form__group__custom form__image__custom">
+                                            <label for="image-product-upload">Hình ảnh</label>
+                                            <div class="text-input">
+                                                <input type="file" id="image-product-upload" class="input-setting-custom" name="images" accept="image/*" required multiple>
+                                                <label class="custom-file-label" for="image-product-upload">Chọn ảnh</label>
+                                                <span id="file-names">Chưa có file nào được chọn</span>
+                                            </div>
+                                        </div>
+
+                                        <!-- Khu vực hiển thị ảnh -->
+                                        <div id="image-preview-container" class="image-preview-container"></div>
+
+                                    </div>
+                                </div>
+                            </div>
+                                <div class="button-container">
+                                    <button type="submit" class="btn btn-success btn-rounded btn-fw">Thêm</button>
+                                </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<!--THÊM-->
+<div layout:fragment="script">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/flatpickr.min.js"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/vn.js"></script>
+    <script>
+        document.getElementById("image-product-upload").addEventListener("change", function () {
+            const fileNames = Array.from(this.files).map(file => file.name).join(', ');
+            document.getElementById("file-names").textContent = fileNames || "Chưa có file nào được chọn";
+        });
+    </script>
+
+<!--    <script>-->
+<!--        const fileInput = document.getElementById("image-product-upload");-->
+<!--        const previewContainer = document.getElementById("image-preview-container");-->
+<!--        const fileNamesElement = document.getElementById("file-names");-->
+<!--        let selectedFiles = []; // Danh sách file đã chọn-->
+
+<!--        fileInput.addEventListener("change", function () {-->
+<!--            const files = Array.from(this.files);-->
+
+<!--            // Lưu file vào danh sách-->
+<!--            files.forEach(file => {-->
+<!--                selectedFiles.push(file);-->
+<!--                displayPreview(file);-->
+<!--            });-->
+
+<!--            // Ẩn thông báo "Chưa có file nào được chọn" nếu có ảnh-->
+<!--            if (selectedFiles.length > 0) {-->
+<!--                fileNamesElement.textContent = "";-->
+<!--            }-->
+
+<!--        });-->
+
+<!--        // Hiển thị preview hình ảnh-->
+<!--        function displayPreview(file) {-->
+<!--            const reader = new FileReader();-->
+<!--            reader.onload = function (e) {-->
+<!--                const preview = document.createElement("div");-->
+<!--                preview.classList.add("image-preview");-->
+
+<!--                const img = document.createElement("img");-->
+<!--                img.src = e.target.result;-->
+<!--                preview.appendChild(img);-->
+
+<!--                const removeBtn = document.createElement("button");-->
+<!--                removeBtn.classList.add("remove-btn");-->
+<!--                removeBtn.textContent = "×";-->
+<!--                removeBtn.onclick = () => removeImage(file, preview);-->
+<!--                preview.appendChild(removeBtn);-->
+
+<!--                previewContainer.appendChild(preview);-->
+<!--            };-->
+<!--            reader.readAsDataURL(file);-->
+<!--        }-->
+
+<!--        // Xóa hình ảnh khỏi danh sách-->
+<!--        function removeImage(file, previewElement) {-->
+<!--            // Xóa file khỏi danh sách-->
+<!--            selectedFiles = selectedFiles.filter(f => f !== file);-->
+
+<!--            // Xóa preview hình ảnh-->
+<!--            previewContainer.removeChild(previewElement);-->
+
+<!--            // Hiển thị thông báo "Chưa có file nào được chọn" nếu danh sách rỗng-->
+<!--            if (selectedFiles.length === 0) {-->
+<!--                fileNamesElement.textContent = "Chưa có file nào được chọn";-->
+<!--            }-->
+<!--        }-->
+<!--    </script>-->
+
+    <script>
+        const fileInput = document.getElementById("image-product-upload");
+        const previewContainer = document.getElementById("image-preview-container");
+        const fileNamesElement = document.getElementById("file-names");
+
+        // Khi người dùng chọn file
+        fileInput.addEventListener("change", function () {
+            const files = Array.from(this.files);
+
+            // Hiển thị preview cho tất cả các file đã chọn
+            previewContainer.innerHTML = ''; // Xóa preview cũ
+            files.forEach(file => {
+                displayPreview(file);
+            });
+
+            // Cập nhật tên các file đã chọn
+            const fileNames = files.map(file => file.name).join(', ');
+            fileNamesElement.textContent = fileNames || "Chưa có file nào được chọn";
+        });
+
+        // Hiển thị preview của hình ảnh
+        function displayPreview(file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const preview = document.createElement("div");
+                preview.classList.add("image-preview");
+
+                const img = document.createElement("img");
+                img.src = e.target.result;
+                preview.appendChild(img);
+
+                const removeBtn = document.createElement("button");
+                removeBtn.classList.add("remove-btn");
+                removeBtn.textContent = "×";
+                removeBtn.onclick = () => removeImage(file, preview);
+                preview.appendChild(removeBtn);
+
+                previewContainer.appendChild(preview);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Xóa hình ảnh khỏi danh sách
+        function removeImage(file, previewElement) {
+            // Tạo lại mảng files và loại bỏ file đã xóa
+            const files = Array.from(fileInput.files);
+            const updatedFiles = files.filter(f => f !== file);
+
+            // Cập nhật lại các files đã chọn cho input
+            const dataTransfer = new DataTransfer();
+            updatedFiles.forEach(f => dataTransfer.items.add(f));
+
+            fileInput.files = dataTransfer.files; // Cập nhật lại thuộc tính files của input
+
+            // Xóa preview hình ảnh
+            previewContainer.removeChild(previewElement);
+
+            // Cập nhật lại tên file đã chọn
+            const fileNames = updatedFiles.map(f => f.name).join(', ');
+            fileNamesElement.textContent = fileNames || "Chưa có file nào được chọn";
+        }
+
+    </script>
+
+
+
+    <script>
+        const datePicker = flatpickr("#dateInput", {
+            dateFormat: "d-m-Y",
+            locale: "vn",
+            onChange: function (selectedDates, dateStr, instance) {
+                document.getElementById('dateInput').value = dateStr;
+            }
+        });
+
+        const dateIcon = document.querySelector('#dateIcon');
+        dateIcon.addEventListener('click', function () {
+            datePicker.open();
+        });
+
+    </script>
+</div>
+
+</body>
+
+</html>
