@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.sportshop.Contants.FormatDate;
 import lombok.*;
 import jakarta.persistence.*;
@@ -13,6 +14,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Entity
 @Table (name = "Product")
 public class ProductEntity {
@@ -48,6 +50,7 @@ public class ProductEntity {
 	private String status;
 	
 	@OneToMany (mappedBy = "product", fetch = FetchType.LAZY)
+	@ToString.Exclude
 	private List <ProductTypeDetailEntity> productTypeDetailItems = new ArrayList<ProductTypeDetailEntity>();
 	
 	@OneToMany (mappedBy = "product", fetch = FetchType.LAZY)

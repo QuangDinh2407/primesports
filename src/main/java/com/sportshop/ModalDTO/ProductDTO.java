@@ -8,7 +8,10 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class ProductDTO {
+    private String product_id;
+
     private String name;
 
     private int quantity;
@@ -24,4 +27,6 @@ public class ProductDTO {
     private List<String> imagePaths;
 
     private List<String> productTypeIds;
+
+//    private List <ProductTypeDetailDTO> listType;
 }

@@ -1,15 +1,17 @@
 package com.sportshop.Controller;
 
 import com.sportshop.Converter.AccountConverter;
-import com.sportshop.Entity.AccountEntity;
-import com.sportshop.Entity.RoleEntity;
+import com.sportshop.Converter.ProductTypeConverter;
+import com.sportshop.Entity.*;
 import com.sportshop.Modal.Mail;
 import com.sportshop.ModalDTO.AccountDTO;
+import com.sportshop.ModalDTO.ProductDTO;
+import com.sportshop.ModalDTO.ProductTypeDTO;
 import com.sportshop.ModalDTO.UserDTO;
-import com.sportshop.Repository.AccountRepository;
-import com.sportshop.Repository.RoleRepository;
-import com.sportshop.Repository.UserInfoRepository;
+import com.sportshop.Repository.*;
 import com.sportshop.Service.AccountService;
+import com.sportshop.Service.Iml.ProductServiceIml;
+import com.sportshop.Service.Iml.ProductTypeServiceIml;
 import com.sportshop.Service.MailService;
 import com.sportshop.Service.UserService;
 import jakarta.mail.MessagingException;
@@ -47,6 +49,10 @@ public class testController {
 
     @Autowired
     RoleRepository roleRepository;
+    @Autowired
+    ProductTypeConverter productTypeConverter;
+    @Autowired
+    ProductRepository productRepository;
 
     @Autowired
     MailService mailService;
@@ -56,6 +62,12 @@ public class testController {
     private AccountRepository accountRepository;
     @Autowired
     private AccountConverter accountConverter;
+    @Autowired
+    private ProductTypeRepository productTypeRepository;
+    @Autowired
+    private ProductTypeServiceIml productTypeServiceIml;
+    @Autowired
+    private ProductServiceIml productServiceIml;
 
     @GetMapping("/test")
     public String test() {
@@ -149,5 +161,29 @@ public class testController {
     public RoleEntity render11(AccountDTO accountDTO)
     {
         return roleRepository.findByName("CUSTOMER");
+    }
+
+    @GetMapping("/type")
+    List<ProductTypeEntity> hehe (){
+        List<ProductTypeEntity> hehe = productTypeRepository.findAll();
+        hehe.forEach(ProductType ->{
+            List<ProductTypeDetailEntity> a = ProductType.getProductTypeDetailItems();
+            a.forEach(product ->{
+                System.out.println(product.getProduct().getName());
+            });
+        });
+        return productTypeRepository.findAll();
+    }
+
+    @GetMapping("/typepro")
+    public List<ProductTypeDTO> getListHierarchyType() {
+        List<ProductTypeDTO> listType = productTypeConverter.toListHierarchyDTO();
+        return listType;
+    }
+
+    @GetMapping("/5pro")
+    public List<ProductDTO>  hehe1() {
+        List<ProductDTO>  listType = productServiceIml.findTop5Rating("available");
+        return listType;
     }
 }

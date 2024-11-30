@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>primesports</title>
+
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="76x76" th:href="@{/Assets/Customer_Shop/Assets/favicon/logo.png}" />
+    <link rel="icon" type="image/png" sizes="32x32" th:href="@{/Assets/Customer_Shop/Assets/favicon/logo.png}" />
+    <link rel="icon" type="image/png" sizes="16x16" th:href="@{/Assets/Customer_Shop/Assets/favicon/logo.png}" />
+    <link rel="manifest" th:href="@{/Assets/Customer_Shop/Assets/favicon/logo.png}" />
+    <meta name="msapplication-TileColor" content="#da532c" />
+    <meta name="theme-color" content="#ffffff" />
+
+    <!-- Fonts -->
+    <link rel="stylesheet" th:href="@{/Assets/Customer_Shop/Assets/fonts/stylesheet.css}" />
+
+    <!-- Styles -->
+    <link rel="stylesheet" th:href="@{/Assets/Customer_Shop/Assets/css/main.css}" />
+    <link rel="stylesheet" th:href="@{/Assets/Customer_Shop/Assets/css/pagination.css}" />
+    <link rel="stylesheet" th:href="@{/Assets/Customer_Shop/Assets/css/search-bar.css}" />
+
+    <!-- Scripts -->
+    <script th:src="@{/Assets/Customer_Shop/Assets/js/scripts.js}" ></script>
+</head>
+<style>
+    img.prev-icon {
+        transform: rotate(180deg);
+    }
+    .error-message {
+        color: red;
+        font-size: 15px;
+        font-weight: 600;
+        margin-top: 5px;
+        margin-bottom: 5px;
+        margin-left: 10px;
+    }
+    .no-data{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+    .no-data img{
+       width: 128px;
+    }
+    .no-data h1{
+        font-size: 2.5rem;
+        font-weight: 600;
+    }
+</style>
+
+<body>
+<!-- Header -->
+<header id="header" class="header"></header>
+<div></div>
+<script>
+    load("#header", "/header");
+</script>
+
+
+<!-- MAIN -->
+<main class="container home">
+    <!-- Browse Categories -->
+    <section class="home__container">
+        <div class="home__row">
+            <h2 class="home__heading">Đội bóng yêu thích</h2>
+        </div>
+        <div class="home__cate row row-cols-5 row-cols-md-1">
+            <!-- Category item 1 -->
+            <div class="col">
+                <a href="#!">
+                    <article class="favourite-clubs">
+                        <img th:src="@{/Assets/Customer_Shop/Assets/img/category-item/item-1.png}" alt="" class="favourite__club__thumb" />
+                    </article>
+                </a>
+            </div>
+
+            <!-- Category item 2 -->
+            <div class="col">
+                <a href="#!">
+                    <article class="favourite-clubs">
+                        <img th:src="@{/Assets/Customer_Shop/Assets/img/category-item/item-2.png}" alt="" class="favourite__club__thumb" />
+                    </article>
+                </a>
+            </div>
+
+            <!-- Category item 3 -->
+            <div class="col">
+                <a href="#!">
+                    <article class="favourite-clubs">
+                        <img th:src="@{/Assets/Customer_Shop/Assets/img/category-item/item-3.png}" alt="" class="favourite__club__thumb" />
+                    </article>
+                </a>
+            </div>
+
+            <!-- Category item 4 -->
+            <div class="col">
+                <a href="#!">
+                    <article class="favourite-clubs">
+                        <img th:src="@{/Assets/Customer_Shop/Assets/img/category-item/item-4.png}" alt="" class="favourite__club__thumb" />
+                    </article>
+                </a>
+            </div>
+
+            <!-- Category item 5 -->
+            <div class="col">
+                <a href="#!">
+                    <article class="favourite-clubs">
+                        <img th:src="@{/Assets/Customer_Shop/Assets/img/category-item/item-5.png}" alt="" class="favourite__club__thumb" />
+
+                    </article>
+                </a>
+            </div>
+
+
+        </div>
+    </section>
+
+    <button class="open-search-btn" onclick="toggleSearchSidebar()">🔍 Tìm kiếm</button>
+
+    <div th:if="${#lists.isEmpty(listPro.content)}"  class="no-data">
+        <img th:src="@{/Assets/Customer_Shop/Assets/icons/no-data128px.png}">
+        <h1>Không tìm thấy sản phẩm!</h1>
+    </div>
+
+
+    <section class="home__container">
+        <div class="row row-cols-5 row-cols-lg-2 row-cols-sm-1 g-3">
+            <!-- Product card 1 -->
+            <div class="col" th:each="product : ${listPro.content}">
+                <article class="product-card">
+                    <div class="product-card__img-wrap">
+                        <a href="./product-detail.html">
+                            <img th:src="@{/Assets/Customer_Shop/Assets/img/product/item-1.png}" alt="" class="product-card__thumb" />
+                        </a>
+                        <button class="like-btn product-card__like-btn">
+                            <img th:src="@{/Assets/Customer_Shop/Assets/icons/heart.svg}" alt="" class="like-btn__icon icon" />
+                            <img th:src="@{/Assets/Customer_Shop/Assets/icons/heart-red.svg}" alt="" class="like-btn__icon--liked" />
+                        </button>
+                    </div>
+                    <h3 class="product-card__title">
+                        <a href="./product-detail.html" th:text="${product.name}"></a>
+                    </h3>
+                    <!--                    <p class="product-card__brand">Lavazza</p>-->
+                    <div class="product-card__row">
+                        <span class="product-card__price" th:text="${product.price}"></span>
+                        <img th:src="@{/Assets/Customer_Shop/Assets/icons/star.svg}" alt="" class="product-card__star" />
+                        <span class="product-card__score" th:text="${product.rating}"></span>
+                    </div>
+                </article>
+            </div>
+        </div>
+
+
+        <div id="search-sidebar" class="search-sidebar">
+            <button class="close-btn" onclick="toggleSearchSidebar()">✖</button>
+            <form class="search-form" th:action="@{/all-product}" method="get" th:object="${searchProduct}">
+                <!-- Trường tìm kiếm sản phẩm -->
+                <input type="text" th:field="*{name}" placeholder="Tìm kiếm sản phẩm..." />
+
+                <!-- Trường giá -->
+                <div class="price-field">
+                    <label for="price-min">Giá từ:</label>
+                    <input type="number" id="price-min" th:field="*{minPrice}" placeholder="Nhập giá tối thiểu" />
+                    <p class="error-message" th:if="${#fields.hasErrors('minPrice')}" th:errors="*{minPrice}"></p>
+                    <label for="price-max">Đến:</label>
+                    <input type="number" id="price-max" th:field="*{maxPrice}" placeholder="Nhập giá tối đa" />
+                    <p class="error-message" th:if="${#fields.hasErrors('maxPrice')}" th:errors="*{maxPrice}"></p>
+                </div>
+                <p class="error-message" th:if="${#fields.hasErrors('priceValid')}" th:errors="*{priceValid}"></p>
+
+                <!-- Trường loại sản phẩm -->
+                <div class="category-field">
+                    <label>Loại sản phẩm:</label>
+                    <div th:each="type : ${listType}">
+                        <div class="category-checkbox">
+                            <!-- Loại cha: Điện tử -->
+                            <div class="category-type">
+                                <label class="checkbox-form">
+                                    <span th:text="${type.name}"></span>
+                                    <input type="checkbox" class="parent-category"
+                                           th:value="${type.name}" name="types"
+                                           th:checked="${#lists.contains(searchProduct.types, type.name)}"/>
+                                </label>
+                                <div th:if="${!#lists.isEmpty(type.name_child)}">
+                                    <div th:each="typeChild : ${type.name_child}">
+                                        <div class="subcategory">
+                                            <label class="checkbox-form">
+                                                <span th:text="${typeChild}"></span>
+                                                <input type="checkbox" class="child-category" name="types" th:value="${typeChild}"
+                                                       th:checked="${#lists.contains(searchProduct.types, typeChild)}"/>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trường đánh giá -->
+                <div class="rating-field">
+                    <select id="rating" th:field="*{rating}">
+                        <option value="">Chọn đánh giá</option>
+                        <option value="1">1 sao</option>
+                        <option value="2">2 sao</option>
+                        <option value="3">3 sao</option>
+                        <option value="4">4 sao</option>
+                        <option value="5">5 sao</option>
+                    </select>
+                </div>
+
+                <button type="submit">Tìm kiếm</button>
+            </form>
+        </div>
+
+        <!--Phân trang -->
+<!--        <div th:if="${!#lists.isEmpty(listPro.content)}"  class="pagination-container">-->
+<!--            <ul class="pagination">-->
+<!--                &lt;!&ndash; Nút Previous &ndash;&gt;-->
+<!--                <li th:class="${listPro.hasPrevious()} ? 'page-item' : 'page-item disabled'">-->
+<!--                    <a class="page-link" th:href="@{/all-product(page=${listPro.number}, pageSize=${size})}">-->
+<!--                        <img th:src="@{/Assets/Customer_Shop/Assets/icons/fast-forward.png}" alt="" class="prev-icon" />-->
+<!--                    </a>-->
+<!--                </li>-->
+
+<!--                &lt;!&ndash; Trang đầu tiên &ndash;&gt;-->
+<!--                <li th:if="${listPro.totalPages > 0}" th:class="${listPro.number == 0} ? 'page-item active' : 'page-item'">-->
+<!--                    <a class="page-link"-->
+<!--                       th:href="@{/all-product(page=1, pageSize=${size})}">1</a>-->
+<!--                </li>-->
+
+<!--                &lt;!&ndash; Dấu "..." trước các trang giữa &ndash;&gt;-->
+<!--                <li th:if="${listPro.number > 2}">-->
+<!--                    <span class="page-link">...</span>-->
+<!--                </li>-->
+
+<!--                &lt;!&ndash; Các trang ở giữa &ndash;&gt;-->
+<!--                <li th:each="i : ${#numbers.sequence(listPro.number - 1, listPro.number + 1)}"-->
+<!--                    th:if="${i > 0 and i < listPro.totalPages - 1}"-->
+<!--                    th:class="${listPro.number == i} ? 'page-item active' : 'page-item'">-->
+<!--                    <a class="page-link"-->
+<!--                       th:href="@{/all-product(page=${i+1}, pageSize=${size})}"-->
+<!--                       th:text="${i + 1}"></a>-->
+<!--                </li>-->
+
+<!--                &lt;!&ndash; Dấu "..." sau các trang giữa &ndash;&gt;-->
+<!--                <li th:if="${listPro.number < listPro.totalPages - 3}">-->
+<!--                    <span class="page-link">...</span>-->
+<!--                </li>-->
+
+<!--                &lt;!&ndash; Trang cuối cùng &ndash;&gt;-->
+<!--                <li th:if="${listPro.totalPages > 1}" th:class="${listPro.number == listPro.totalPages - 1} ? 'page-item active' : 'page-item'">-->
+<!--                    <a class="page-link"-->
+<!--                       th:href="@{/all-product(page=${listPro.totalPages}, pageSize=${size})}"-->
+<!--                       th:text="${listPro.totalPages}"></a>-->
+<!--                </li>-->
+
+<!--                &lt;!&ndash; Nút Next &ndash;&gt;-->
+<!--                <li th:class="${listPro.hasNext()} ? 'page-item' : 'page-item disabled'">-->
+<!--                    <a class="page-link"-->
+<!--                       th:href="@{/all-product(page=${listPro.number + 2}, pageSize=${size})}">-->
+<!--                        <img th:src="@{/Assets/Customer_Shop/Assets/icons/fast-forward.png}" alt="" class="next-icon" />-->
+<!--                    </a>-->
+<!--                </li>-->
+<!--            </ul>-->
+<!--        </div>-->
+        <div th:if="${!#lists.isEmpty(listPro.content)}" class="pagination-container">
+            <ul class="pagination">
+                <!-- Nút Previous -->
+                <li th:class="${listPro.hasPrevious()} ? 'page-item' : 'page-item disabled'">
+                    <a class="page-link"
+                       th:href="@{/all-product(page=${listPro.number}, pageSize=${size}, name=${searchProduct.name}, minPrice=${searchProduct.minPrice}, maxPrice=${searchProduct.maxPrice}, rating=${searchProduct.rating}, types=${searchProduct.types})}">
+                        <img th:src="@{/Assets/Customer_Shop/Assets/icons/fast-forward.png}" alt="" class="prev-icon" />
+                    </a>
+                </li>
+
+                <!-- Trang đầu tiên -->
+                <li th:if="${listPro.totalPages > 0}" th:class="${listPro.number == 0} ? 'page-item active' : 'page-item'">
+                    <a class="page-link"
+                       th:href="@{/all-product(page=1, pageSize=${size}, name=${searchProduct.name}, minPrice=${searchProduct.minPrice}, maxPrice=${searchProduct.maxPrice}, rating=${searchProduct.rating}, types=${searchProduct.types})}">1</a>
+                </li>
+
+                <!-- Các trang ở giữa -->
+                <li th:each="i : ${#numbers.sequence(listPro.number - 1, listPro.number + 1)}"
+                    th:if="${i > 0 and i < listPro.totalPages - 1}"
+                    th:class="${listPro.number == i} ? 'page-item active' : 'page-item'">
+                    <a class="page-link"
+                       th:href="@{/all-product(page=${i+1}, pageSize=${size}, name=${searchProduct.name}, minPrice=${searchProduct.minPrice}, maxPrice=${searchProduct.maxPrice}, rating=${searchProduct.rating}, types=${searchProduct.types})}"
+                       th:text="${i + 1}"></a>
+                </li>
+
+                <li th:if="${listPro.totalPages > 1}" th:class="${listPro.number == listPro.totalPages - 1} ? 'page-item active' : 'page-item'">
+                    <a class="page-link"
+                       th:href="@{/all-product(page=${listPro.totalPages}, pageSize=${size},name=${searchProduct.name}, minPrice=${searchProduct.minPrice}, maxPrice=${searchProduct.maxPrice}, rating=${searchProduct.rating}, types=${searchProduct.types})}"
+                       th:text="${listPro.totalPages}"></a>
+                </li>
+
+                <!-- Nút Next -->
+                <li th:class="${listPro.hasNext()} ? 'page-item' : 'page-item disabled'">
+                    <a class="page-link"
+                       th:href="@{/all-product(page=${listPro.number + 2}, pageSize=${size}, name=${searchProduct.name}, minPrice=${searchProduct.minPrice}, maxPrice=${searchProduct.maxPrice}, rating=${searchProduct.rating}, types=${searchProduct.types})}">
+                        <img th:src="@{/Assets/Customer_Shop/Assets/icons/fast-forward.png}" alt="" class="next-icon" />
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+    </section>
+
+</main>
+
+<!-- Footer -->
+
+<footer id="footer" class="footer"></footer>
+<script>
+    load("#footer", "/footer");
+    function toggleSearchSidebar() {
+        const sidebar = document.getElementById("search-sidebar");
+        if (sidebar.classList.contains("active")) {
+            sidebar.classList.remove("active");
+        } else {
+            sidebar.classList.add("active");
+        }
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+        const parentCheckboxes = document.querySelectorAll('.parent-category');
+
+        parentCheckboxes.forEach(function(parentCheckbox) {
+            parentCheckbox.addEventListener('change', function() {
+                const subcategory = parentCheckbox.closest('.category-type').querySelector('.subcategory');
+                const childCheckboxes = subcategory.querySelectorAll('.child-category');
+                if (parentCheckbox.checked) {
+                    subcategory.style.display = 'block';
+                } else {
+                    subcategory.style.display = 'none';
+                }
+                childCheckboxes.forEach(function(childCheckbox) {
+                    if(!parentCheckbox.checked){
+                        childCheckbox.checked = false;
+                    }
+                });
+            });
+        });
+    });
+
+</script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    const typeList = /*[[${searchProduct.types}]]*/ 'default';
+    /*]]>*/
+
+    const parentCheckboxes = document.querySelectorAll('.parent-category');
+    parentCheckboxes.forEach(function(parentCheckbox) {
+        const subcategory = parentCheckbox.closest('.category-type').querySelector('.subcategory');
+        if (typeList.includes(parentCheckbox.value)) {
+            subcategory.style.display = 'block';
+        }
+    });
+</script>
+</body>
+</html>

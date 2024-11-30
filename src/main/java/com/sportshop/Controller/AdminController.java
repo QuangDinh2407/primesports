@@ -3,7 +3,11 @@ package com.sportshop.Controller;
 import com.sportshop.Modal.Result;
 import com.sportshop.ModalDTO.AccountDTO;
 import com.sportshop.ModalDTO.UserDTO;
+import com.sportshop.Repository.ProductRepository;
+import com.sportshop.Repository.ProductTypeRepository;
 import com.sportshop.Service.Iml.AccountServiceIml;
+import com.sportshop.Service.Iml.ProductServiceIml;
+import com.sportshop.Service.ProductService;
 import com.sportshop.Service.UserService;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,10 +35,13 @@ public class AdminController {
 
     @Autowired
     ProductService productService;
+
     @Autowired
     private ProductServiceIml productServiceIml;
+
     @Autowired
     private ProductTypeRepository productTypeRepository;
+
     @Autowired
     private ProductRepository productRepository;
 
@@ -123,47 +130,47 @@ public class AdminController {
         return "Admin/admin-info";
     }
 
-    @GetMapping("/product")
-    public String renderProductManage (HttpSession session, Model model){
-        List<ProductEntity> products = productRepository.findAll();
-        model.addAttribute("products",products);
-        return "Admin/productManage";
-    }
-
-    @GetMapping("/product/add-product")
-    public String addProduct (HttpSession session, Model model){
-        ProductDTO productDTO = new ProductDTO();
-        model.addAttribute("productDTO", productDTO);
-
-        List<ProductTypeEntity> productTypes = productTypeRepository.findAll();
-        model.addAttribute("productTypes", productTypes);
-
-        // Lọc danh mục cha (parent_id == NULL)
-        List<ProductTypeEntity> productTypesParent = productTypes.stream()
-                .filter(type -> type.getParent_id() == null)
-                .toList();
-
-        model.addAttribute("productTypesParent", productTypesParent);
-
-        return "Admin/addProduct";
-    }
-
-    @PostMapping("/product/add-product")
-    public String saveProduct(@ModelAttribute ProductDTO productDTO,
-                              RedirectAttributes redirectAttributes, @RequestParam("images") List <MultipartFile> files) {
-        System.out.println("------------------- Vô đây rồi  nè  ---------------");
-        System.out.println(productDTO);
-        System.out.println("Received files: " + files.size());
-        for (MultipartFile file : files) {
-            System.out.println("File Name: " + file.getOriginalFilename() + ", Size: " + file.getSize());
-        }
-        // Gọi service để thêm sản phẩm
-        Result rs = productService.addProduct(productDTO,files);
-        // Thêm đối tượng Result vào redirectAttributes
-        redirectAttributes.addFlashAttribute("rs", rs);
-        // Chuyển hướng về trang GET "/admin/product/add-product"
-        return "redirect:/admin/product/add-product";
-    }
+//    @GetMapping("/product")
+//    public String renderProductManage (HttpSession session, Model model){
+//        List<ProductEntity> products = productRepository.findAll();
+//        model.addAttribute("products",products);
+//        return "Admin/productManage";
+//    }
+//
+//    @GetMapping("/product/add-product")
+//    public String addProduct (HttpSession session, Model model){
+//        ProductDTO productDTO = new ProductDTO();
+//        model.addAttribute("productDTO", productDTO);
+//
+//        List<ProductTypeEntity> productTypes = productTypeRepository.findAll();
+//        model.addAttribute("productTypes", productTypes);
+//
+//        // Lọc danh mục cha (parent_id == NULL)
+//        List<ProductTypeEntity> productTypesParent = productTypes.stream()
+//                .filter(type -> type.getParent_id() == null)
+//                .toList();
+//
+//        model.addAttribute("productTypesParent", productTypesParent);
+//
+//        return "Admin/addProduct";
+//    }
+//
+//    @PostMapping("/product/add-product")
+//    public String saveProduct(@ModelAttribute ProductDTO productDTO,
+//                              RedirectAttributes redirectAttributes, @RequestParam("images") List <MultipartFile> files) {
+//        System.out.println("------------------- Vô đây rồi  nè  ---------------");
+//        System.out.println(productDTO);
+//        System.out.println("Received files: " + files.size());
+//        for (MultipartFile file : files) {
+//            System.out.println("File Name: " + file.getOriginalFilename() + ", Size: " + file.getSize());
+//        }
+//        // Gọi service để thêm sản phẩm
+//        Result rs = productService.addProduct(productDTO,files);
+//        // Thêm đối tượng Result vào redirectAttributes
+//        redirectAttributes.addFlashAttribute("rs", rs);
+//        // Chuyển hướng về trang GET "/admin/product/add-product"
+//        return "redirect:/admin/product/add-product";
+//    }
 
 
     @PostMapping("/manage-customer/edit")

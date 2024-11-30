@@ -1,5 +1,6 @@
 package com.sportshop.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 import jakarta.persistence.*;
 
@@ -21,7 +22,7 @@ public class ProductTypeDetailEntity {
 	
 	@ManyToOne
 	@JoinColumn(name="productType_id", referencedColumnName = "productType_id")
+	@ToString.Exclude
 	private ProductTypeEntity productType;
 
-	
 }

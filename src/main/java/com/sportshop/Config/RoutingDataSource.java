@@ -9,7 +9,6 @@ public class RoutingDataSource extends AbstractRoutingDataSource {
     @Override
     protected Object determineCurrentLookupKey() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
         if (authentication != null && authentication.isAuthenticated())
         {
             boolean isAdmin = authentication.getAuthorities().contains(new SimpleGrantedAuthority("ADMIN"));
@@ -29,8 +28,11 @@ public class RoutingDataSource extends AbstractRoutingDataSource {
             if(isAdmin) {
                 return "admin";
             }
-            else{
+            else if(isCustomer){
                 return "customer";
+            }
+            else {
+                return "auth";
             }
         }
         return "auth";

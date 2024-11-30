@@ -2240,8 +2240,8 @@ html {
 }
 .menu-column__heading {
   margin-top: 4px;
-  font-size: 1.6rem;
-  font-weight: 500;
+  font-size: 2rem;
+  font-weight: 600;
   line-height: 150%;
 }
 @media (max-width: 991.98px) {

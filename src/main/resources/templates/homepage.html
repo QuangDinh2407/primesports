@@ -23,6 +23,23 @@
     <!-- Scripts -->
     <script th:src="@{/Assets/Customer_Shop/Assets/js/scripts.js}" ></script>
 </head>
+<style>
+    .see-more{
+        margin-top: 20px;
+        display: flex;
+        justify-content: center;
+    }
+
+    .see-more a {
+        padding: 20px;
+       font-size: 1.2em;
+    }
+
+    .see-more a img {
+        transform: rotate(180deg);
+    }
+
+</style>
 <body>
 <!-- Header -->
 <header id="header" class="header"></header>
@@ -30,6 +47,7 @@
 <script>
     load("#header", "/header");
 </script>
+
 
 <!-- MAIN -->
 <main class="container home">
@@ -69,10 +87,6 @@
                 <a href="#!">
                     <article class="favourite-clubs">
                         <img th:src="@{/Assets/Customer_Shop/Assets/img/category-item/item-1.png}" alt="" class="favourite__club__thumb" />
-                        <!-- <div class="cate-item__info">
-                            <h3 class="cate-item__title">Nam</h3>
-                            <p class="cate-item__desc">Áo thun, quần áo bóng đá, giày bóng đá, phụ kiện</p>
-                        </div> -->
                     </article>
                 </a>
             </div>
@@ -82,10 +96,6 @@
                 <a href="#!">
                     <article class="favourite-clubs">
                         <img th:src="@{/Assets/Customer_Shop/Assets/img/category-item/item-2.png}" alt="" class="favourite__club__thumb" />
-                        <!-- <div class="cate-item__info">
-                            <h3 class="cate-item__title">$37 - $160</h3>
-                            <p class="cate-item__desc">Espresso arabica and robusta beans</p>
-                        </div> -->
                     </article>
                 </a>
             </div>
@@ -95,10 +105,6 @@
                 <a href="#!">
                     <article class="favourite-clubs">
                         <img th:src="@{/Assets/Customer_Shop/Assets/img/category-item/item-3.png}" alt="" class="favourite__club__thumb" />
-                        <!-- <div class="cate-item__info">
-                            <h3 class="cate-item__title">$32 - $160</h3>
-                            <p class="cate-item__desc">Lavazza top class whole bean coffee blend</p>
-                        </div> -->
                     </article>
                 </a>
             </div>
@@ -108,10 +114,6 @@
                 <a href="#!">
                     <article class="favourite-clubs">
                         <img th:src="@{/Assets/Customer_Shop/Assets/img/category-item/item-4.png}" alt="" class="favourite__club__thumb" />
-                        <!-- <div class="cate-item__info">
-                            <h3 class="cate-item__title">$32 - $160</h3>
-                            <p class="cate-item__desc">Lavazza top class whole bean coffee blend</p>
-                        </div> -->
                     </article>
                 </a>
             </div>
@@ -121,10 +123,7 @@
                 <a href="#!">
                     <article class="favourite-clubs">
                         <img th:src="@{/Assets/Customer_Shop/Assets/img/category-item/item-5.png}" alt="" class="favourite__club__thumb" />
-                        <!-- <div class="cate-item__info">
-                            <h3 class="cate-item__title">$32 - $160</h3>
-                            <p class="cate-item__desc">Lavazza top class whole bean coffee blend</p>
-                        </div> -->
+
                     </article>
                 </a>
             </div>
@@ -137,137 +136,136 @@
     <section class="home__container">
         <div class="home__row">
             <h2 class="home__heading">Quần áo bóng đá</h2>
-            <div class="filter-wrap">
-                <button class="filter-btn js-toggle" toggle-target="#home-filter">
-                    Filter
-                    <img th:src="@{/Assets/Customer_Shop/Assets/icons/filter.svg}" alt="" class="filter-btn__icon icon" />
-                </button>
+<!--            <div class="filter-wrap">-->
+<!--                <button class="filter-btn js-toggle" toggle-target="#home-filter">-->
+<!--                    Filter-->
+<!--                    <img th:src="@{/Assets/Customer_Shop/Assets/icons/filter.svg}" alt="" class="filter-btn__icon icon" />-->
+<!--                </button>-->
 
-                <div id="home-filter" class="filter hide">
-                    <img th:src="@{/Assets/Customer_Shop/Assets/icons/arrow-up.png}" alt="" class="filter__arrow" />
-                    <h3 class="filter__heading">Filter</h3>
-                    <form action="" class="filter__form form">
-                        <div class="filter__row filter__content">
-                            <!-- Filter column 1 -->
-                            <div class="filter__col">
-                                <label for="" class="form__label">Price</label>
-                                <div class="filter__form-group">
-                                    <div
-                                            class="filter__form-slider"
-                                            style="--min-value: 10%; --max-value: 60%"
-                                    ></div>
-                                </div>
-                                <div class="filter__form-group filter__form-group--inline">
-                                    <div>
-                                        <label for="" class="form__label form__label--small"> Minimum </label>
-                                        <div class="filter__form-text-input filter__form-text-input--small">
-                                            <input
-                                                    type="text"
-                                                    name=""
-                                                    id=""
-                                                    class="filter__form-input"
-                                                    value="$30.00"
-                                            />
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <label for="" class="form__label form__label--small"> Maximum </label>
-                                        <div class="filter__form-text-input filter__form-text-input--small">
-                                            <input
-                                                    type="text"
-                                                    name=""
-                                                    id=""
-                                                    class="filter__form-input"
-                                                    value="$100.00"
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+<!--                <div id="home-filter" class="filter hide">-->
+<!--                    <img th:src="@{/Assets/Customer_Shop/Assets/icons/arrow-up.png}" alt="" class="filter__arrow" />-->
+<!--                    <h3 class="filter__heading">Filter</h3>-->
+<!--                    <form action="" class="filter__form form">-->
+<!--                        <div class="filter__row filter__content">-->
+<!--                            &lt;!&ndash; Filter column 1 &ndash;&gt;-->
+<!--                            <div class="filter__col">-->
+<!--                                <label for="" class="form__label">Price</label>-->
+<!--                                <div class="filter__form-group">-->
+<!--                                    <div-->
+<!--                                            class="filter__form-slider"-->
+<!--                                            style="&#45;&#45;min-value: 10%; &#45;&#45;max-value: 60%"-->
+<!--                                    ></div>-->
+<!--                                </div>-->
+<!--                                <div class="filter__form-group filter__form-group&#45;&#45;inline">-->
+<!--                                    <div>-->
+<!--                                        <label for="" class="form__label form__label&#45;&#45;small"> Minimum </label>-->
+<!--                                        <div class="filter__form-text-input filter__form-text-input&#45;&#45;small">-->
+<!--                                            <input-->
+<!--                                                    type="text"-->
+<!--                                                    name=""-->
+<!--                                                    id=""-->
+<!--                                                    class="filter__form-input"-->
+<!--                                                    value="$30.00"-->
+<!--                                            />-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                    <div>-->
+<!--                                        <label for="" class="form__label form__label&#45;&#45;small"> Maximum </label>-->
+<!--                                        <div class="filter__form-text-input filter__form-text-input&#45;&#45;small">-->
+<!--                                            <input-->
+<!--                                                    type="text"-->
+<!--                                                    name=""-->
+<!--                                                    id=""-->
+<!--                                                    class="filter__form-input"-->
+<!--                                                    value="$100.00"-->
+<!--                                            />-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
 
-                            <div class="filter__separate"></div>
+<!--                            <div class="filter__separate"></div>-->
 
-                            <!-- Filter column 2 -->
-                            <div class="filter__col">
-                                <label for="" class="form__label">Size/Weight</label>
-                                <div class="filter__form-group">
-                                    <div class="form__select-wrap">
-                                        <div class="form__select" style="--width: 158px">
-                                            500g
-                                            <img
-                                                    th:src="@{/Assets/Customer_Shop/Assets/icons/select-arrow.svg}"
-                                                    alt=""
-                                                    class="form__select-arrow icon"
-                                            />
-                                        </div>
-                                        <div class="form__select">
-                                            Gram
-                                            <img
-                                                    th:src="@{/Assets/Customer_Shop/Assets/icons/select-arrow.svg}"
-                                                    alt=""
-                                                    class="form__select-arrow icon"
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="filter__form-group">
-                                    <div class="form__tags">
-                                        <button class="form__tag">Small</button>
-                                        <button class="form__tag">Medium</button>
-                                        <button class="form__tag">Large</button>
-                                    </div>
-                                </div>
-                            </div>
+<!--                            &lt;!&ndash; Filter column 2 &ndash;&gt;-->
+<!--                            <div class="filter__col">-->
+<!--                                <label for="" class="form__label">Size/Weight</label>-->
+<!--                                <div class="filter__form-group">-->
+<!--                                    <div class="form__select-wrap">-->
+<!--                                        <div class="form__select" style="&#45;&#45;width: 158px">-->
+<!--                                            500g-->
+<!--                                            <img-->
+<!--                                                    th:src="@{/Assets/Customer_Shop/Assets/icons/select-arrow.svg}"-->
+<!--                                                    alt=""-->
+<!--                                                    class="form__select-arrow icon"-->
+<!--                                            />-->
+<!--                                        </div>-->
+<!--                                        <div class="form__select">-->
+<!--                                            Gram-->
+<!--                                            <img-->
+<!--                                                    th:src="@{/Assets/Customer_Shop/Assets/icons/select-arrow.svg}"-->
+<!--                                                    alt=""-->
+<!--                                                    class="form__select-arrow icon"-->
+<!--                                            />-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <div class="filter__form-group">-->
+<!--                                    <div class="form__tags">-->
+<!--                                        <button class="form__tag">Small</button>-->
+<!--                                        <button class="form__tag">Medium</button>-->
+<!--                                        <button class="form__tag">Large</button>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
 
-                            <div class="filter__separate"></div>
+<!--                            <div class="filter__separate"></div>-->
 
-                            <!-- Filter column 3 -->
-                            <div class="filter__col">
-                                <label for="" class="form__label">Brand</label>
-                                <div class="filter__form-group">
-                                    <div class="filter__form-text-input">
-                                        <input
-                                                type="text"
-                                                name=""
-                                                id=""
-                                                placeholder="Search brand name"
-                                                class="filter__form-input"
-                                        />
-                                        <img
-                                                th:src="@{/Assets/Customer_Shop/Assets/icons/search.svg}"
-                                                alt=""
-                                                class="filter__form-input-icon icon"
-                                        />
-                                    </div>
-                                </div>
-                                <div class="filter__form-group">
-                                    <div class="form__tags">
-                                        <button class="form__tag">Lavazza</button>
-                                        <button class="form__tag">Nescafe</button>
-                                        <button class="form__tag">Starbucks</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="filter__row filter__footer">
-                            <button class="btn btn--text filter__cancel js-toggle" toggle-target="#home-filter">
-                                Cancel
-                            </button>
-                            <button
-                                    class="btn btn--primary filter__submit js-toggle"
-                                    toggle-target="#home-filter"
-                            >
-                                Show Result
-                            </button>
-                        </div>
-                    </form>
-                </div>
+<!--                            &lt;!&ndash; Filter column 3 &ndash;&gt;-->
+<!--                            <div class="filter__col">-->
+<!--                                <label for="" class="form__label">Brand</label>-->
+<!--                                <div class="filter__form-group">-->
+<!--                                    <div class="filter__form-text-input">-->
+<!--                                        <input-->
+<!--                                                type="text"-->
+<!--                                                name=""-->
+<!--                                                id=""-->
+<!--                                                placeholder="Search brand name"-->
+<!--                                                class="filter__form-input"-->
+<!--                                        />-->
+<!--                                        <img-->
+<!--                                                th:src="@{/Assets/Customer_Shop/Assets/icons/search.svg}"-->
+<!--                                                alt=""-->
+<!--                                                class="filter__form-input-icon icon"-->
+<!--                                        />-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <div class="filter__form-group">-->
+<!--                                    <div class="form__tags">-->
+<!--                                        <button class="form__tag">Lavazza</button>-->
+<!--                                        <button class="form__tag">Nescafe</button>-->
+<!--                                        <button class="form__tag">Starbucks</button>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="filter__row filter__footer">-->
+<!--                            <button class="btn btn&#45;&#45;text filter__cancel js-toggle" toggle-target="#home-filter">-->
+<!--                                Cancel-->
+<!--                            </button>-->
+<!--                            <button-->
+<!--                                    class="btn btn&#45;&#45;primary filter__submit js-toggle"-->
+<!--                                    toggle-target="#home-filter">-->
+<!--                                Show Result-->
+<!--                            </button>-->
+<!--                        </div>-->
+<!--                    </form>-->
+<!--                </div>-->
             </div>
         </div>
 
         <div class="row row-cols-5 row-cols-lg-2 row-cols-sm-1 g-3">
             <!-- Product card 1 -->
-            <div class="col">
+            <div class="col" th:each="product : ${listPro}">
                 <article class="product-card">
                     <div class="product-card__img-wrap">
                         <a href="./product-detail.html">
@@ -279,234 +277,25 @@
                         </button>
                     </div>
                     <h3 class="product-card__title">
-                        <a href="./product-detail.html">Coffee Beans - Espresso Arabica and Robusta Beans</a>
+                        <a href="./product-detail.html" th:text="${product.name}"></a>
                     </h3>
-                    <p class="product-card__brand">Lavazza</p>
+<!--                    <p class="product-card__brand">Lavazza</p>-->
                     <div class="product-card__row">
-                        <span class="product-card__price">$47.00</span>
+                        <span class="product-card__price" th:text="${product.price}"></span>
                         <img th:src="@{/Assets/Customer_Shop/Assets/icons/star.svg}" alt="" class="product-card__star" />
-                        <span class="product-card__score">4.3</span>
-                    </div>
-                </article>
-            </div>
-
-            <!-- Product card 2 -->
-            <div class="col">
-                <article class="product-card">
-                    <div class="product-card__img-wrap">
-                        <a href="./product-detail.html">
-                            <img th:src="@{/Assets/Customer_Shop/Assets/img/product/item-2.png}" alt="" class="product-card__thumb" />
-                        </a>
-                        <button class="like-btn product-card__like-btn">
-                            <img th:src="@{/Assets/Customer_Shop/Assets/icons/heart.svg}" alt="" class="like-btn__icon icon" />
-                            <img th:src="@{/Assets/Customer_Shop/Assets/icons/heart-red.svg}" alt="" class="like-btn__icon--liked" />
-                        </button>
-                    </div>
-                    <h3 class="product-card__title">
-                        <a href="./product-detail.html">Lavazza Coffee Blends - Try the Italian Espresso</a>
-                    </h3>
-                    <p class="product-card__brand">Lavazza</p>
-                    <div class="product-card__row">
-                        <span class="product-card__price">$53.00</span>
-                        <img th:src="@{/Assets/Customer_Shop/Assets/icons/star.svg}" alt="" class="product-card__star" />
-                        <span class="product-card__score">3.4</span>
-                    </div>
-                </article>
-            </div>
-
-            <!-- Product card 3 -->
-            <div class="col">
-                <article class="product-card">
-                    <div class="product-card__img-wrap">
-                        <a href="./product-detail.html">
-                            <img th:src="@{/Assets/Customer_Shop/Assets/img/product/item-5.png}" alt="" class="product-card__thumb" />
-                        </a>
-                        <button class="like-btn like-btn--liked product-card__like-btn">
-                            <img th:src="@{/Assets/Customer_Shop/Assets/icons/heart.svg}" alt="" class="like-btn__icon icon" />
-                            <img th:src="@{/Assets/Customer_Shop/Assets/icons/heart-red.svg}" alt="" class="like-btn__icon--liked" />
-                        </button>
-                    </div>
-                    <h3 class="product-card__title">
-                        <a href="./product-detail.html">Lavazza - Caffè Espresso Black Tin - Ground coffee</a>
-                    </h3>
-                    <p class="product-card__brand">Welikecoffee</p>
-                    <div class="product-card__row">
-                        <span class="product-card__price">$99.99</span>
-                        <img th:src="@{/Assets/Customer_Shop/Assets/icons/star.svg}" alt="" class="product-card__star" />
-                        <span class="product-card__score">5.0</span>
-                    </div>
-                </article>
-            </div>
-
-            <!-- Product card 4 -->
-            <div class="col">
-                <article class="product-card">
-                    <div class="product-card__img-wrap">
-                        <a href="./product-detail.html">
-                            <img th:src="@{/Assets/Customer_Shop/Assets/img/product/item-4.png}" alt="" class="product-card__thumb" />
-                        </a>
-                        <button class="like-btn product-card__like-btn">
-                            <img th:src="@{/Assets/Customer_Shop/Assets/icons/heart.svg}" alt="" class="like-btn__icon icon" />
-                            <img th:src="@{/Assets/Customer_Shop/Assets/icons/heart-red.svg}" alt="" class="like-btn__icon--liked" />
-                        </button>
-                    </div>
-                    <h3 class="product-card__title">
-                        <a href="./product-detail.html">Qualità Oro Mountain Grown - Espresso Coffee Beans</a>
-                    </h3>
-                    <p class="product-card__brand">Lavazza</p>
-                    <div class="product-card__row">
-                        <span class="product-card__price">$38.65</span>
-                        <img th:src="@{/Assets/Customer_Shop/Assets/icons/star.svg}" alt="" class="product-card__star" />
-                        <span class="product-card__score">4.4</span>
-                    </div>
-                </article>
-            </div>
-
-            <!-- Product card 5 -->
-            <div class="col">
-                <article class="product-card">
-                    <div class="product-card__img-wrap">
-                        <a href="./product-detail.html">
-                            <img th:src="@{/Assets/Customer_Shop/Assets/img/product/item-6.png}" alt="" class="product-card__thumb" />
-                        </a>
-                        <button class="like-btn product-card__like-btn">
-                            <img th:src="@{/Assets/Customer_Shop/Assets/icons/heart.svg}" alt="" class="like-btn__icon icon" />
-                            <img th:src="@{/Assets/Customer_Shop/Assets/icons/heart-red.svg}" alt="" class="like-btn__icon--liked" />
-                        </button>
-                    </div>
-                    <h3 class="product-card__title">
-                        <a href="./product-detail.html">Coffee Beans - Espresso Arabica and Robusta Beans</a>
-                    </h3>
-                    <p class="product-card__brand">Lavazza</p>
-                    <div class="product-card__row">
-                        <span class="product-card__price">$47.00</span>
-                        <img th:src="@{/Assets/Customer_Shop/Assets/icons/star.svg}" alt="" class="product-card__star" />
-                        <span class="product-card__score">4.3</span>
-                    </div>
-                </article>
-            </div>
-
-            <!-- Product card 6 -->
-            <div class="col">
-                <article class="product-card">
-                    <div class="product-card__img-wrap">
-                        <a href="./product-detail.html">
-                            <img th:src="@{/Assets/Customer_Shop/Assets/img/product/item-6.png}" alt="" class="product-card__thumb" />
-                        </a>
-                        <button class="like-btn product-card__like-btn">
-                            <img th:src="@{/Assets/Customer_Shop/Assets/icons/heart.svg}" alt="" class="like-btn__icon icon" />
-                            <img th:src="@{/Assets/Customer_Shop/Assets/icons/heart-red.svg}" alt="" class="like-btn__icon--liked" />
-                        </button>
-                    </div>
-                    <h3 class="product-card__title">
-                        <a href="./product-detail.html">Lavazza Coffee Blends - Try the Italian Espresso</a>
-                    </h3>
-                    <p class="product-card__brand">Lavazza</p>
-                    <div class="product-card__row">
-                        <span class="product-card__price">$53.00</span>
-                        <img th:src="@{/Assets/Customer_Shop/Assets/icons/star.svg}" alt="" class="product-card__star" />
-                        <span class="product-card__score">3.4</span>
-                    </div>
-                </article>
-            </div>
-
-            <!-- Product card 7 -->
-            <div class="col">
-                <article class="product-card">
-                    <div class="product-card__img-wrap">
-                        <a href="./product-detail.html">
-                            <img th:src="@{/Assets/Customer_Shop/Assets/img/product/item-3.png}" alt="" class="product-card__thumb" />
-                        </a>
-                        <button class="like-btn like-btn--liked product-card__like-btn">
-                            <img th:src="@{/Assets/Customer_Shop/Assets/icons/heart.svg}" alt="" class="like-btn__icon icon" />
-                            <img th:src="@{/Assets/Customer_Shop/Assets/icons/heart-red.svg}" alt="" class="like-btn__icon--liked" />
-                        </button>
-                    </div>
-                    <h3 class="product-card__title">
-                        <a href="./product-detail.html">Lavazza - Caffè Espresso Black Tin - Ground coffee</a>
-                    </h3>
-                    <p class="product-card__brand">Welikecoffee</p>
-                    <div class="product-card__row">
-                        <span class="product-card__price">$99.99</span>
-                        <img th:src="@{/Assets/Customer_Shop/Assets/icons/star.svg}" alt="" class="product-card__star" />
-                        <span class="product-card__score">5.0</span>
-                    </div>
-                </article>
-            </div>
-
-            <!-- Product card 8 -->
-            <div class="col">
-                <article class="product-card">
-                    <div class="product-card__img-wrap">
-                        <a href="./product-detail.html">
-                            <img th:src="@{/Assets/Customer_Shop/Assets/img/product/item-4.png}" alt="" class="product-card__thumb" />
-                        </a>
-                        <button class="like-btn product-card__like-btn">
-                            <img th:src="@{/Assets/Customer_Shop/Assets/icons/heart.svg}" alt="" class="like-btn__icon icon" />
-                            <img th:src="@{/Assets/Customer_Shop/Assets/icons/heart-red.svg}" alt="" class="like-btn__icon--liked" />
-                        </button>
-                    </div>
-                    <h3 class="product-card__title">
-                        <a href="./product-detail.html">Qualità Oro Mountain Grown - Espresso Coffee Beans</a>
-                    </h3>
-                    <p class="product-card__brand">Lavazza</p>
-                    <div class="product-card__row">
-                        <span class="product-card__price">$38.65</span>
-                        <img th:src="@{/Assets/Customer_Shop/Assets/icons/star.svg}" alt="" class="product-card__star" />
-                        <span class="product-card__score">4.4</span>
-                    </div>
-                </article>
-            </div>
-
-            <!-- Product card 9 -->
-            <div class="col">
-                <article class="product-card">
-                    <div class="product-card__img-wrap">
-                        <a href="./product-detail.html">
-                            <img th:src="@{/Assets/Customer_Shop/Assets/img/product/item-1.png}" alt="" class="product-card__thumb" />
-                        </a>
-                        <button class="like-btn product-card__like-btn">
-                            <img th:src="@{/Assets/Customer_Shop/Assets/icons/heart.svg}" alt="" class="like-btn__icon icon" />
-                            <img th:src="@{/Assets/Customer_Shop/Assets/icons/heart-red.svg}" alt="" class="like-btn__icon--liked" />
-                        </button>
-                    </div>
-                    <h3 class="product-card__title">
-                        <a href="./product-detail.html">Coffee Beans - Espresso Arabica and Robusta Beans</a>
-                    </h3>
-                    <p class="product-card__brand">Lavazza</p>
-                    <div class="product-card__row">
-                        <span class="product-card__price">$47.00</span>
-                        <img th:src="@{/Assets/Customer_Shop/Assets/icons/star.svg}" alt="" class="product-card__star" />
-                        <span class="product-card__score">4.3</span>
-                    </div>
-                </article>
-            </div>
-
-            <!-- Product card 10 -->
-            <div class="col">
-                <article class="product-card">
-                    <div class="product-card__img-wrap">
-                        <a href="./product-detail.html">
-                            <img th:src="@{/Assets/Customer_Shop/Assets/img/product/item-2.png}" alt="" class="product-card__thumb" />
-                        </a>
-                        <button class="like-btn product-card__like-btn">
-                            <img th:src="@{/Assets/Customer_Shop/Assets/icons/heart.svg}" alt="" class="like-btn__icon icon" />
-                            <img th:src="@{/Assets/Customer_Shop/Assets/icons/heart-red.svg}" alt="" class="like-btn__icon--liked" />
-                        </button>
-                    </div>
-                    <h3 class="product-card__title">
-                        <a href="./product-detail.html">Lavazza Coffee Blends - Try the Italian Espresso</a>
-                    </h3>
-                    <p class="product-card__brand">Lavazza</p>
-                    <div class="product-card__row">
-                        <span class="product-card__price">$53.00</span>
-                        <img th:src="@{/Assets/Customer_Shop/Assets/icons/star.svg}" alt="" class="product-card__star" />
-                        <span class="product-card__score">3.4</span>
+                        <span class="product-card__score" th:text="${product.rating}"></span>
                     </div>
                 </article>
             </div>
         </div>
     </section>
+
+    <div class="see-more">
+        <a class="btn btn--primary filter__submit" th:href="@{/all-product}">
+            Xem thêm
+            <img th:src="@{/Assets/Customer_Shop/Assets/icons/arrow-left.svg}" alt="" class="filter-btn__icon icon" />
+        </a>
+    </div>
 </main>
 
 <!-- Footer -->

@@ -1,13 +1,18 @@
 package com.sportshop.Service.Iml;
 
 import com.sportshop.Contants.StringConstant;
+import com.sportshop.Converter.ProductConverter;
 import com.sportshop.Modal.Result;
+import com.sportshop.Modal.SearchProduct;
 import com.sportshop.ModalDTO.ProductDTO;
 import com.sportshop.Entity.*;
 import com.sportshop.Repository.*;
 import com.sportshop.Service.ProductService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,6 +23,7 @@ import java.nio.file.Paths;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceIml implements ProductService {
@@ -30,6 +36,9 @@ public class ProductServiceIml implements ProductService {
 
     @Autowired
     private ProductTypeDetailRepository productTypeDetailRepository;
+
+    @Autowired
+    ProductConverter productConverter;
 
     // Đường dẫn lưu file ảnh (cấu hình trong application.properties)
     private final String uploadDir = StringConstant.PRODUCTIMAGE_URL;
@@ -95,5 +104,25 @@ public class ProductServiceIml implements ProductService {
             e.printStackTrace();
             return new Result(false, "Thêm sản phẩm không thành công: " + e.getMessage());
         }
+    }
+
+    @Override
+    public List<ProductDTO> findTop5Rating(String status) {
+        List<ProductEntity> listPro = productRepository.findTop5ByStatusOrderByRatingDesc(status);
+        return listPro.stream().map(productConverter::toDTO).collect(Collectors.toList());
+    }
+
+    @Override
+    public Page <ProductDTO> getAll(SearchProduct searchProduct, Pageable pageable) {
+        List<String> types = (searchProduct.getTypes() != null && searchProduct.getTypes().isEmpty()) ? null : searchProduct.getTypes();
+        Page<ProductEntity> productPage = productRepository.searchProducts(
+                searchProduct.getName(),
+                searchProduct.getMinPrice(),
+                searchProduct.getMaxPrice(),
+                searchProduct.getRating(),
+                types,
+                pageable
+        );
+        return productPage.map(productConverter::toDTO);
     }
 }
