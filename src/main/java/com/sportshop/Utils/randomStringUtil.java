@@ -53,5 +53,10 @@ public class randomStringUtil {
         return new String(characters);
     }
 
+//    public static void main(String[] args) {
+//        String a=randomOTP(4);
+//        System.out.println( a );
+//    }
+
 
 }

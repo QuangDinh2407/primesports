@@ -29,8 +29,11 @@ public class RoutingDataSource extends AbstractRoutingDataSource {
             if(isAdmin) {
                 return "admin";
             }
-            else{
+            else if(isCustomer){
                 return "customer";
+            }
+            else {
+                return "auth";
             }
         }
         return "auth";

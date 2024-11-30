@@ -9,7 +9,7 @@ import lombok.*;
 import jakarta.persistence.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
-
+@Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -23,6 +23,9 @@ public class ProductEntity {
 
 	@Column(nullable = false, columnDefinition = "nvarchar(255)")
 	private String name;
+
+	@Column(nullable = false)
+	private int quantity;
 
 	@Column(nullable = false)
 	private float price;
@@ -45,6 +48,7 @@ public class ProductEntity {
 	private String status;
 	
 	@OneToMany (mappedBy = "product", fetch = FetchType.LAZY)
+	@ToString.Exclude
 	private List <ProductTypeDetailEntity> productTypeDetailItems = new ArrayList<ProductTypeDetailEntity>();
 	
 	@OneToMany (mappedBy = "product", fetch = FetchType.LAZY)

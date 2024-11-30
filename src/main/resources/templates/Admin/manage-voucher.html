@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/Common/Admin/LayoutMaster.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>ADMIN SHOP</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            line-height: 2!important;
+            word-wrap: break-word;
+            word-break: break-word;
+            white-space: normal!important;
+        }
+
+        td {
+            max-width: 200px;
+        }
+        th:nth-child(1), td:nth-child(1) {
+            width: 200px;
+        }
+        th:nth-child(2), td:nth-child(2){
+            width:140px;
+        }
+        th:nth-child(3), td:nth-child(3){
+            width: 100px;
+        }
+        th:nth-child(4), td:nth-child(4) {
+            width: 120px;
+        }
+
+        th:nth-child(5), td:nth-child(5){
+            width:150px;
+        }
+
+        th:nth-child(6), td:nth-child(6){
+            width:230px;
+        }
+
+        .btn-container{
+            display: inline-block;
+        }
+
+        a.button {
+            text-decoration: none;
+            font-size: 14px;
+            margin: 5px;
+            padding: 4px 10px;
+            border: 1px solid;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        a.button:hover {
+            background-color: #c7c7c7 !important;
+        }
+
+        a i {
+            margin-right: 5px;
+        }
+
+        .edit-button{
+            color: blue;
+        }
+
+        .delete-button{
+            color: red;
+        }
+
+        .delete-button:hover{
+            color: red !important;
+        }
+
+        .view-button{
+            color: #c9c921;
+        }
+
+        .view-button:hover{
+            color: #c9c921 !important;
+        }
+
+        .input-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-container input {
+            width: 100%;
+            padding-right: 40px; /* Để chừa khoảng trống cho icon */
+        }
+
+        #dateInputStart, #dateInputEnd, #dateInputStartAdd, #dateInputEndAdd {
+            background-color: white; /* Màu nền */
+        }
+
+        .input-container .calendar-icon {
+            position: absolute;
+            right: 10px; /* Đặt icon ở cạnh phải */
+            top: 50%;
+            transform: translateY(-50%);
+            color: #888; /* Màu icon */
+            pointer-events: none; /* Không ảnh hưởng đến thao tác nhập liệu */
+        }
+
+        #typeProduct.checkbox-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px; /* Khoảng cách giữa các ô */
+        }
+        .form-check {
+            margin: 5px 0; /* Khoảng cách giữa các checkbox trong cùng cột */
+        }
+    </style>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/flatpickr.min.js"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/vn.js"></script>
+
+</head>
+<body>
+<div class="container" layout:fragment="content">
+    <div class="content" >
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>Tên mã</th>
+                <th>Mã giảm</th>
+                <th>Giá trị</th>
+                <th>Trạng thái</th>
+                <th>Hạn sử dụng</th>
+                <th>Loại SP</th>
+                <th> <!-- Nút mở Modal Thêm Voucher -->
+                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addVoucherModal">
+                        Thêm Voucher
+                    </button>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="voucher : ${vCListDTO}">
+                <td th:text="${voucher.name}"></td>
+                <td th:text="${voucher.code}"></td>
+                <td th:text="${voucher.getDiscountAmount()}"></td>
+                <td th:classappend="${voucher.getStatus() == 'active'} ? 'text-success' : 'text-danger'">
+                    <span th:text="${voucher.getStatus()}"></span>
+                    <i class="ti-arrow-up" th:if="${voucher.getStatus() == 'active'}"></i>
+                    <i class="ti-arrow-down" th:if="${voucher.getStatus() != 'active'}"></i>
+                </td>
+                <td th:text="${#dates.format(voucher.getEnded_at(), 'dd-MM-yyyy HH:mm:ss')}"></td>
+                <td th:text="${voucher.productTypeName}"></td>
+                <td>
+                    <div class="btn-container">
+                        <a class="button edit-button"
+                           th:data-id="${voucher.shopVoucher_id}"
+                           th:data-name="${voucher.name}"
+                           th:data-code="${voucher.code}"
+                           th:data-discount="${voucher.discountAmount}"
+                           th:data-startdate="${voucher.started_at}"
+                           th:data-enddate="${voucher.ended_at}"
+                           th:data-description="${voucher.description}"
+                           data-toggle="modal" data-target="#editVoucherModal">
+                            <i class="mdi mdi-lead-pencil"></i>
+                        </a>
+                    </div>
+                    <div class="btn-container">
+                        <a class="button delete-button"
+                           th:data-id="${voucher.shopVoucher_id}"
+                           th:data-code="${voucher.code}"
+                           data-toggle="modal" data-target="#deleteModal">
+                            <i class="mdi mdi-delete"></i>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <!-- Modal Thêm Voucher -->
+        <div class="modal fade" id="addVoucherModal" tabindex="-1" role="dialog" aria-labelledby="addVoucherModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addVoucherModalLabel">Thêm Voucher</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Form thêm Voucher -->
+                        <form id="addVoucherForm" method="POST" th:action="@{/admin/manage-voucher/add}">
+                            <div class="form-group row">
+                                <div class="col-md-6">
+                                    <label for="voucherNameAdd">Tên mã:</label>
+                                    <input type="text" class="form-control" id="voucherNameAdd" placeholder="Nhập tên mã" name="name">
+                                    <small class="error-message text-danger" id="error-voucherNameAdd"></small>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="voucherCodeAdd">Mã giảm:</label>
+                                    <input type="text" class="form-control" id="voucherCodeAdd" placeholder="Nhập mã giảm" name="code">
+                                    <small class="error-message text-danger" id="error-voucherCodeAdd"></small>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="voucherDiscountAmountAdd">Giá trị giảm:</label>
+                                <input type="number" class="form-control" id="voucherDiscountAmountAdd" placeholder="Nhập giá trị giảm" name="discountAmount">
+                                <small class="error-message text-danger" id="error-voucherDiscountAmountAdd"></small>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-6">
+                                    <label for="dateInputStartAdd">Ngày bắt đầu:</label>
+                                    <div class="input-container">
+                                        <input class="form-control" id="dateInputStartAdd" type="text" name="started_at_add" placeholder="Nhập ngày bắt đầu">
+                                        <i class="fa-regular fa-calendar-days calendar-icon"></i>
+                                    </div>
+                                    <small class="error-message text-danger" id="error-dateInputStartAdd"></small>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="dateInputEndAdd">Ngày kết thúc:</label>
+                                    <div class="input-container">
+                                        <input class="form-control" id="dateInputEndAdd" type="text" name="ended_at_add" placeholder="Nhập ngày kết thúc">
+                                        <i class="fa-regular fa-calendar-days calendar-icon"></i>
+                                    </div>
+                                    <small class="error-message text-danger" id="error-dateInputEndAdd"></small>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="voucherDescriptionAdd">Mô tả chi tiết:</label>
+                                <textarea class="form-control" id="voucherDescriptionAdd" name="description" rows="3" placeholder="Nhập mô tả chi tiết"></textarea>
+<!--                                <small class="error-message text-danger" id="error-voucherDescriptionAdd"></small>-->
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                                <button type="submit" class="btn btn-primary" id="saveAddVoucherBtn">Hoàn thành</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal Chỉnh sửa Voucher -->
+        <div class="modal fade" id="editVoucherModal" tabindex="-1" role="dialog" aria-labelledby="editVoucherModalLabel" aria-hidden="true">
+            <div class="modal-dialog" style="max-width: 1000px;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editVoucherModalLabel">Chỉnh sửa Voucher</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Form chỉnh sửa Voucher -->
+                        <form id="editVoucherForm" method="POST" th:action="@{/admin/manage-voucher/edit}">
+                            <input type="hidden" id="voucherId" name="voucher_id">
+                            <!-- Tên mã, Mã giảm và Giá trị giảm -->
+                            <div class="form-group row">
+                                <div class="col-md-4">
+                                    <label for="voucherNameEdit">Tên mã:</label>
+                                    <input type="text" class="form-control" id="voucherNameEdit" placeholder="Nhập tên mã" name="name">
+                                    <small class="error-message text-danger" id="error-voucherNameEdit"></small>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="voucherCodeEdit">Mã giảm:</label>
+                                    <input type="text" class="form-control" id="voucherCodeEdit" placeholder="Nhập mã giảm" name="code">
+                                    <small class="error-message text-danger" id="error-voucherCodeEdit"></small>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="voucherDiscountAmountEdit">Giá trị giảm:</label>
+                                    <input type="number" class="form-control" id="voucherDiscountAmountEdit" placeholder="Nhập giá trị giảm" name="discountAmount">
+                                    <small class="error-message text-danger" id="error-voucherDiscountAmountEdit"></small>
+                                </div>
+                            </div>
+
+                            <!-- Ngày bắt đầu và Ngày kết thúc -->
+                            <div class="form-group row">
+                                <div class="col-md-4">
+                                    <label for="dateInputStart">Ngày bắt đầu:</label>
+                                    <div class="input-container">
+                                        <input class="form-control" id="dateInputStart" type="text" name="started_at1" placeholder="Nhập ngày bắt đầu">
+                                        <i class="fa-regular fa-calendar-days calendar-icon"></i>
+                                    </div>
+                                    <small class="error-message text-danger" id="error-dateInputStart"></small>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="dateInputEnd">Ngày kết thúc:</label>
+                                    <div class="input-container">
+                                        <input class="form-control" id="dateInputEnd" type="text" name="ended_at1" placeholder="Nhập ngày kết thúc">
+                                        <i class="fa-regular fa-calendar-days calendar-icon"></i>
+                                    </div>
+                                    <small class="error-message text-danger" id="error-dateInputEnd"></small>
+                                </div>
+                            </div>
+                            <!-- Mô tả chi tiết -->
+                            <div class="form-group">
+                                <label for="voucherDescriptionEdit">Mô tả chi tiết:</label>
+                                <textarea class="form-control" id="voucherDescriptionEdit" name="description" rows="3" placeholder="Nhập mô tả chi tiết"></textarea>
+                                <small class="error-message text-danger" id="error-voucherDescriptionEdit"></small>
+                            </div>
+                            <!-- Loại sản phẩm -->
+                            <div class="form-group">
+                                <label for="typeProduct">Chọn loại sản phẩm:</label>
+                                <div id="typeProduct" class="checkbox-grid">
+                                    <!-- Checkbox Chọn tất cả -->
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="selectAll" onclick="toggleAllCheckboxes(this)">
+                                        <label class="form-check-label" for="selectAll">Chọn tất cả</label>
+                                    </div>
+
+                                    <!-- Các checkbox sản phẩm -->
+                                    <div class="form-check" th:each="type : ${listProductTypeDTO}">
+                                        <input class="form-check-input"
+                                               type="checkbox"
+                                               th:id="'productType' + ${type.name}"
+                                               th:name="'listTypeEdit[]'"
+                                               th:value="${type.name}">
+                                        <label class="form-check-label"
+                                               th:for="'productType' + ${type.name}"
+                                               th:text="${type.name}"></label>
+                                    </div>
+                                </div>
+                                <small class="error-message text-danger" id="error-typeProduct"></small>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                                <button type="submit" class="btn btn-primary" id="saveEditVoucherBtn">Tiêp tục</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal Xác nhận xóa Voucher -->
+        <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deleteModalLabel">Xác nhận xóa</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form id="deleteVoucherForm" method="POST" th:action="@{/admin/manage-voucher/delete}">
+                        <div class="modal-body">
+                            Bạn có chắc chắn muốn xóa voucher này không?
+                            <!-- Hidden input để truyền mã voucher -->
+                            <input type="hidden" id="deleteVoucherCode" name="code">
+                            <input type="hidden" id="deleteVoucherId" name="shopVoucher_id">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                            <button type="submit" class="btn btn-danger">Xóa</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div layout:fragment="script">
+    <script>
+        // Khi click vào nút chỉnh sửa, điền dữ liệu vào form modal
+        $('a.edit-button').on('click', function() {
+            var voucherId = $(this).data('id');
+            var voucherName = $(this).data('name');
+            var voucherCode = $(this).data('code');
+            var voucherDiscountAmount = $(this).data('discount');
+            var voucherStartDate = $(this).data('startdate');
+            var voucherEndDate = $(this).data('enddate');
+            var voucherDescription = $(this).data('description');
+
+            // Log dữ liệu để kiểm tra
+            console.log("Voucher ID: " + voucherId);
+            console.log("Voucher Name: " + voucherName);
+            console.log("Voucher Code: " + voucherCode);
+            console.log("Voucher Discount: " + voucherDiscountAmount);
+            console.log("Voucher Start Date: " + voucherStartDate);
+            console.log("Voucher End Date: " + voucherEndDate);
+            console.log("Voucher Description: " + voucherDescription);
+
+            // Điền dữ liệu vào các trường trong modal
+            $('#voucherId').val(voucherId);
+            $('#voucherNameEdit').val(voucherName);
+            $('#voucherCodeEdit').val(voucherCode);
+            $('#voucherDiscountAmountEdit').val(voucherDiscountAmount);
+            $('#dateInputStart').val(voucherStartDate);
+            $('#dateInputEnd').val(voucherEndDate);
+            $('#voucherDescriptionEdit').val(voucherDescription);
+        });
+        $('a.delete-button').on('click', function() {
+            var voucherCode = $(this).data('code'); // Lấy giá trị code từ data-code
+            var voucherId = $(this).data('id');
+            // Log để kiểm tra giá trị
+            console.log("Voucher Code to delete: " + voucherCode);
+
+            // Điền giá trị vào input ẩn của modal
+            $('#deleteVoucherCode').val(voucherCode);
+            $('#deleteVoucherId').val(voucherId);
+
+        });
+    </script>
+    <script>
+        // Hàm thiết lập Flatpickr cho một trường input cụ thể
+        function setupDatePicker(inputId, iconSelector) {
+            const input = document.querySelector(inputId);
+            const datePicker = flatpickr(input, {
+                enableTime: true, // Bật chọn giờ, phút
+                enableSeconds: true,
+                time_24hr: true,  // Hiển thị giờ ở định dạng 24 giờ
+                dateFormat: "Y-m-d H:i:S", // Định dạng ngày, giờ, phút, giây
+                locale: "vn", // Ngôn ngữ Việt Nam
+                onChange: function (selectedDates, dateStr, instance) {
+                   document.getElementById(inputId).value = dateStr;
+                },
+            });
+
+            // Gắn sự kiện click vào biểu tượng lịch
+            const dateIcon = document.querySelector(iconSelector);
+            if (dateIcon) {
+                dateIcon.addEventListener('click', function () {
+                    datePicker.open();
+                });
+            }
+        }
+        // Thiết lập Flatpickr cho từng trường
+        setupDatePicker("#dateInputStart", "#dateInputStart + .calendar-icon");
+        setupDatePicker("#dateInputEnd", "#dateInputEnd + .calendar-icon");
+        setupDatePicker("#dateInputStartAdd", "#dateInputStart + .calendar-icon");
+        setupDatePicker("#dateInputEndAdd", "#dateInputEnd + .calendar-icon");
+    </script>
+    <script>
+        // Hàm kiểm tra form
+        function validateForm(fields) {
+            let isValid = true; // Cờ kiểm tra toàn bộ form
+
+            // Xóa thông báo lỗi cũ
+            fields.forEach(({ id, errorId }) => {
+                const input = document.getElementById(id);
+                if (input) {
+                    input.classList.remove("is-invalid");
+                    document.getElementById(errorId).textContent = "";
+                }
+            });
+
+            // Kiểm tra từng trường
+            fields.forEach(({ id, errorId, message }) => {
+                const input = document.getElementById(id);
+                if (input && !input.value.trim()) {
+                    isValid = false;
+                    input.classList.add("is-invalid");
+                    document.getElementById(errorId).textContent = message;
+                }
+            });
+
+            return isValid;
+        }
+
+        // Xử lý form thêm voucher
+        document.getElementById("addVoucherForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+            const fields = [
+                { id: "voucherNameAdd", errorId: "error-voucherNameAdd", message: "Tên mã không được để trống." },
+                { id: "voucherCodeAdd", errorId: "error-voucherCodeAdd", message: "Mã giảm không được để trống." },
+                { id: "voucherDiscountAmountAdd", errorId: "error-voucherDiscountAmountAdd", message: "Giá trị giảm không được để trống." },
+                { id: "dateInputStartAdd", errorId: "error-dateInputStartAdd", message: "Ngày bắt đầu không được để trống." },
+                { id: "dateInputEndAdd", errorId: "error-dateInputEndAdd", message: "Ngày kết thúc không được để trống." },
+            ];
+            const isValid = validateForm(fields);
+            if (isValid) {
+                this.submit();
+            }
+        });
+        // Xử lý form chỉnh sửa voucher
+        document.getElementById("editVoucherForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            const fields = [
+                { id: "voucherNameEdit", errorId: "error-voucherNameEdit", message: "Tên mã không được để trống." },
+                { id: "voucherCodeEdit", errorId: "error-voucherCodeEdit", message: "Mã giảm không được để trống." },
+                { id: "voucherDiscountAmountEdit", errorId: "error-voucherDiscountAmountEdit", message: "Giá trị giảm không được để trống." },
+                { id: "dateInputStart", errorId: "error-dateInputStart", message: "Ngày bắt đầu không được để trống." },
+                { id: "dateInputEnd", errorId: "error-dateInputEnd", message: "Ngày kết thúc không được để trống." },
+            ];
+            const isValid = validateForm(fields);
+            if (isValid) {
+                this.submit();
+            }
+        });
+    </script>
+    <script>
+        // Hàm để đánh dấu hoặc bỏ đánh dấu tất cả checkbox
+        function toggleAllCheckboxes(selectAllCheckbox) {
+            // Lấy tất cả các checkbox con (trừ checkbox "Chọn tất cả")
+            const checkboxes = document.querySelectorAll('#typeProduct .form-check-input:not(#selectAll)');
+
+            // Đánh dấu hoặc bỏ đánh dấu tất cả checkbox dựa trên trạng thái của checkbox "Chọn tất cả"
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = selectAllCheckbox.checked;
+            });
+        }
+    </script>
+</div>
+</body>
+</html>

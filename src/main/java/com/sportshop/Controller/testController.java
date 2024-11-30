@@ -1,10 +1,17 @@
 package com.sportshop.Controller;
 
+import com.sportshop.Entity.ProductTypeDetailEntity;
+import com.sportshop.Entity.ProductTypeEntity;
 import com.sportshop.Modal.Mail;
 import com.sportshop.ModalDTO.AccountDTO;
+import com.sportshop.ModalDTO.ShopVoucherDTO;
+import com.sportshop.ModalDTO.ShopVoucherDetailDTO;
 import com.sportshop.ModalDTO.UserDTO;
+import com.sportshop.Repository.ProductTypeRepository;
+import com.sportshop.Repository.ShopVoucherDetailRepository;
 import com.sportshop.Service.AccountService;
 import com.sportshop.Service.MailService;
+import com.sportshop.Service.ShopVoucherService;
 import com.sportshop.Service.UserService;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.ServletContext;
@@ -25,8 +32,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
-/*@RestController*/
-@Controller
+@RestController
+//@Controller
 public class testController {
 
     @Autowired
@@ -36,7 +43,16 @@ public class testController {
     AccountService accountService;
 
     @Autowired
+    ShopVoucherService shopVoucherService;
+
+    @Autowired
     MailService mailService;
+
+    @Autowired
+    ShopVoucherDetailRepository shopVoucherDetailRepository;
+
+    @Autowired
+    ProductTypeRepository productTypeRepository;
 
     @GetMapping("/test")
     public String test() {
@@ -84,8 +100,6 @@ public class testController {
         return "welcome";
     }
 
-
-
     private static String UPLOAD_DIRECTORY = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\Assets\\image\\Employee";
 
     @GetMapping("/upload")
@@ -119,5 +133,29 @@ public class testController {
 
         return "redirect:/upload";
     }
+
+    @GetMapping("/type")
+    List<ProductTypeEntity> hehe (){
+        List<ProductTypeEntity> hehe = productTypeRepository.findAll();
+        hehe.forEach(ProductType ->{
+            List<ProductTypeDetailEntity> a = ProductType.getProductTypeDetailItems();
+            a.forEach(product ->{
+                System.out.println(product.getProduct().getName());
+            });
+        });
+        return productTypeRepository.findAll();
+    }
+
+    @GetMapping("/pro")
+    List<ProductTypeEntity> haha (@RequestParam List<String> names){
+        List<ProductTypeEntity> a = productTypeRepository.findByNameIn(names);
+        a.forEach(pro ->{
+            pro.getProductTypeDetailItems().forEach(prod ->{
+                System.out.println(prod.getProduct().getName());
+            });
+        });
+        return a;
+    }
+
 
 }

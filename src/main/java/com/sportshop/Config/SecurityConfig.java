@@ -68,6 +68,7 @@ public class SecurityConfig {
        http.csrf(Customizer.withDefaults())
                 .authorizeHttpRequests(req -> req
                         .requestMatchers(WHITE_LIST_URL).permitAll()            // Permit requests to the whitelist URLs
+                        //.requestMatchers("/captcha").permitAll()  // Cho phép truy cập đến CAPTCHA
                         .requestMatchers("/admin/**").hasAuthority("ADMIN")
                         //.requestMatchers("/employee/**").hasAuthority("EMPLOYEE")
                         .requestMatchers("/customer/**").hasAuthority("CUSTOMER")  // Only users with 'ADMIN' role can access admin routes

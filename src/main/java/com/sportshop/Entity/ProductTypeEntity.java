@@ -6,7 +6,7 @@ import java.util.List;
 import lombok.*;
 import jakarta.persistence.*;
 
-
+@Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -14,7 +14,6 @@ import jakarta.persistence.*;
 @Table (name = "ProductType")
 public class ProductTypeEntity {
 	@Id
-	@GeneratedValue (strategy = GenerationType.UUID)
 	private String productType_id;
 
 	@Column(nullable = false, columnDefinition = "nvarchar(255)")
@@ -23,6 +22,7 @@ public class ProductTypeEntity {
 	private String parent_id;
 	
 	@OneToMany (mappedBy = "productType", fetch = FetchType.LAZY)
+	@ToString.Exclude
 	private List <ProductTypeDetailEntity> productTypeDetailItems = new ArrayList<ProductTypeDetailEntity>();
 
 

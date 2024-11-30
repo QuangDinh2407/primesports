@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/Common/Admin/LayoutMaster.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>ADMIN SHOP</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            line-height: 2!important;
+            word-wrap: break-word;
+            word-break: break-word;
+            white-space: normal!important;
+        }
+
+        td {
+            max-width: 200px;
+        }
+
+        th:nth-child(1), td:nth-child(1) {
+            width: 150px;
+        }
+        th:nth-child(2), td:nth-child(2){
+            width:100px;
+        }
+        th:nth-child(3), td:nth-child(3){
+            width: 100px;
+        }
+        th:nth-child(4), td:nth-child(4) {
+            width: 120px;
+        }
+
+        th:nth-child(5), td:nth-child(5) {
+            width: 100px;
+        }
+
+        a i {
+            margin-right: 5px;
+        }
+
+        .input-container input {
+            width: 100%;
+            padding-right: 40px; /* Để chừa khoảng trống cho icon */
+        }
+
+        /* CSS cho checkbox */
+        td input[type="checkbox"] {
+            width: 18px;  /* Giảm kích thước checkbox */
+            height: 18px;
+            cursor: pointer;
+        }
+
+        /* Tăng kích thước cho chữ "Chọn tất cả" */
+        .select-all {
+            font-size: 14px; /* Giảm kích thước chữ */
+            font-weight: bold;
+            color: #007bff;
+            cursor: pointer;
+        }
+
+        .select-all:hover {
+            color: #0056b3;
+        }
+
+    </style>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/vn.js"></script>
+</head>
+<body>
+<div class="container" layout:fragment="content">
+    <div class="content">
+        <form method="POST" th:action="@{/admin/manage-voucher/add_product}">
+            <input type="hidden" th:value="${voucher_id}" name="voucher_id">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>Tên sản phẩm</th>
+                <th>Giá</th>
+                <th>Số lượng</th>
+                <th>
+                    <span class="select-all" onclick="toggleSelectAll()">Chọn tất cả</span>
+                </th>
+                <th>
+                    <button type="submit" class="btn btn-success"  >
+                        Hoàn thành
+                    </button>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- Lặp qua các voucher trong danh sách vCListDTO -->
+            <tr th:each="product : ${listPro}">
+                <td th:text="${product.name}"></td> <!-- Thay getName() bằng name -->
+                <td th:text="${product.price}"></td>
+                <td th:text="${product.quantity}"></td>
+<!--                <td th:text="${product.product_id}"></td>-->
+                <td>
+                    <input type="checkbox"
+                           class="select-checkbox"
+                           th:name="'selectedProducts[]'"
+                           th:value="${product.product_id}"
+                           th:checked="${existProductInVoucher.contains(product.product_id)}">
+                </td>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div th:each="product : ${listProducts}">
+            <p th:text="${product.getName()}"></p> <!-- Thay getName() bằng name -->
+        </div>
+        </form>
+    </div>
+</div>
+<div layout:fragment="script"><script>
+    // JavaScript để chọn/hủy chọn tất cả checkbox
+    function toggleSelectAll() {
+        var checkboxes = document.querySelectorAll('.select-checkbox');
+        var selectAllText = document.querySelector('.select-all');
+
+        var allChecked = Array.from(checkboxes).every(checkbox => checkbox.checked);
+
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = !allChecked;
+        });
+
+        // Cập nhật text "Chọn tất cả" tùy theo trạng thái
+        if (allChecked) {
+            selectAllText.textContent = 'Chọn tất cả';
+        } else {
+            selectAllText.textContent = 'Bỏ chọn tất cả';
+        }
+    }
+</script>
+</div>
+
+</body>
+</html>

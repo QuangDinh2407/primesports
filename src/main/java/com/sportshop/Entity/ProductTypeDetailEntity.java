@@ -21,7 +21,7 @@ public class ProductTypeDetailEntity {
 	
 	@ManyToOne
 	@JoinColumn(name="productType_id", referencedColumnName = "productType_id")
+	@ToString.Exclude
 	private ProductTypeEntity productType;
 
-	
 }

@@ -28,8 +28,10 @@ public class UserServiceIml implements UserService {
 
     @Autowired
     UserInfoRepository userInfoRepo;
+
     @Autowired
     private PasswordEncoder passwordEncoder;
+
     @Autowired
     private AccountRepository accountRepository;
 

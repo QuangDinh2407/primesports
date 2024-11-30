@@ -14246,7 +14246,7 @@ fieldset:disabled .swal2-modal .swal2-buttonswrapper .swal2-styled,
 
 @media (min-width: 576px) {
   .modal-dialog {
-    max-width: 500px;
+    max-width: 1000px;
     margin: 30px auto;
   }
   .modal-dialog-scrollable {
@@ -24217,7 +24217,7 @@ dl li {
 
 /* Modals */
 .modal .modal-dialog {
-  margin-top: 100px;
+  margin-top: 50px;
 }
 
 .modal .modal-dialog .modal-content .modal-header {
