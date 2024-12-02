@@ -27,8 +27,20 @@
     <script th:src="@{/Assets/Customer_Shop/Assets/js/scripts.js}"></script>
     <script th:src="@{/Assets/Toast_Message/toastmessjs.js}"></script>
     <script th:src="@{/Assets/Form_Validator/validatorjs.js}"></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
 </head>
+<style>
+    .error-message{
+        position: absolute;
+        margin-top: 10px;
+        left: 0;
+        color: red;
+    }
+    .g-recaptcha{
+        margin-top: 10px;
+    }
+</style>
 <body>
 <div id="toast"></div>
 <main class="auth">
@@ -88,6 +100,12 @@
                         <span class="form__checkbox-label">Remember sign in</span>
                     </label>
                     <a th:href="@{/auth/send-otp}" class="auth__link form__pull-right">Forgot password?</a>
+                </div>
+
+                <div class="g-recaptcha" data-sitekey="6LejbI8qAAAAABd0GBVRWsRaRjU1w1r6QnVsJ3UX"></div>
+
+                <div th:if="${errorMessage != null}" class="error-message">
+                    <span th:text="${errorMessage}"></span>
                 </div>
 
                 <div class="form__group auth__btn-group">

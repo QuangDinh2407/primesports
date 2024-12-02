@@ -3750,6 +3750,7 @@ html {
 .auth__form {
   width: 100%;
   margin-top: 9px;
+  position: relative;
 }
 .auth__form-forgot {
   margin-top: 10px;
@@ -3774,7 +3775,7 @@ html {
   display: flex;
   flex-direction: column;
   gap: 30px;
-  margin-top: 29px;
+  margin-top: 35px;
 }
 @media (max-width: 767.98px) {
   .auth__btn-group {

@@ -2,6 +2,7 @@ package com.sportshop.Config;
 
 import com.sportshop.Entity.AccountEntity;
 import com.sportshop.Repository.AccountRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -14,6 +15,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import java.security.SecureRandom;
@@ -32,7 +34,7 @@ public class SecurityConfig {
             "/server-error",
             "/Assets/**"    // Static assets like CSS, JS, etc.
     };
-
+    
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -63,7 +65,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, RecaptchaAuthenticationFilter recaptchaAuthenticationFilter) throws Exception {
         //CSRF protection and configure request authorization
        http.csrf(Customizer.withDefaults())
                 .authorizeHttpRequests(req -> req
@@ -78,6 +80,7 @@ public class SecurityConfig {
                         .accessDeniedPage("/access-denied") // URL cho trang từ chối quyền truy cập
                 )
                 // Configure form-based login
+               .addFilterBefore(recaptchaAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .formLogin((form) -> form
                         .loginPage("/auth/sign-in")                             // Custom login page URL
                         .loginProcessingUrl("/auth/sign-in")                    // URL to submit login credentials

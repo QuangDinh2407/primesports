@@ -23,7 +23,11 @@ public class AuthController {
 
 
     @GetMapping("/sign-in")
-    public String renderSignIn() {
+    public String renderSignIn(@RequestParam(required = false) String error, Model model)
+    {
+        if (error != null && error.equals("missingRecapcha")) {
+            model.addAttribute("errorMessage", "Vui lòng xác minh reCAPTCHA.");
+        }
         return "Auth/sign-in";
     }
 
