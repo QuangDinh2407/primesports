@@ -34,7 +34,10 @@ public class SecurityConfig {
             "/server-error",
             "/Assets/**"    // Static assets like CSS, JS, etc.
     };
-    
+
+    @Autowired
+    private AuthSuccessHandler authSuccessHandler;
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -86,9 +89,14 @@ public class SecurityConfig {
                         .loginProcessingUrl("/auth/sign-in")                    // URL to submit login credentials
                         .failureUrl("/auth/sign-in?error=true")                      // Redirect on login failure
 //                        .defaultSuccessUrl("/success", true)                           // Redirect to home on successful login
-                        .successHandler(new AuthSuccessHandler()) // Custom success handler for additional actions after login
+                        .successHandler(authSuccessHandler) // Custom success handler for additional actions after login
                         .permitAll()                                            // Allow everyone to access the login page
                 )
+               .oauth2Login(oauth2 -> oauth2
+                       .loginPage("/auth/sign-in")  // Đặt trang login tùy chỉnh nếu cần
+                       .successHandler(authSuccessHandler)  // Sử dụng handler tùy chỉnh sau khi đăng nhập thành công
+                       .failureUrl("/auth/sign-in?error=true")    // Đặt URL khi đăng nhập thất bại
+               )
                 .rememberMe((rememberMe) -> rememberMe
                         .key(generateRandomKey())
                         .tokenValiditySeconds(86400)
@@ -98,7 +106,7 @@ public class SecurityConfig {
                 .logout((logout) -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/auth/sign-out", "GET")) // Allow GET for logout                                           // URL for logging out
                         .logoutSuccessUrl("/auth/sign-in")                                          // Redirect to home page after logout
-                        .deleteCookies("JSESSIONID", "userAuth")                // Delete cookies on logout
+                        .deleteCookies("JSESSIONID", "userAuth","oauth2_access_token", "oauth2_refresh_token")                // Delete cookies on logout
                         .invalidateHttpSession(true)                                               // Invalidate session on logout
                         .clearAuthentication(true)                                                  // Clear authentication on logout
                         .permitAll()                                                                // Allow everyone to log out

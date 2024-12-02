@@ -33,4 +33,6 @@ public interface AccountService {
 
     Result addAccountCustomer (AccountDTO accountDTO, MultipartFile file);
 
+    AccountEntity processOAuth2Account(AccountDTO accountDTO);
+
 }

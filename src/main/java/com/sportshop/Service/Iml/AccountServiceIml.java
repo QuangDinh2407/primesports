@@ -240,4 +240,20 @@ public class AccountServiceIml implements AccountService {
             return new Result(false,"Thêm khách hàng thất bại");
         }
     }
+
+    @Override
+    public AccountEntity processOAuth2Account(AccountDTO accountDTO) {
+
+            if (accountRepository.existsByemail(accountDTO.getEmail())){
+                return accountRepository.findByemail(accountDTO.getEmail());
+            }
+            else {
+                AccountEntity accountEntity = new AccountEntity();
+                accountDTO.setIs_disable("1");
+                accountEntity = accountConverter.toEntity(accountDTO);
+                accountRepository.save(accountEntity);
+                return accountEntity;
+
+            }
+    }
 }
