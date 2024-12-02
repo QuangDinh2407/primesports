@@ -125,4 +125,20 @@ public class ProductServiceIml implements ProductService {
         );
         return productPage.map(productConverter::toDTO);
     }
+
+    @Override
+    public ProductDTO findProductById(String id) {
+        // Tìm kiếm sản phẩm theo product_id
+        ProductEntity productEntity = productRepository.findByProductId(id);
+
+        // Nếu không tìm thấy sản phẩm, trả về null hoặc throw exception tuỳ theo yêu cầu
+        if (productEntity == null) {
+            return null;
+            // Hoặc có thể throw exception như sau:
+            // throw new ProductNotFoundException("Product not found for id: " + id);
+        }
+
+        // Chuyển đổi từ ProductEntity sang ProductDTO
+        return productConverter.toDTO(productEntity);
+    }
 }

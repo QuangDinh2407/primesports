@@ -1,10 +1,13 @@
 package com.sportshop.Controller;
 
+import com.sportshop.Entity.ProductEntity;
 import com.sportshop.Modal.SearchProduct;
 import com.sportshop.ModalDTO.AccountDTO;
 import com.sportshop.ModalDTO.ProductDTO;
 import com.sportshop.ModalDTO.UserDTO;
+import com.sportshop.Repository.ProductRepository;
 import com.sportshop.Repository.ProductTypeRepository;
+import com.sportshop.Service.Iml.ProductServiceIml;
 import com.sportshop.Service.Iml.ProductTypeServiceIml;
 import com.sportshop.Service.ProductService;
 import jakarta.servlet.http.HttpSession;
@@ -17,10 +20,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -32,6 +32,10 @@ public class ShopController {
 
     @Autowired
     ProductService productService;
+    @Autowired
+    private ProductRepository productRepository;
+    @Autowired
+    private ProductServiceIml productServiceIml;
 
     @ModelAttribute
     public void getSearchModal(Model model) {
@@ -72,6 +76,7 @@ public class ShopController {
         Pageable pageable = page > 0 ? PageRequest.of(page-1, size) : PageRequest.of(page, size) ;
 
         Page <ProductDTO> listPro = productService.getAll(searchProduct, pageable);
+
         model.addAttribute("listPro", listPro);
         model.addAttribute("size", size);
         model.addAttribute("listPro", listPro);
@@ -80,8 +85,23 @@ public class ShopController {
         if (bindingResult.hasErrors()) {
             model.addAttribute("bindingResult", bindingResult);
         }
+        //System.out.println(listPro.getContent());
         return "all-product";
     }
 
+    @GetMapping("/product-detail/{id}")
+    public String renderDetailProduct(@PathVariable("id") String id, Model model) {
+        ProductDTO proDTO= productServiceIml.findProductById(id);
+        System.out.println(proDTO.getName());
+
+        //lấy 5 sản phẩm được rating cao
+        List<ProductDTO> relatedProducts=productServiceIml.findTop5Rating("available");
+
+        //xử lý voucher (Từ sản phẩm lấy được voucher -> lấy voucher giảm giá nhiều nhất)
+
+        model.addAttribute("productDTO", proDTO);
+        model.addAttribute("relatedProducts", relatedProducts);
+        return "product-detail";
+    }
 
 }

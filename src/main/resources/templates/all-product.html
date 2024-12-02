@@ -43,7 +43,7 @@
         flex-direction: column;
     }
     .no-data img{
-       width: 128px;
+        width: 128px;
     }
     .no-data h1{
         font-size: 2.5rem;
@@ -132,7 +132,7 @@
             <div class="col" th:each="product : ${listPro.content}">
                 <article class="product-card">
                     <div class="product-card__img-wrap">
-                        <a href="./product-detail.html">
+                        <a th:href="@{/product-detail/{id}(id=${product.product_id})}">
                             <img th:src="@{/Assets/Customer_Shop/Assets/img/product/item-1.png}" alt="" class="product-card__thumb" />
                         </a>
                         <button class="like-btn product-card__like-btn">
@@ -217,56 +217,56 @@
         </div>
 
         <!--Phân trang -->
-<!--        <div th:if="${!#lists.isEmpty(listPro.content)}"  class="pagination-container">-->
-<!--            <ul class="pagination">-->
-<!--                &lt;!&ndash; Nút Previous &ndash;&gt;-->
-<!--                <li th:class="${listPro.hasPrevious()} ? 'page-item' : 'page-item disabled'">-->
-<!--                    <a class="page-link" th:href="@{/all-product(page=${listPro.number}, pageSize=${size})}">-->
-<!--                        <img th:src="@{/Assets/Customer_Shop/Assets/icons/fast-forward.png}" alt="" class="prev-icon" />-->
-<!--                    </a>-->
-<!--                </li>-->
+        <!--        <div th:if="${!#lists.isEmpty(listPro.content)}"  class="pagination-container">-->
+        <!--            <ul class="pagination">-->
+        <!--                &lt;!&ndash; Nút Previous &ndash;&gt;-->
+        <!--                <li th:class="${listPro.hasPrevious()} ? 'page-item' : 'page-item disabled'">-->
+        <!--                    <a class="page-link" th:href="@{/all-product(page=${listPro.number}, pageSize=${size})}">-->
+        <!--                        <img th:src="@{/Assets/Customer_Shop/Assets/icons/fast-forward.png}" alt="" class="prev-icon" />-->
+        <!--                    </a>-->
+        <!--                </li>-->
 
-<!--                &lt;!&ndash; Trang đầu tiên &ndash;&gt;-->
-<!--                <li th:if="${listPro.totalPages > 0}" th:class="${listPro.number == 0} ? 'page-item active' : 'page-item'">-->
-<!--                    <a class="page-link"-->
-<!--                       th:href="@{/all-product(page=1, pageSize=${size})}">1</a>-->
-<!--                </li>-->
+        <!--                &lt;!&ndash; Trang đầu tiên &ndash;&gt;-->
+        <!--                <li th:if="${listPro.totalPages > 0}" th:class="${listPro.number == 0} ? 'page-item active' : 'page-item'">-->
+        <!--                    <a class="page-link"-->
+        <!--                       th:href="@{/all-product(page=1, pageSize=${size})}">1</a>-->
+        <!--                </li>-->
 
-<!--                &lt;!&ndash; Dấu "..." trước các trang giữa &ndash;&gt;-->
-<!--                <li th:if="${listPro.number > 2}">-->
-<!--                    <span class="page-link">...</span>-->
-<!--                </li>-->
+        <!--                &lt;!&ndash; Dấu "..." trước các trang giữa &ndash;&gt;-->
+        <!--                <li th:if="${listPro.number > 2}">-->
+        <!--                    <span class="page-link">...</span>-->
+        <!--                </li>-->
 
-<!--                &lt;!&ndash; Các trang ở giữa &ndash;&gt;-->
-<!--                <li th:each="i : ${#numbers.sequence(listPro.number - 1, listPro.number + 1)}"-->
-<!--                    th:if="${i > 0 and i < listPro.totalPages - 1}"-->
-<!--                    th:class="${listPro.number == i} ? 'page-item active' : 'page-item'">-->
-<!--                    <a class="page-link"-->
-<!--                       th:href="@{/all-product(page=${i+1}, pageSize=${size})}"-->
-<!--                       th:text="${i + 1}"></a>-->
-<!--                </li>-->
+        <!--                &lt;!&ndash; Các trang ở giữa &ndash;&gt;-->
+        <!--                <li th:each="i : ${#numbers.sequence(listPro.number - 1, listPro.number + 1)}"-->
+        <!--                    th:if="${i > 0 and i < listPro.totalPages - 1}"-->
+        <!--                    th:class="${listPro.number == i} ? 'page-item active' : 'page-item'">-->
+        <!--                    <a class="page-link"-->
+        <!--                       th:href="@{/all-product(page=${i+1}, pageSize=${size})}"-->
+        <!--                       th:text="${i + 1}"></a>-->
+        <!--                </li>-->
 
-<!--                &lt;!&ndash; Dấu "..." sau các trang giữa &ndash;&gt;-->
-<!--                <li th:if="${listPro.number < listPro.totalPages - 3}">-->
-<!--                    <span class="page-link">...</span>-->
-<!--                </li>-->
+        <!--                &lt;!&ndash; Dấu "..." sau các trang giữa &ndash;&gt;-->
+        <!--                <li th:if="${listPro.number < listPro.totalPages - 3}">-->
+        <!--                    <span class="page-link">...</span>-->
+        <!--                </li>-->
 
-<!--                &lt;!&ndash; Trang cuối cùng &ndash;&gt;-->
-<!--                <li th:if="${listPro.totalPages > 1}" th:class="${listPro.number == listPro.totalPages - 1} ? 'page-item active' : 'page-item'">-->
-<!--                    <a class="page-link"-->
-<!--                       th:href="@{/all-product(page=${listPro.totalPages}, pageSize=${size})}"-->
-<!--                       th:text="${listPro.totalPages}"></a>-->
-<!--                </li>-->
+        <!--                &lt;!&ndash; Trang cuối cùng &ndash;&gt;-->
+        <!--                <li th:if="${listPro.totalPages > 1}" th:class="${listPro.number == listPro.totalPages - 1} ? 'page-item active' : 'page-item'">-->
+        <!--                    <a class="page-link"-->
+        <!--                       th:href="@{/all-product(page=${listPro.totalPages}, pageSize=${size})}"-->
+        <!--                       th:text="${listPro.totalPages}"></a>-->
+        <!--                </li>-->
 
-<!--                &lt;!&ndash; Nút Next &ndash;&gt;-->
-<!--                <li th:class="${listPro.hasNext()} ? 'page-item' : 'page-item disabled'">-->
-<!--                    <a class="page-link"-->
-<!--                       th:href="@{/all-product(page=${listPro.number + 2}, pageSize=${size})}">-->
-<!--                        <img th:src="@{/Assets/Customer_Shop/Assets/icons/fast-forward.png}" alt="" class="next-icon" />-->
-<!--                    </a>-->
-<!--                </li>-->
-<!--            </ul>-->
-<!--        </div>-->
+        <!--                &lt;!&ndash; Nút Next &ndash;&gt;-->
+        <!--                <li th:class="${listPro.hasNext()} ? 'page-item' : 'page-item disabled'">-->
+        <!--                    <a class="page-link"-->
+        <!--                       th:href="@{/all-product(page=${listPro.number + 2}, pageSize=${size})}">-->
+        <!--                        <img th:src="@{/Assets/Customer_Shop/Assets/icons/fast-forward.png}" alt="" class="next-icon" />-->
+        <!--                    </a>-->
+        <!--                </li>-->
+        <!--            </ul>-->
+        <!--        </div>-->
         <div th:if="${!#lists.isEmpty(listPro.content)}" class="pagination-container">
             <ul class="pagination">
                 <!-- Nút Previous -->

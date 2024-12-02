@@ -17,4 +17,5 @@ public interface ProductService {
 
     Page<ProductDTO> getAll(SearchProduct searchProduct, Pageable pageable);
 
+    ProductDTO findProductById(String id);
 }
