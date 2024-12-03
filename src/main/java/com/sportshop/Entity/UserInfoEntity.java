@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-
+@Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -44,7 +44,7 @@ public class UserInfoEntity {
     private Date birth;
 
     private String image_path;
-    
+
     @Temporal(TemporalType.TIMESTAMP)
     @DateTimeFormat(pattern = FormatDate.FM_DATE)
     @Column(nullable = false)

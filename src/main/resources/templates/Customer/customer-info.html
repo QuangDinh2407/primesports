@@ -13,6 +13,7 @@
     <link rel="manifest" th:href="@{/Assets/Customer_Shop/Assets/favicon/site.webmanifest}" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<!--    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">-->
     <meta name="msapplication-TileColor" content="#da532c" />
     <meta name="theme-color" content="#ffffff" />
 
@@ -24,30 +25,7 @@
 
     <!-- Scripts -->
     <script th:src="@{/Assets/Customer_Shop/Assets/js/scripts.js}"></script>
-    <style>
-        .profile-user__avatar-label {
-            cursor: pointer;
-        }
-        .profile-user__avatar:hover {
-            opacity: 0.8;
-        }
-        .cart-info__heading {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .cart-info__back-arrow {
-            margin-right: 10px; /* Khoảng cách giữa icon và text */
-        }
-
-        .cart-info__card-id {
-            font-size: 14px; /* Tùy chỉnh kích thước text */
-            color: #555; /* Màu sắc */
-            margin-left: auto; /* Đẩy sang phải */
-        }
-
-    </style>
+    <link rel="stylesheet" th:href="@{/Assets/Customer_Shop/Assets/css/styles.css}" />
 
 </head>
 <body>
@@ -104,7 +82,7 @@
                             <h3 class="profile-menu__title">My items</h3>
                             <ul class="profile-menu__list">
                                 <li>
-                                    <a href="#!" class="profile-menu__link">
+                                    <a th:href="@{/customer/test}" class="profile-menu__link">
                                                 <span class="profile-menu__icon">
                                                     <img th:src="@{/Assets/Customer_Shop/Assets/icons/buy.svg}" alt="" class="icon" />
                                                 </span>
@@ -112,8 +90,10 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a th:href="@{/customer}" class="profile-menu__link">
-                                                <span class="profile-menu__icon">
+<!--                                    <a th:href="@{/customer/order-history(userInfoId=${userInfo_id})}" class="profile-menu__link">-->
+                                    <a th:href="@{/customer/order-history}" class="profile-menu__link">
+
+                                               <span class="profile-menu__icon">
                                                     <img th:src="@{/Assets/Customer_Shop/Assets/icons/document.svg}" alt="" class="icon" />
                                                 </span>
                                         Lịch sử mua hàng
@@ -174,17 +154,9 @@
                         <div class="row gy-3">
                             <div class="col-12">
                                 <h2 class="cart-info__heading">
-                                    <a href="./profile.html">
-                                        <img
-                                                src="./assets/icons/arrow-left.svg"
-                                                alt=""
-                                                class="icon cart-info__back-arrow"
-                                        />
-                                    </a>
                                     Thông tin cá nhân
                                     <div class="cart-info__card-id">
                                         <span class="label">Cart ID: <span th:text="${userDTO.cart.cart_id}"></span></span>
-<!--                                        <span class="value" th:text="${userDTO.card_id}></span>-->
                                     </div>
                                 </h2>
 

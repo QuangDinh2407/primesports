@@ -13,30 +13,16 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserDTO {
-    private String user_id;
-
-    private String name;
-
+public class ProductReviewDTO {
+    private String productReview_id;
+    private String product_id;
+    private String userInfo_id;
     @DateTimeFormat(pattern = FormatDate.FM_DATE)
-    private Date birth;
-
-    private String email;
-
-    private String address;
-
-    private String phone;
-
-    private String imagePath;
-
-    private Date created_at;
-
-    private String status;
-
-    private AccountDTO account;
-
-    private String gender;
-
-    private CartDTO cart;
+    private Date create_date;
+    @DateTimeFormat(pattern = FormatDate.FM_DATE)
+    private Date update_date;
+    private String productName; // Nếu cần thông tin sản phẩm
+    private Float rating;
+    private String comment;
 
 }

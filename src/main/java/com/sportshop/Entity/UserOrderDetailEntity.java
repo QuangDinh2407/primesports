@@ -29,4 +29,8 @@ public class UserOrderDetailEntity {
 	@JoinColumn(name="product_id", referencedColumnName = "product_id")
 	private ProductEntity product;
 
+	@ManyToOne
+	@JoinColumn(name="shopVoucher_id", referencedColumnName = "shopVoucher_id")
+	private ShopVoucherEntity shopVoucher;
+
 }
