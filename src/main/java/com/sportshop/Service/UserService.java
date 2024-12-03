@@ -9,5 +9,5 @@ import java.util.List;
 public interface UserService {
     List<UserDTO> findAll ();
     UserDTO findbyEmail (String email);
-    Result updateInfoUser (UserDTO userDTO, MultipartFile file);
+    Result updateInfoAdmin (UserDTO userDTO, MultipartFile file);
 }

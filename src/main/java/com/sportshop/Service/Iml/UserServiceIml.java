@@ -1,5 +1,6 @@
 package com.sportshop.Service.Iml;
 
+import com.cloudinary.Cloudinary;
 import com.sportshop.Contants.StringContant;
 import com.sportshop.Entity.AccountEntity;
 import com.sportshop.Entity.UserInfoEntity;
@@ -9,6 +10,7 @@ import com.sportshop.ModalDTO.UserDTO;
 import com.sportshop.ModalDTO.RoleDTO;
 import com.sportshop.Repository.AccountRepository;
 import com.sportshop.Repository.UserInfoRepository;
+import com.sportshop.Service.CloudinaryService;
 import com.sportshop.Service.UserService;
 import jakarta.servlet.ServletContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -35,6 +38,11 @@ public class UserServiceIml implements UserService {
 
     @Autowired
     ServletContext context;
+    @Autowired
+    private Cloudinary cloudinary;
+
+    @Autowired
+    private CloudinaryService cloudinaryService;
 
     @Override
     public List <UserDTO> findAll() {
@@ -80,7 +88,7 @@ public class UserServiceIml implements UserService {
     }
 
     @Override
-    public Result updateInfoUser(UserDTO userDTO, MultipartFile file) {
+    public Result updateInfoAdmin(UserDTO userDTO, MultipartFile file) {
         try{
             UserInfoEntity userInfoEntity = userInfoRepo.findByEmail(userDTO.getEmail());
             userInfoEntity.setName(userDTO.getName());
@@ -96,11 +104,14 @@ public class UserServiceIml implements UserService {
             }
             if (!file.isEmpty())
             {
-                Path path = Paths.get(StringContant.ADMINIMAGE_URL + File.separator + file.getOriginalFilename());
-                file.transferTo(new File(String.valueOf(path)));
-                System.out.println(path);
-                userInfoEntity.setImage_path(file.getOriginalFilename());
-                Thread.sleep(5000);
+                try {
+                    String imagePath = cloudinaryService.uploadFileToFolder(file, "admin");
+                    userInfoEntity.setImage_path(imagePath);
+                    userDTO.setImagePath(imagePath);
+                } catch (IOException e) {
+
+                    throw new RuntimeException("Upload ảnh thất bại: " + e.getMessage());
+                }
             }
             userInfoRepo.save(userInfoEntity);
             return new Result(true,"Thay đổi thông tin thành công");

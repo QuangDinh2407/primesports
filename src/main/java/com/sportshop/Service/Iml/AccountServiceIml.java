@@ -14,6 +14,7 @@ import com.sportshop.Repository.RoleRepository;
 import com.sportshop.Repository.UserInfoRepository;
 import com.sportshop.Service.AccountService;
 
+import com.sportshop.Service.CloudinaryService;
 import com.sportshop.Service.MailService;
 import com.sportshop.Utils.randomStringUtil;
 import jakarta.servlet.http.HttpServletRequest;
@@ -53,6 +54,9 @@ public class AccountServiceIml implements AccountService {
 
     @Autowired
     MailService mailService;
+
+    @Autowired
+    CloudinaryService cloudinaryService;
 
     @Autowired
     private AccountConverter accountConverter;

@@ -32,7 +32,7 @@
                 <div class="user-info-content">
                     <div class="info-display">
                         <div class="user-avatar">
-                        <img th:src="@{'/Assets/image/Admin/' + ${userDTO.imagePath}}" alt="profile">
+                        <img th:src="${userDTO.imagePath}" alt="profile">
                             <p class="user-name" th:text="${userDTO.name}"></p>
                         </div>
                         <div class="user-display">
