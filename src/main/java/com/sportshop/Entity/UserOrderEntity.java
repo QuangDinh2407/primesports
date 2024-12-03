@@ -22,7 +22,7 @@ public class UserOrderEntity {
 	@GeneratedValue (strategy = GenerationType.UUID)
 	private UUID userOrder_id;
 
-	@Column(nullable = false)
+	@Column(nullable = false, columnDefinition = "nvarchar(MAX)")
 	private String status; 
 	
 	@Temporal(TemporalType.TIMESTAMP)

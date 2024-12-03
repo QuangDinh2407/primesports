@@ -9,13 +9,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ProductTypeDTO {
+public class SizeDTO {
 
-    private String productType_id;
+    private String size_id;
 
-    private String name;
-
-    private String parent_id;
-
+    private String name_size;
 
 }

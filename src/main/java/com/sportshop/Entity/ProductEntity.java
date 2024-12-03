@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sportshop.Contants.FormatDate;
 import lombok.*;
 import jakarta.persistence.*;
@@ -48,9 +49,13 @@ public class ProductEntity {
 	private String status;
 	
 	@OneToMany (mappedBy = "product", fetch = FetchType.LAZY)
+	@JsonIgnore
+	@ToString.Exclude
 	private List <ProductTypeDetailEntity> productTypeDetailItems = new ArrayList<ProductTypeDetailEntity>();
 	
 	@OneToMany (mappedBy = "product", fetch = FetchType.LAZY)
+	@JsonIgnore
+	@ToString.Exclude
 	private List <ProductImageEntity> productImageItems = new ArrayList<ProductImageEntity>();
 
 	@OneToMany (mappedBy = "product", fetch = FetchType.LAZY)
@@ -70,5 +75,8 @@ public class ProductEntity {
 	
 	@OneToMany (mappedBy = "product", fetch = FetchType.LAZY)
 	private List <UserOrderDetailEntity> UserOrderDetailItems = new ArrayList<UserOrderDetailEntity>();
+
+	@OneToMany (mappedBy = "product", fetch = FetchType.LAZY)
+	private List <SizeDetailEntity> SizeDetailItems = new ArrayList<SizeDetailEntity>();
 
 }

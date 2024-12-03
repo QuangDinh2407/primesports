@@ -9,13 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ProductTypeDTO {
+public class ProductImageDTO {
 
-    private String productType_id;
-
-    private String name;
-
-    private String parent_id;
-
+    private String image_path;
 
 }

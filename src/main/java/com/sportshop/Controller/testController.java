@@ -1,18 +1,24 @@
 package com.sportshop.Controller;
 
+import com.sportshop.Entity.ProductEntity;
+import com.sportshop.Entity.ProductImageEntity;
 import com.sportshop.Modal.Mail;
 import com.sportshop.ModalDTO.AccountDTO;
 import com.sportshop.ModalDTO.UserDTO;
+import com.sportshop.Repository.ProductImageRepository;
+import com.sportshop.Repository.ProductRepository;
 import com.sportshop.Service.AccountService;
 import com.sportshop.Service.MailService;
 import com.sportshop.Service.UserService;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -25,8 +31,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
-/*@RestController*/
-@Controller
+@RestController
+//@Controller
 public class testController {
 
     @Autowired
@@ -37,6 +43,10 @@ public class testController {
 
     @Autowired
     MailService mailService;
+    @Autowired
+    private ProductRepository productRepository;
+    @Autowired
+    private ProductImageRepository productImageRepository;
 
     @GetMapping("/test")
     public String test() {
@@ -115,4 +125,15 @@ public class testController {
         return "redirect:/upload";
     }
 
+    @GetMapping("tst")
+    public List<ProductEntity> renderTst (HttpSession session, Model model){
+        List<ProductEntity> a = productRepository.findAll();
+        return a;
+    }
+
+    @GetMapping("image")
+    public List<ProductImageEntity> renderImage (HttpSession session, Model model){
+        List<ProductImageEntity> a = productImageRepository.findAll();
+        return a;
+    }
 }
