@@ -82,6 +82,7 @@ public class AuthSuccessHandler implements AuthenticationSuccessHandler {
         HttpSession session = request.getSession();
         session.setAttribute("email", email);
 
+        
 //        if (isAdmin)
 //        {
 //            response.sendRedirect("/admin");
@@ -97,6 +98,7 @@ public class AuthSuccessHandler implements AuthenticationSuccessHandler {
             response.sendRedirect("/admin");
         }
         else {
+
             response.sendRedirect("/customer");
         }
 

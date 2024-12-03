@@ -1,12 +1,17 @@
 package com.sportshop.Controller;
 
+import com.sportshop.Entity.ProductEntity;
 import com.sportshop.Modal.SearchProduct;
 import com.sportshop.ModalDTO.AccountDTO;
+import com.sportshop.ModalDTO.CartDTO;
 import com.sportshop.ModalDTO.ProductDTO;
 import com.sportshop.ModalDTO.UserDTO;
+import com.sportshop.Repository.ProductRepository;
 import com.sportshop.Repository.ProductTypeRepository;
+import com.sportshop.Service.Iml.ProductServiceIml;
 import com.sportshop.Service.Iml.ProductTypeServiceIml;
 import com.sportshop.Service.ProductService;
+import com.sportshop.Service.UserService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +22,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @Controller
 public class ShopController {
@@ -32,6 +35,39 @@ public class ShopController {
 
     @Autowired
     ProductService productService;
+
+    @Autowired
+    private ProductServiceIml productServiceIml;
+
+    @Autowired
+    UserService userService;
+
+//    @ModelAttribute
+//    public void checkLoginToCreateCart(HttpSession session,Model model){
+//        String email = (String) session.getAttribute("email");
+//
+//        if (email == null) {
+//            if(!model.containsAttribute("newCart")){
+//                CartDTO newCart = new CartDTO();
+//                newCart.setCart_id(UUID.randomUUID().toString());
+//                System.out.println(newCart);
+//                model.addAttribute("newCart", newCart);
+//            }
+//        }
+//    }
+
+    @ModelAttribute
+    public void checkLoginToCreateCart(HttpSession session){
+        String email = (String) session.getAttribute("email");
+        if (email == null) {
+            if(session.getAttribute("newCart")==null){
+                CartDTO newCart = new CartDTO();
+                newCart.setCart_id(UUID.randomUUID().toString());
+                System.out.println(newCart);
+                session.setAttribute("newCart", newCart);
+            }
+        }
+    }
 
     @ModelAttribute
     public void getSearchModal(Model model) {
@@ -49,8 +85,9 @@ public class ShopController {
     }
 
     @GetMapping("/header")
-    public String headerRender(Model model) {
+    public String headerRender(CartDTO cart,Model model) {
         model.addAttribute("listType",productTypeServiceIml.getListHierarchyType());
+        model.addAttribute("newCart", new CartDTO());
         return "templates/header1";
     }
 
@@ -72,6 +109,7 @@ public class ShopController {
         Pageable pageable = page > 0 ? PageRequest.of(page-1, size) : PageRequest.of(page, size) ;
 
         Page <ProductDTO> listPro = productService.getAll(searchProduct, pageable);
+
         model.addAttribute("listPro", listPro);
         model.addAttribute("size", size);
         model.addAttribute("listPro", listPro);
@@ -80,8 +118,23 @@ public class ShopController {
         if (bindingResult.hasErrors()) {
             model.addAttribute("bindingResult", bindingResult);
         }
+        //System.out.println(listPro.getContent());
         return "all-product";
     }
 
+    @GetMapping("/product-detail/{id}")
+    public String renderDetailProduct(@PathVariable("id") String id, Model model,HttpSession session) {
+        ProductDTO proDTO= productServiceIml.findProductById(id);
+        System.out.println(proDTO.getName());
+
+        //lấy 5 sản phẩm được rating cao
+        List<ProductDTO> relatedProducts=productServiceIml.findTop5Rating("available");
+
+        //xử lý voucher (Từ sản phẩm lấy được voucher -> lấy voucher giảm giá nhiều nhất)
+        model.addAttribute("newCart",(CartDTO) session.getAttribute("newCart"));
+        model.addAttribute("productDTO", proDTO);
+        model.addAttribute("relatedProducts", relatedProducts);
+        return "product-detail";
+    }
 
 }

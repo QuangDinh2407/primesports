@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>primesports</title>
+
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="76x76" th:href="@{/Assets/Customer_Shop/Assets/favicon/logo.png}" />
+    <link rel="icon" type="image/png" sizes="32x32" th:href="@{/Assets/Customer_Shop/Assets/favicon/logo.png}" />
+    <link rel="icon" type="image/png" sizes="16x16" th:href="@{/Assets/Customer_Shop/Assets/favicon/logo.png}" />
+    <link rel="manifest" th:href="@{/Assets/Customer_Shop/Assets/favicon/logo.png}" />
+    <meta name="msapplication-TileColor" content="#da532c" />
+    <meta name="theme-color" content="#ffffff" />
+
+    <!-- Fonts -->
+    <link rel="stylesheet" th:href="@{/Assets/Customer_Shop/Assets/fonts/stylesheet.css}" />
+
+    <!-- Styles -->
+    <link rel="stylesheet" th:href="@{/Assets/Customer_Shop/Assets/css/main.css}" />
+    <link rel="stylesheet" th:href="@{/Assets/Customer_Shop/Assets/css/pagination.css}" />
+    <link rel="stylesheet" th:href="@{/Assets/Customer_Shop/Assets/css/search-bar.css}" />
+
+    <!-- Scripts -->
+    <script th:src="@{/Assets/Customer_Shop/Assets/js/scripts.js}" ></script>
+</head>
+<style>
+    img.prev-icon {
+        transform: rotate(180deg);
+    }
+    .error-message {
+        color: red;
+        font-size: 15px;
+        font-weight: 600;
+        margin-top: 5px;
+        margin-bottom: 5px;
+        margin-left: 10px;
+    }
+    .no-data{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+    .no-data img{
+        width: 128px;
+    }
+    .no-data h1{
+        font-size: 2.5rem;
+        font-weight: 600;
+    }
+</style>
+
+<body>
+<!-- Header -->
+<header id="header" class="header"></header>
+<div></div>
+<script>
+    load("#header", "/header");
+</script>
+
+<!-- MAIN -->
+<main class="product-page">
+    <div class="container">
+        <!-- Search bar -->
+        <div class="product-container">
+            <div class="search-bar d-none d-md-flex">
+                <input type="text" name="" id="" placeholder="Search for item" class="search-bar__input" />
+                <button class="search-bar__submit">
+                    <img src="./assets/icons/search.svg" alt="" class="search-bar__icon icon" />
+                </button>
+            </div>
+        </div>
+
+        <!-- Breadcrumbs -->
+        <div class="product-container">
+            <ul class="breadcrumbs">
+                <li>
+                    <a href="#!" class="breadcrumbs__link">
+                        Departments
+                        <img src="./assets/icons/arrow-right.svg" alt="" />
+                    </a>
+                </li>
+                <li>
+                    <a href="#!" class="breadcrumbs__link">
+                        Coffee
+                        <img src="./assets/icons/arrow-right.svg" alt="" />
+                    </a>
+                </li>
+                <li>
+                    <a href="#!" class="breadcrumbs__link">
+                        Coffee Beans
+                        <img src="./assets/icons/arrow-right.svg" alt="" />
+                    </a>
+                </li>
+                <li>
+                    <a href="#!" class="breadcrumbs__link breadcrumbs__link--current">LavAzza</a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Product info -->
+        <div class="product-container prod-info-content">
+            <div class="row">
+                <div class="col-5 col-xl-6 col-lg-12">
+                    <div class="prod-preview">
+                        <div class="prod-preview__list">
+                            <div class="prod-preview__item">
+                                <img src="./assets/img/product/item-1.png" alt="" class="prod-preview__img" />
+                            </div>
+                            <div class="prod-preview__item">
+                                <img src="./assets/img/product/item-2.png" alt="" class="prod-preview__img" />
+                            </div>
+                            <div class="prod-preview__item">
+                                <img src="./assets/img/product/item-3.png" alt="" class="prod-preview__img" />
+                            </div>
+                            <div class="prod-preview__item">
+                                <img src="./assets/img/product/item-4.png" alt="" class="prod-preview__img" />
+                            </div>
+                        </div>
+                        <div class="prod-preview__thumbs">
+                            <img
+                                    th:src="@{/Assets/Customer_Shop/Assets/img/product/item-1.png}"
+                                    alt=""
+                                    class="prod-preview__thumb-img prod-preview__thumb-img--current"
+                            />
+                            <img th:src="@{/Assets/Customer_Shop/Assets/img/product/item-2.png}" alt="" class="prod-preview__thumb-img" />
+                            <img th:src="@{/Assets/Customer_Shop/Assets/img/product/item-3.png}" alt="" class="prod-preview__thumb-img" />
+                            <img th:src="@{/Assets/Customer_Shop/Assets/img/product/item-4.png}" alt="" class="prod-preview__thumb-img" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-7 col-xl-6 col-lg-12">
+                    <form th:action="@{/add-pro-to-cart}" class="form">
+                        <section class="prod-info">
+                            <input type="hidden" name="product_id" th:value="${productDTO.product_id}">
+                            <input type="hidden" name="cart_id" th:value="${newCart.cart_id}">
+
+                            <h1 class="prod-info__heading" th:text="${productDTO.name}" name="name">
+                            </h1>
+                            <div class="row">
+                                <div class="col-5 col-xxl-6 col-xl-12">
+                                    <div class="prod-prop">
+                                        <p class="prod-prop__title">Rating</p>
+                                        <img th:src="@{/Assets/Customer_Shop/Assets/icons/star.svg}" alt="" class="prod-prop__icon" />
+                                        <h4 class="prod-prop__title" th:text="${productDTO.rating}"></h4>
+                                    </div>
+                                    <label for="" class="form__label prod-info__label">Còn lại</label>
+                                    <div class="filter__form-group">
+                                        <div class="form__select-wrap">
+                                            <div class="form__select" style="--width: 146px" th:text="${productDTO.quantity}" name="quantity">
+
+                                                <img
+                                                        th:src="@{/Assets/Customer_Shop/Assets/icons/select-arrow.svg}"
+                                                        alt=""
+                                                        class="form__select-arrow icon"
+                                                />
+                                            </div>
+                                            <div class="form__select">
+                                                cái
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="filter__form-group">
+                                        <div class="form__tags">
+                                            <button class="form__tag prod-info__tag">Nhỏ (S)</button>
+                                            <button class="form__tag prod-info__tag">Vừa (M)</button>
+                                            <button class="form__tag prod-info__tag">Lớn (L)</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-7 col-xxl-6 col-xl-12">
+                                    <div class="prod-props">
+                                        <div class="prod-prop">
+                                            <img
+                                                    th:src="@{/Assets/Customer_Shop/Assets/icons/document.svg}"
+                                                    alt=""
+                                                    class="prod-prop__icon icon"
+                                            />
+                                            <h4 class="prod-prop__title">So sánh</h4>
+                                        </div>
+                                        <div class="prod-prop">
+                                            <img
+                                                    th:src="@{/Assets/Customer_Shop/Assets/icons/buy.svg}"
+                                                    alt=""
+                                                    class="prod-prop__icon icon"
+                                            />
+                                            <div>
+                                                <h4 class="prod-prop__title">Vận chuyển</h4>
+                                                <p class="prod-prop__desc">Khoảng 30.000VND cho 3-4 ngày</p>
+                                            </div>
+                                        </div>
+                                        <div class="prod-info__card">
+                                            <div class="prod-info__row">
+                                                <span class="prod-info__price" th:text="${productDTO.price}+'VND'" name="price"></span>
+                                                <span class="prod-info__tax">(Voucher)</span>
+                                            </div>
+                                            <p class="prod-info__total-price">(giá - voucher)</p>
+                                            <div class="prod-info__row">
+                                                <button class="btn btn--primary prod-info__add-to-cart" type="submit">
+                                                    Thêm giỏ hàng
+                                                </button>
+                                                <button class="like-btn prod-info__like-btn">
+                                                    <img
+                                                            th:src="@{/Assets/Customer_Shop/Assets/icons/heart.svg}"
+                                                            alt=""
+                                                            class="like-btn__icon icon"
+                                                    />
+                                                    <img
+                                                            th:src="@{/Assets/Customer_Shop/Assets/icons/heart-red.svg}"
+                                                            alt=""
+                                                            class="like-btn__icon--liked"
+                                                    />
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Product content -->
+        <div class="product-container">
+            <div class="prod-tab js-tabs">
+                <ul class="prod-tab__list">
+                    <li class="prod-tab__item prod-tab__item--current">Miêu tả</li>
+<!--                    <li class="prod-tab__item">Review (1100)</li>-->
+                    <li class="prod-tab__item">Liên quan</li>
+                </ul>
+                <div class="prod-tab__contents">
+                    <div class="prod-tab__content prod-tab__content--current">
+                        <div class="row">
+                            <div class="col-8 col-xl-10 col-lg-12">
+                                <div class="text-content prod-tab__text-content">
+                                    <h2>Thông tin sản phẩm</h2>
+                                    <p th:text="${productDTO.description}" name="description"></p>
+                                    <blockquote>
+                                        <p>
+                                            Lorem ipsum dolor sit amet <em>consectetur</em>
+                                            <u>adipisicing</u> elit. Aliquid, cupiditate. Modi, quidem, ullam
+                                            sint dolorum recusandae voluptates dignissimos similique animi
+                                            assumenda praesentium et! Illum dolorem est rem voluptas nam!
+                                            Voluptatem.
+                                        </p>
+                                    </blockquote>
+                                    <hr />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="prod-tab__content">
+                        <div class="prod-content">
+                            <h2 class="prod-content__heading">Những sản phẩm liên quan bạn có thể thích</h2>
+                            <div
+                                    class="row row-cols-6 row-cols-xl-4 row-cols-lg-3 row-cols-md-2 row-cols-sm-1 g-2"
+                            >
+                                <!-- Product card 1 -->
+                                <div class="col" th:each="product : ${relatedProducts}">
+                                    <article class="product-card">
+                                        <div class="product-card__img-wrap">
+                                            <a th:href="@{/product-detail/{id}(id=${product.product_id})}">
+                                                <img
+                                                        th:src="@{/Assets/Customer_Shop/Assets/img/product/item-1.png}"
+                                                        alt=""
+                                                        class="product-card__thumb"
+                                                />
+                                            </a>
+                                            <button class="like-btn product-card__like-btn">
+                                                <img
+                                                        th:src="@{/Assets/Customer_Shop/Assets/icons/heart.svg}"
+                                                        alt=""
+                                                        class="like-btn__icon icon"
+                                                />
+                                                <img
+                                                        th:src="@{/Assets/Customer_Shop/Assets/icons/heart-red.svg}"
+                                                        alt=""
+                                                        class="like-btn__icon--liked"
+                                                />
+                                            </button>
+                                        </div>
+                                        <h3 class="product-card__title">
+                                            <a href="/product-detail" th:text="${product.name}"
+                                            ></a
+                                            >
+                                        </h3>
+                                        <p class="product-card__brand" th:text="${product.status}"></p>
+                                        <div class="product-card__row">
+                                            <span class="product-card__price" th:text="${product.price}+'VND'"></span>
+                                            <img
+                                                    th:src="@{/Assets/Customer_Shop/Assets/icons/star.svg}"
+                                                    alt=""
+                                                    class="product-card__star"
+                                            />
+                                            <span class="product-card__score" th:text="${product.rating}" name="rating"></span>
+                                        </div>
+                                    </article>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Footer -->
+
+<footer id="footer" class="footer"></footer>
+
+</body>
+</html>

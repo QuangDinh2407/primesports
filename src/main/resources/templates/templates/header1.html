@@ -86,7 +86,7 @@
                 <div class="top-act__btn-wrap">
                     <button class="top-act__btn">
                         <img th:src="@{/Assets/Customer_Shop/Assets/icons/heart.svg}" alt="" class="icon top-act__icon" />
-                        <span class="top-act__title">03</span>
+<!--                        <span class="top-act__title" th:text="${newCart.cartDetailItems != null ? cart.cartDetailItems.size() : 0}"></span>-->
                     </button>
 
                     <!-- Dropdown -->
@@ -155,10 +155,12 @@
                 </div>
 
                 <div class="top-act__separate"></div>
-                <div class="top-act__btn-wrap">
+                <div class="top-act__btn-wrap" >
                     <button class="top-act__btn">
                         <img th:src="@{/Assets/Customer_Shop/Assets/icons/buy.svg}"  alt="" class="icon top-act__icon" />
                         <span class="top-act__title">$65.42</span>
+<!--                        <span class="top-act__title" th:text="${cartDetailItems != null ? cartDetailItems.size() : 0}"></span>-->
+
                     </button>
 
                     <!-- Dropdown -->
