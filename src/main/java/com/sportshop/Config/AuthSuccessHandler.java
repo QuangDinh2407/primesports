@@ -4,6 +4,7 @@ import com.sportshop.Entity.AccountEntity;
 import com.sportshop.ModalDTO.AccountDTO;
 import com.sportshop.ModalDTO.UserDTO;
 import com.sportshop.Service.AccountService;
+import com.sportshop.Utils.randomStringUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -53,12 +54,10 @@ public class AuthSuccessHandler implements AuthenticationSuccessHandler {
             else {
                 picture = oauth2User.getAttribute("picture");
             }
-            System.out.println(email);
-            System.out.println(name);
-            System.out.println(picture);
+            String passsword = randomStringUtil.randomPassword(12);
             AccountDTO account = AccountDTO.builder()
                     .email(oauth2User.getAttribute("email"))
-                    .password(" ")
+                    .password(passsword)
                     .userInfo(UserDTO.builder()
                             .name(oauth2User.getAttribute("name"))
                             .imagePath(picture)
