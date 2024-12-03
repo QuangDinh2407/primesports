@@ -6,12 +6,15 @@ import com.sportshop.Modal.SearchProduct;
 import com.sportshop.ModalDTO.ProductDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 public interface ProductService {
+
+    @Transactional
     Result addProduct(ProductDTO productDTO, List<MultipartFile> files );
 
     List<ProductDTO> findTop5Rating(String status);

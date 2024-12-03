@@ -23,9 +23,6 @@ public class ProductTypeServiceIml implements ProductTypeService {
     @Autowired
     private ProductTypeConverter productTypeConverter;
 
-    @Autowired
-    ProductTypeRepository productTypeRepository;
-
     @Override
     public List<ProductTypeDTO> getListHierarchyType() {
         return productTypeConverter.toListHierarchyDTO();

@@ -2,6 +2,7 @@ package com.sportshop.Service.Iml;
 
 import com.cloudinary.Cloudinary;
 import com.sportshop.Contants.StringContant;
+import com.sportshop.Converter.CartConverter;
 import com.sportshop.Entity.AccountEntity;
 import com.sportshop.Entity.UserInfoEntity;
 import com.sportshop.Entity.UserOrderEntity;
@@ -43,6 +44,9 @@ public class UserServiceIml implements UserService {
     @Autowired
     private CloudinaryService cloudinaryService;
 
+    @Autowired
+    CartConverter cartConverter;
+
     @Override
     public List <UserDTO> findAll() {
         List<UserInfoEntity> items = userInfoRepo.findAll();
@@ -58,7 +62,8 @@ public class UserServiceIml implements UserService {
                    .created_at(item.getCreated_at())
                    .status(item.getStatus())
                    .gender(item.getGender())
-                   .cart(new CartDTO(item.getCart().getCart_id()))
+                   .cart(cartConverter.toDTO(item.getCart()))
+                   //                   .cart(new CartDTO(item.getCart().getCart_id()))
 //                   .account(AccountDTO.builder()
 //                           .email(item.getEmail())
 //                           .password(item.getAccount().getPassword())
@@ -110,6 +115,44 @@ public class UserServiceIml implements UserService {
             {
                 try {
                     String imagePath = cloudinaryService.uploadFileToFolder(file, "admin");
+                    userInfoEntity.setImage_path(imagePath);
+                    userDTO.setImagePath(imagePath);
+                } catch (IOException e) {
+
+                    throw new RuntimeException("Upload ảnh thất bại: " + e.getMessage());
+                }
+            }
+            userInfoRepo.save(userInfoEntity);
+
+            return new Result(true,"Thay đổi thông tin thành công");
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            return new Result(false,"Thay đổi thông tin thất bại");
+        }
+    }
+
+    @Override
+    public Result updateInfoUser(UserDTO userDTO, MultipartFile file) {
+        try{
+            UserInfoEntity userInfoEntity = userInfoRepo.findByEmail(userDTO.getEmail());
+            userInfoEntity.setName(userDTO.getName());
+            userInfoEntity.setPhone(userDTO.getPhone());
+            userInfoEntity.setAddress(userDTO.getAddress());
+            userInfoEntity.setBirth(userDTO.getBirth());
+            userInfoEntity.setGender(userDTO.getGender());
+            if (!Objects.equals(userDTO.getAccount().getPassword(), ""))
+            {
+                String passEncrypt = passwordEncoder.encode(userDTO.getAccount().getPassword());
+                AccountEntity accountEntity = accountRepository.findByemail(userDTO.getEmail());
+                accountEntity.setPassword(passEncrypt);
+                accountRepository.save(accountEntity);
+            }
+            if (!file.isEmpty())
+            {
+                try {
+                    String imagePath = cloudinaryService.uploadFileToFolder(file, "customer");
                     userInfoEntity.setImage_path(imagePath);
                     userDTO.setImagePath(imagePath);
                 } catch (IOException e) {

@@ -44,9 +44,10 @@ public class ProductConverter {
                         .stream()
                         .map(imageEntity -> imageEntity.getImage_path()) // Giả sử ProductImageEntity có getImagePath
                         .collect(Collectors.toList()))
-                .productTypeIds(entity.getProductTypeDetailItems())
+                .productTypeIds(entity.getProductTypeDetailItems()
                         .stream()
-                        .map(detail -> detail.getProductType().getProductType_id()) // Giả sử ProductTypeDetailEntity liên kết với ProductTypeEntity
+                        .map(detail -> detail.getProductType().getProductType_id())
+                        .collect(Collectors.toList()))// Giả sử ProductTypeDetailEntity liên kết với ProductTypeEntity
                 .updated_at(entity.getUpdated_at())
                 .sizeQuantities(sizeQuantities)
                 .imagePaths(entity.getProductImageItems()

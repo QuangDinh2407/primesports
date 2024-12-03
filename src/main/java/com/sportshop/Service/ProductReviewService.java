@@ -5,16 +5,9 @@ import com.sportshop.Repository.ProductReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-@Service
-public class ProductReviewService {
+public interface ProductReviewService {
 
-    @Autowired
-    private ProductReviewRepository productReviewRepository;
+    void save(ProductReviewEntity review);
 
-    public void save(ProductReviewEntity review) {
-        productReviewRepository.save(review);
-    }
-    public boolean hasReviewed(String productId, String userId) {
-        return productReviewRepository.existsByProductIdAndUserId(productId, userId);
-    }
+    boolean hasReviewed(String productId, String userId);
 }

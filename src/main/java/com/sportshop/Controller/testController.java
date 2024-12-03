@@ -10,8 +10,7 @@ import com.sportshop.ModalDTO.AccountDTO;
 import com.sportshop.ModalDTO.ProductDTO;
 import com.sportshop.ModalDTO.ProductTypeDTO;
 import com.sportshop.ModalDTO.UserDTO;
-import com.sportshop.Repository.ProductImageRepository;
-import com.sportshop.Repository.ProductRepository;
+import com.sportshop.Repository.*;
 import com.sportshop.Service.AccountService;
 import com.sportshop.Service.Iml.ProductServiceIml;
 import com.sportshop.Service.Iml.ProductTypeServiceIml;
@@ -73,7 +72,7 @@ public class testController {
     private ProductTypeServiceIml productTypeServiceIml;
     @Autowired
     private ProductServiceIml productServiceIml;
-    private ProductRepository productRepository;
+
     @Autowired
     private ProductImageRepository productImageRepository;
 
@@ -189,8 +188,9 @@ public class testController {
 
     @GetMapping("/5pro")
     public List<ProductDTO>  hehe1() {
-        List<ProductDTO>  listType = productServiceIml.findTop5Rating("available");
+        List<ProductDTO> listType = productServiceIml.findTop5Rating("available");
         return listType;
+    }
     @GetMapping("tst")
     public List<ProductEntity> renderTst (HttpSession session, Model model){
         List<ProductEntity> a = productRepository.findAll();

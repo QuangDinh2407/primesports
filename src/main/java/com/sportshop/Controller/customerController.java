@@ -64,8 +64,8 @@ public class customerController {
     @PostMapping("/customer-info")
     public String updateInfo(UserDTO userDTO, Model model) {
         System.out.println(userDTO);
-        Result rs = userService.updateInfoUser(userDTO);
-        model.addAttribute("rs", rs);
+//        Result rs = userService.updateInfoUser(userDTO);
+//        model.addAttribute("rs", rs);
         return "redirect:/customer";
     }
 

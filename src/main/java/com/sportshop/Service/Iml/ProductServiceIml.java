@@ -47,8 +47,7 @@ public class ProductServiceIml implements ProductService {
 
     // Đường dẫn lưu file ảnh (cấu hình trong application.properties)
     private final String uploadDir = StringConstant.PRODUCTIMAGE_URL;
-    @Autowired
-    private ProductConverter productConverter;
+
     @Autowired
     private SizeRepository sizeRepository;
 
@@ -150,6 +149,11 @@ public class ProductServiceIml implements ProductService {
             e.printStackTrace();
             return new Result(false, "Thêm sản phẩm không thành công: " + e.getMessage());
         }
+    }
+
+    @Override
+    public Result addProduct(ProductDTO productDTO, List<MultipartFile> files) {
+        return null;
     }
 
     @Override
