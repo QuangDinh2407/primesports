@@ -131,9 +131,12 @@
                     </div>
                 </div>
                 <div class="col-7 col-xl-6 col-lg-12">
-                    <form action="" class="form">
+                    <form th:action="@{/add-pro-to-cart}" class="form">
                         <section class="prod-info">
-                            <h1 class="prod-info__heading" th:text="${productDTO.name}">
+                            <input type="hidden" name="product_id" th:value="${productDTO.product_id}">
+                            <input type="hidden" name="cart_id" th:value="${newCart.cart_id}">
+
+                            <h1 class="prod-info__heading" th:text="${productDTO.name}" name="name">
                             </h1>
                             <div class="row">
                                 <div class="col-5 col-xxl-6 col-xl-12">
@@ -145,7 +148,7 @@
                                     <label for="" class="form__label prod-info__label">Còn lại</label>
                                     <div class="filter__form-group">
                                         <div class="form__select-wrap">
-                                            <div class="form__select" style="--width: 146px" th:text="${productDTO.quantity}">
+                                            <div class="form__select" style="--width: 146px" th:text="${productDTO.quantity}" name="quantity">
 
                                                 <img
                                                         th:src="@{/Assets/Customer_Shop/Assets/icons/select-arrow.svg}"
@@ -189,13 +192,13 @@
                                         </div>
                                         <div class="prod-info__card">
                                             <div class="prod-info__row">
-                                                <span class="prod-info__price" th:text="${productDTO.price}+'VND'"></span>
+                                                <span class="prod-info__price" th:text="${productDTO.price}+'VND'" name="price"></span>
                                                 <span class="prod-info__tax">(Voucher)</span>
                                             </div>
                                             <p class="prod-info__total-price">(giá - voucher)</p>
                                             <div class="prod-info__row">
-                                                <button class="btn btn--primary prod-info__add-to-cart">
-                                                    Add to cart
+                                                <button class="btn btn--primary prod-info__add-to-cart" type="submit">
+                                                    Thêm giỏ hàng
                                                 </button>
                                                 <button class="like-btn prod-info__like-btn">
                                                     <img
@@ -234,7 +237,7 @@
                             <div class="col-8 col-xl-10 col-lg-12">
                                 <div class="text-content prod-tab__text-content">
                                     <h2>Thông tin sản phẩm</h2>
-                                    <p th:text="${productDTO.description}"></p>
+                                    <p th:text="${productDTO.description}" name="description"></p>
                                     <blockquote>
                                         <p>
                                             Lorem ipsum dolor sit amet <em>consectetur</em>
@@ -292,7 +295,7 @@
                                                     alt=""
                                                     class="product-card__star"
                                             />
-                                            <span class="product-card__score" th:text="${product.rating}"></span>
+                                            <span class="product-card__score" th:text="${product.rating}" name="rating"></span>
                                         </div>
                                     </article>
                                 </div>
