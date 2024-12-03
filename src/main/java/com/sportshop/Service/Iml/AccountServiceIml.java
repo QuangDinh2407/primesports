@@ -260,4 +260,36 @@ public class AccountServiceIml implements AccountService {
 
             }
     }
+    public Result changePassword(String email, String oldPassword, String newPassword) {
+        try {
+            // Tìm tài khoản bằng email
+            AccountEntity accEntity = accountRepository.findByemail(email);
+
+            // Kiểm tra xem tài khoản có tồn tại không
+            if (accEntity == null) {
+                return new Result(false, "Tài khoản không tồn tại!");
+            }
+
+            // Kiểm tra mật khẩu cũ có đúng không
+            if (!passwordEncoder.matches(oldPassword, accEntity.getPassword())) {
+                System.out.println("Mật khẩu cũ không đúng!");
+                return new Result(false, "Mật khẩu cũ không đúng!");
+            }
+
+            // Mã hóa mật khẩu mới và cập nhật
+            String encodedNewPassword = passwordEncoder.encode(newPassword);
+            accEntity.setPassword(encodedNewPassword);
+
+            // Lưu tài khoản
+            accountRepository.save(accEntity);
+
+            // Trả về kết quả thành công
+            System.out.println("Đổi mật khẩu thành công");
+            return new Result(true, "Đổi mật khẩu thành công!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Trả về kết quả thất bại trong trường hợp xảy ra lỗi
+            return new Result(false, "Đổi mật khẩu thất bại!");
+        }
+    }
 }

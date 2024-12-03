@@ -19,6 +19,7 @@ import java.util.Date;
 @AllArgsConstructor
 @Builder
 public class UserDTO {
+    private String user_id;
 
     private String name;
 
@@ -43,6 +44,8 @@ public class UserDTO {
     private String status;
 
     private AccountDTO account;
+
+    private CartDTO cart;
 
     public void setPhone(String phone) {
         this.phone = phone != null && !phone.trim().isEmpty() ? phone : null;  // Chỉ set nếu có giá trị

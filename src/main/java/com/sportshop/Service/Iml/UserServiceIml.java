@@ -4,10 +4,9 @@ import com.cloudinary.Cloudinary;
 import com.sportshop.Contants.StringContant;
 import com.sportshop.Entity.AccountEntity;
 import com.sportshop.Entity.UserInfoEntity;
+import com.sportshop.Entity.UserOrderEntity;
 import com.sportshop.Modal.Result;
-import com.sportshop.ModalDTO.AccountDTO;
-import com.sportshop.ModalDTO.UserDTO;
-import com.sportshop.ModalDTO.RoleDTO;
+import com.sportshop.ModalDTO.*;
 import com.sportshop.Repository.AccountRepository;
 import com.sportshop.Repository.UserInfoRepository;
 import com.sportshop.Service.CloudinaryService;
@@ -51,12 +50,15 @@ public class UserServiceIml implements UserService {
 
         for (UserInfoEntity item : items) {
            UserDTO userDTO = UserDTO.builder()
+                   .user_id(item.getUserInfo_id())
                    .name(item.getName())
                    .email(item.getEmail())
                    .phone(item.getPhone())
                    .birth(item.getBirth())
                    .created_at(item.getCreated_at())
                    .status(item.getStatus())
+                   .gender(item.getGender())
+                   .cart(new CartDTO(item.getCart().getCart_id()))
 //                   .account(AccountDTO.builder()
 //                           .email(item.getEmail())
 //                           .password(item.getAccount().getPassword())
@@ -75,6 +77,7 @@ public class UserServiceIml implements UserService {
     public UserDTO findbyEmail(String email) {
         UserInfoEntity user = userInfoRepo.findByEmail(email);
         UserDTO userDTO = UserDTO.builder()
+                .user_id(user.getUserInfo_id())
                 .birth(user.getBirth())
                 .address(user.getAddress())
                 .name(user.getName())
@@ -95,6 +98,7 @@ public class UserServiceIml implements UserService {
             userInfoEntity.setPhone(userDTO.getPhone());
             userInfoEntity.setAddress(userDTO.getAddress());
             userInfoEntity.setBirth(userDTO.getBirth());
+            userInfoEntity.setGender(userDTO.getGender());
             if (!Objects.equals(userDTO.getAccount().getPassword(), ""))
             {
                 String passEncrypt = passwordEncoder.encode(userDTO.getAccount().getPassword());
@@ -114,6 +118,7 @@ public class UserServiceIml implements UserService {
                 }
             }
             userInfoRepo.save(userInfoEntity);
+
             return new Result(true,"Thay đổi thông tin thành công");
         }
         catch (Exception e)
@@ -122,5 +127,4 @@ public class UserServiceIml implements UserService {
             return new Result(false,"Thay đổi thông tin thất bại");
         }
     }
-
 }

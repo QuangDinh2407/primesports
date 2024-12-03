@@ -8,7 +8,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
-
+@Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

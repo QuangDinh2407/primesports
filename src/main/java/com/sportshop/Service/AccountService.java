@@ -35,4 +35,6 @@ public interface AccountService {
 
     AccountEntity processOAuth2Account(AccountDTO accountDTO);
 
+    Result changePassword(String email, String oldPassword, String newPassword);
+
 }

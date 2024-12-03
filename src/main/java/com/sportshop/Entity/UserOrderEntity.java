@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import jakarta.persistence.Entity;
 
 import com.sportshop.Contants.FormatDate;
 import lombok.*;
@@ -33,7 +34,13 @@ public class UserOrderEntity {
 	@Temporal(TemporalType.TIMESTAMP)
 	@DateTimeFormat(pattern = FormatDate.FM_DATE)
 	private Date updated_at;
-	
+
+	@Column(nullable = false)
+	private  Float totalPrice;
+
+	@Column(nullable = false, columnDefinition = "nvarchar(MAX)")
+	private String shipping_address;
+
 	@ManyToOne
 	@JoinColumn(name="userInfo_id", referencedColumnName = "userInfo_id")
 	private UserInfoEntity userInfo;
@@ -44,5 +51,4 @@ public class UserOrderEntity {
 	
 	@OneToMany(mappedBy = "userOrder", fetch = FetchType.LAZY)
 	private List <UserOrderDetailEntity> userOrderDetailItems = new ArrayList<UserOrderDetailEntity>();
-
 }

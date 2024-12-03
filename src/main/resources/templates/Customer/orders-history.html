@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lịch sử mua hàng  </title>
+
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="76x76" th:href="@{/Assets/Customer_Shop/Assets/favicon/apple-touch-icon.png}" />
+    <link rel="icon" type="image/png" sizes="32x32" th:href="@{/Assets/Customer_Shop/Assets/favicon/favicon-32x32.png}" />
+    <link rel="icon" type="image/png" sizes="16x16" th:href="@{/Assets/Customer_Shop/Assets/favicon/favicon-16x16.png}" />
+    <link rel="manifest" th:href="@{/Assets/Customer_Shop/Assets/favicon/site.webmanifest}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <meta name="msapplication-TileColor" content="#da532c" />
+    <meta name="theme-color" content="#ffffff" />
+
+    <!-- Fonts -->
+    <link rel="stylesheet" th:href="@{/Assets/Customer_Shop/Assets/fonts/stylesheet.css}" />
+
+    <!-- Styles -->
+    <link rel="stylesheet" th:href="@{/Assets/Customer_Shop/Assets/css/main.css}" />
+
+    <!-- Scripts -->
+    <script th:src="@{/Assets/Customer_Shop/Assets/js/scripts.js}"></script>
+    <link rel="stylesheet" th:href="@{/Assets/Customer_Shop/Assets/css/styles.css}" />
+
+</head>
+<body>
+
+<!-- MAIN -->
+<main class="profile">
+    <div class="container">
+        <!-- Search bar -->
+        <div class="profile-container">
+            <div class="search-bar d-none d-md-flex">
+            </div>
+        </div>
+
+        <!-- Profile content -->
+        <div class="profile-container">
+            <div class="row gy-md-3">
+                <div class="col-3 col-xl-4 d-lg-none">
+                    <aside class="profile__sidebar">
+                        <!-- User -->
+                        <div class="profile-user">
+                            <label for="avatar-upload" class="profile-user__avatar-label">
+                                <img th:src="@{/Assets/Customer_Shop/Assets/img/avatar/blank-avatar.png}" alt="Profile Avatar" class="profile-user__avatar" />
+
+                            </label>
+                            <input type="file" id="avatar-upload" class="profile-user__avatar-input" accept="image/*" style="display: none;" />
+                            <h1 class="profile-user__name" th:text="${userDTO.name}"></h1>
+                            <!-- <p class="profile-user__desc">Registered: 17th May 2022</p>-->
+                        </div>
+                        <!-- Menu 1 -->
+                        <div class="profile-menu">
+                            <h3 class="profile-menu__title">Quản lý tài khoản</h3>
+                            <ul class="profile-menu__list">
+                                <li>
+                                    <a th:href="@{/customer}" class="profile-menu__link">
+                                                <span class="profile-menu__icon">
+                                                    <img th:src="@{/Assets/Customer_Shop/Assets/icons/profile.svg}" alt="" class="icon" />
+                                                </span>
+                                        Thông tin cá nhân
+                                    </a>
+                                </li>
+                                <li>
+                                    <a th:href="@{/customer/change-password-form}" class="profile-menu__link" methods="post">
+                                                <span class="profile-menu__icon">
+                                                    <img th:src="@{/Assets/Customer_Shop/Assets/icons/message-2.svg}" alt="" class="icon" />
+                                                </span>
+                                        Quyền riêng tư
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Menu 2 -->
+                        <div class="profile-menu">
+                            <h3 class="profile-menu__title">My items</h3>
+                            <ul class="profile-menu__list">
+                                <li>
+                                    <a th:href="@{/customer/test}" class="profile-menu__link">
+                                                <span class="profile-menu__icon">
+                                                    <img th:src="@{/Assets/Customer_Shop/Assets/icons/buy.svg}" alt="" class="icon" />
+                                                </span>
+                                        Giỏ hàng của bạn
+                                    </a>
+                                </li>
+                                <li>
+                                    <!--                                    <a th:href="@{/customer/order-history(userInfoId=${userInfo_id})}" class="profile-menu__link">-->
+                                    <a th:href="@{/customer/order-history}" class="profile-menu__link">
+
+                                               <span class="profile-menu__icon">
+                                                    <img th:src="@{/Assets/Customer_Shop/Assets/icons/document.svg}" alt="" class="icon" />
+                                                </span>
+                                        Lịch sử mua hàng
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#!" class="profile-menu__link">
+                                                <span class="profile-menu__icon">
+                                                    <img src="./assets/icons/gift-2.svg" alt="" class="icon" />
+                                                </span>
+                                        Registries
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Menu 3 -->
+                        <div class="profile-menu">
+                            <h3 class="profile-menu__title">Subscriptions & plans</h3>
+                            <ul class="profile-menu__list">
+                                <li>
+                                    <a href="#!" class="profile-menu__link">
+                                                <span class="profile-menu__icon">
+                                                    <img src="./assets/icons/shield.svg" alt="" class="icon" />
+                                                </span>
+                                        Protection plans
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Menu 4 -->
+                        <div class="profile-menu">
+                            <h3 class="profile-menu__title">Chăm sóc khách hàng</h3>
+                            <ul class="profile-menu__list">
+                                <li>
+                                    <a href="#!" class="profile-menu__link">
+                                                <span class="profile-menu__icon">
+                                                    <img src="./assets/icons/info.svg" alt="" class="icon" />
+                                                </span>
+                                        Trợ giúp
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#!" class="profile-menu__link">
+                                                <span class="profile-menu__icon">
+                                                    <img src="./assets/icons/danger.svg" alt="" class="icon" />
+                                                </span>
+                                        Terms of Use
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </aside>
+                </div>
+                <div class="col-9 col-xl-8 col-lg-12">
+                    <div class="cart-info">
+                        <div class="col-12">
+                            <h2 class="cart-info__heading">
+                                Lịch sử mua hàng
+                                <div class="cart-info__card-id">
+                                    <span class="label">Cart ID: <span th:text="${userDTO.cart.cart_id}"></span></span>
+                                </div>
+                            </h2>
+
+                            <div class="cart-info__card-id">
+                                <div class="content">
+                                    <table class="table table-hover">
+                                        <thead>
+                                        <tr>
+                                            <!--                                        <th>Mã đơn hàng</th>-->
+                                            <th>STT</th>
+<!--                                            <th>Sản phẩm</th>-->
+                                            <th>Ngày mua</th>
+                                            <th>Thành tiền</th>
+                                            <th>Trạng thái</th>
+                                            <th>Phương thức thanh toán</th>
+                                            <th>Ngày cập nhật</th>
+                                            <th>Xem chi tiết</th>
+                                            <!--                                            <th></th>-->
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="order : ${userOrders}">
+                                            <!--                                        <td th:text="${order.userOrder_id}"></td>-->
+                                            <td th:text="${orderStat.index + 1}"></td>  <!-- Số thứ tự bắt đầu từ 1 -->
+<!--                                            <td th:text="${order.product.name}"></td>-->
+                                            <td th:text="${#dates.format(order.created_at, 'yyyy-MM-dd')}"></td>
+                                            <td th:text="${order.total_price}"></td>
+                                            <td class="status"
+                                                th:classappend="${order.status == 'Đã giao' ? 'completed' :
+                                            (order.status == 'Đang giao' ? 'in-progress' :
+                                             (order.status == 'Đã hủy' ? 'cancelled' : 'pending'))}">
+                                                <span th:text="${order.status}"></span>
+                                            </td>
+                                            <td th:text="${order.paymentType.name}"></td>
+                                            <td th:text="${#dates.format(order.updated_at, 'yyyy-MM-dd')}"></td>
+                                            <td>
+                                                <!-- Nút xem chi tiết -->
+                                                    <form method="get" th:action="@{/customer/order-detail}">
+                                                    <input type="hidden" name="orderId" th:value="${order.userOrder_id}" />
+                                                    <button type="submit">Chi Tiết</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                        <tr th:if="${#lists.isEmpty(userOrders)}">
+                                            <td colspan="6" class="text-center">Không có đơn hàng nào.</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+<!--                                    <div th:if="${orderDetails != null}">-->
+<!--                                        <h3>Chi tiết đơn hàng</h3>-->
+<!--                                        <p><strong>Mã Đơn Hàng:</strong> <span th:text="${orderDetails.userOrder_id}"></span></p>-->
+<!--                                        <p><strong>Sản Phẩm:</strong> <span th:text="${orderDetails.product.name}"></span></p>-->
+<!--                                        <p><strong>Hình ảnh:</strong> <span th:text="${orderDetails.product.name}"></span></p>-->
+<!--                                        <p><strong>Ngày Mua:</strong> <span th:text="${orderDetails.created_at}"></span></p>-->
+<!--                                        <p><strong>Số lượng:</strong> <span th:text="${orderDetails.userOrderDetail.amount }"></span></p>-->
+<!--                                        <p><strong>Giá:</strong> <span th:text="${orderDetails.userOrderDetail.price}"></span></p>-->
+<!--                                        <p> <strong>Giảm giá:</strong><span>10%</span></p>-->
+<!--                                        <p><strong>Tổng tiền:</strong> <span th:text="${orderDetails.total_price}"></span></p>-->
+<!--                                        <p><strong>Trạng Thái:</strong> <span th:text="${orderDetails.status}"></span></p>-->
+<!--                                        <p><strong>Ngày Cập Nhật:</strong> <span th:text="${orderDetails.updated_at}"></span></p>-->
+<!--                                        <p><strong>Phương Thức Thanh Toán:</strong> <span th:text="${orderDetails.paymentType.name}"></span></p>-->
+<!--                                        <p><strong>Đánh Giá:</strong> <span th:text="${orderDetails. product.rating}"></span></p>-->
+<!--                                    </div>-->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>
