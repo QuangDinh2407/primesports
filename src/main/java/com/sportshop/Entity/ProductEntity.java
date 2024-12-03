@@ -3,14 +3,13 @@ package com.sportshop.Entity;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.sportshop.Contants.FormatDate;
 import lombok.*;
 import jakarta.persistence.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
-
+@Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -50,10 +49,12 @@ public class ProductEntity {
 	private String status;
 	
 	@OneToMany (mappedBy = "product", fetch = FetchType.LAZY)
+
 	@ToString.Exclude
 	private List <ProductTypeDetailEntity> productTypeDetailItems = new ArrayList<ProductTypeDetailEntity>();
 	
 	@OneToMany (mappedBy = "product", fetch = FetchType.LAZY)
+	@ToString.Exclude
 	private List <ProductImageEntity> productImageItems = new ArrayList<ProductImageEntity>();
 
 	@OneToMany (mappedBy = "product", fetch = FetchType.LAZY)
@@ -73,5 +74,8 @@ public class ProductEntity {
 	
 	@OneToMany (mappedBy = "product", fetch = FetchType.LAZY)
 	private List <UserOrderDetailEntity> UserOrderDetailItems = new ArrayList<UserOrderDetailEntity>();
+
+	@OneToMany (mappedBy = "product", fetch = FetchType.LAZY)
+	private List <SizeDetailEntity> SizeDetailItems = new ArrayList<SizeDetailEntity>();
 
 }

@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/Common/Employee/LayoutMaster.html}">
+<head>
+    <title>Product Manage</title>
+
+    <link rel="stylesheet" th:href="@{/Assets/Admin_Employee/Assets/css/vertical-layout-light/employeeInfocss.css}"/>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <style>
+        .flatpickr-current-month .flatpickr-monthDropdown-months {
+            padding: 0 !important;
+        }
+
+        #dateIcon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-size: 20px;
+            color: rgba(0, 0, 0, .8);
+            z-index: 1;
+        }
+
+    </style>
+</head>
+
+<body>
+<div class="content" layout:fragment="content">
+    <div class="product-manage-container">
+        <div class="product-info-content">
+            <div class="product-show-display">
+                <div class="col-lg-12 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="container__header container">
+                            <h2 class="header__addProduct" th:text="${title}"></h2>
+                            <a class="back-product-btn" href="/admin/product" ><i class="mdi mdi-arrow-left"></i></a>
+                        </div>
+                        <form class="form" th:action="${formAction}" th:object="${productDTO}"
+                              enctype="multipart/form-data" method="post">
+                            <input type="hidden" th:field="*{product_id}" />
+                            <div class="form-container-custom">
+                                <div class="left__side">
+                                    <div class="form__group form__group__custom">
+                                        <label for="">Tên sản phẩm: </label>
+                                        <div class="text-input">
+                                            <input type="text" id="name" class="input-setting-custom input-name-product" th:field="*{name}">
+                                        </div>
+                                    </div>
+                                    <div class="form__group form__group__custom">
+                                        <label for="">Giá tiền</label>
+                                        <div class="text-input">
+                                            <input type="number" class="input-setting-custom" th:field="*{price}">
+                                        </div>
+                                    </div>
+                                    <div class="form__group form__group__custom">
+                                        <label for="quantityType">Loại số lượng:</label>
+                                        <div class="size__group">
+                                            <div class="none-size">
+                                                <input type="radio" id="no-size-option" name="quantityType" value="noSize" th:checked="${productDTO.sizeQuantities == null or productDTO.sizeQuantities.isEmpty()}">
+                                                <label for="no-size-option">Không có size</label>
+                                            </div>
+                                            <div class="size">
+                                                <input type="radio" id="size-option" name="quantityType" value="size" th:checked="${productDTO.sizeQuantities != null and not productDTO.sizeQuantities.isEmpty()}">
+                                                <label for="size-option">Có size</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Phần nhập số lượng không có size -->
+                                    <div class="form__group form__group__custom" id="no-size-quantity-section" th:style="${(productDTO.sizeQuantities == null or productDTO.sizeQuantities.isEmpty()) ? '' : 'display: none;'}">
+                                        <label for="no-size-quantity">Số lượng:</label>
+                                        <div class="text-input">
+                                            <input type="number" id="no-size-quantity" class="input-setting-custom" name="quantity" th:field="*{quantity}" placeholder="Nhập số lượng tổng" min="0" required>
+                                        </div>
+                                    </div>
+
+                                    <!--                                     Phần nhập size và số lượng-->
+<!--                                    <div class="form__group form__group__custom" id="size-section" style="display: none;">-->
+<!--                                        <label for="size-list">Kích thước và số lượng:</label>-->
+<!--                                        <div id="size-list"></div>-->
+<!--                                        <button type="button" id="add-size-btn" class="btn btn-primary btn-sm" style=" margin-top: 19px; margin-left: 7px; "> Thêm Size</button>-->
+<!--                                    </div>-->
+                                    <div class="form__group form__group__custom" id="size-section"
+                                         th:style="${(productDTO.sizeQuantities != null and not productDTO.sizeQuantities.isEmpty()) ? '' : 'display: none;'}">
+                                        <label for="size-list">Kích thước và số lượng:</label>
+                                        <div id="size-list">
+                                            <!-- Lặp qua từng size và quantity -->
+                                            <div class="size-row" th:each="entry : ${productDTO.sizeQuantities}">
+                                                <input type="text" name="sizes" class="input-size-setting-custom"
+                                                       th:value="${entry.key}" placeholder="Size" required />
+                                                -
+                                                <input type="number" name="quantities" class="input-size-setting-custom"
+                                                       th:value="${entry.value}" placeholder="Số lượng" min="0" required />
+                                            </div>
+                                        </div>
+                                        <button type="button" id="add-size-btn" class="btn btn-primary btn-sm" style=" margin-top: 19px; margin-left: 7px; width: 93px"> Thêm Size</button>
+                                    </div>
+
+
+
+                                    <select id="size-template" style="display: none;">
+                                        <option value="" selected>Chọn size</option>
+                                        <option name="" th:each="size : ${sizes}" th:value="${size.size_id}" th:text="${size.name_size}"></option>
+                                    </select>
+
+                                    <div class="form__group form__group__custom">
+                                        <label for="">Loại sản phẩm</label>
+                                        <div class="input__productTypes__content">
+                                            <div th:each="parentType : ${productTypesParent}">
+                                                <div class="label">
+                                                    <span th:text="${parentType.name}"></span>
+                                                </div>
+                                                <div class="group__select">
+                                                    <div th:each="childType : ${productTypes}" th:if="${childType.parent_id == parentType.productType_id}">
+                                                        <label class="checkbox-item label__checkbox">
+                                                            <input type="checkbox" name="productTypes" th:value="${childType.productType_id}" th:text="${childType.name}" th:field="*{productTypeIds}"/>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form__group form__group__custom">
+                                        <label for="">Mô tả</label>
+                                        <div class="text-input">
+                                            <textarea  type="number" class="input-setting-custom textarea" th:field="*{description}"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="right__side">
+                                    <div>
+                                        <div class="form__group form__group__custom form__image__custom">
+                                            <label for="image-product-upload">Hình ảnh</label>
+                                            <div class="text-input">
+                                                <input type="file" id="image-product-upload" class="input-setting-custom" name="images" accept="image/*" multiple>
+                                                <label class="custom-file-label" for="image-product-upload">Chọn ảnh</label>
+                                                <span id="file-names" style="margin-left: 12px;">Chưa có file nào được chọn</span>
+                                            </div>
+                                        </div>
+
+                                        <!-- Khu vực hiển thị ảnh -->
+                                        <div id="image-preview-container" class="image-preview-container">
+                                            <!-- Thymeleaf render ảnh sẵn có -->
+                                            <div th:each="imagePath : ${productDTO.imagePaths}" class="image-preview">
+                                                <img th:src="@{'/Assets/Customer_Shop/Assets/img/product/' + ${imagePath}}" alt="productImage" />
+                                                <button type="button" class="remove-btn"
+                                                        th:attr="onclick='removeExistingImage(this, \'' + ${imagePath} + '\')'">
+                                                    ×
+                                                </button>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="button-container">
+                                <button type="submit" class="btn btn-success btn-rounded btn-fw">Thêm</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<!--THÊM-->
+<div layout:fragment="script">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/flatpickr.min.js"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/vn.js"></script>
+    <script>
+        document.getElementById("image-product-upload").addEventListener("change", function () {
+            document.getElementById("file-names").textContent = fileNames || "Chưa có file nào được chọn";
+        });
+    </script>
+
+    <script th:inline="javascript">
+        document.addEventListener("DOMContentLoaded", function () {
+            const noSizeOption = document.getElementById("no-size-option");
+            const sizeOption = document.getElementById("size-option");
+            const noSizeQuantitySection = document.getElementById("no-size-quantity-section");
+            const sizeSection = document.getElementById("size-section");
+
+            // Điều chỉnh hiển thị khi chuyển giữa các lựa chọn
+            noSizeOption.addEventListener("change", toggleQuantityType);
+            sizeOption.addEventListener("change", toggleQuantityType);
+
+            function toggleQuantityType() {
+                if (noSizeOption.checked) {
+                    noSizeQuantitySection.style.display = "block";
+                    sizeSection.style.display = "none";
+                } else if (sizeOption.checked) {
+                    noSizeQuantitySection.style.display = "none";
+                    sizeSection.style.display = "block";
+                }
+            }
+
+            // Thêm size và số lượng
+            const addSizeBtn = document.getElementById("add-size-btn");
+            const sizeList = document.getElementById("size-list");
+            const sizeTemplate = document.getElementById("size-template").innerHTML; // Lấy template size
+
+            addSizeBtn.addEventListener("click", function () {
+                const sizeRow = document.createElement("div");
+                sizeRow.classList.add("size-row");
+
+                sizeRow.innerHTML = `
+            <select class="input-size-setting-custom" name="sizes" required>
+                ${sizeTemplate}
+            </select>
+            -
+            <input type="number" class="input-size-setting-custom" name="quantities" placeholder="Số lượng" min="0" required>
+            <button type="button" class="remove-size-btn">×</button>
+        `;
+
+                sizeRow.querySelector(".remove-size-btn").addEventListener("click", function () {
+                    sizeList.removeChild(sizeRow);
+                });
+
+                sizeList.appendChild(sizeRow);
+            });
+        });
+
+
+    </script>
+
+    <script>
+        const fileInput = document.getElementById("image-product-upload");
+        const previewContainer = document.getElementById("image-preview-container");
+        const fileNamesElement = document.getElementById("file-names");
+
+        // Danh sách chứa URL ảnh sẵn có và file mới
+        let currentImages = Array.from(document.querySelectorAll('.image-preview img')).map(img => img.src);
+        const deletedImages = []; // Danh sách ảnh sẵn có đã bị xóa
+        const newImages = []; // Danh sách ảnh mới được tải lên
+
+        // Khi trang load, cập nhật số lượng file sẵn có
+        document.addEventListener("DOMContentLoaded", () => {
+            updateFileCount();
+        });
+
+        // Khi người dùng chọn file
+        fileInput.addEventListener("change", function () {
+            const files = Array.from(this.files);
+
+            // Thêm file mới vào danh sách và hiển thị preview
+            files.forEach(file => {
+                newImages.push(file);
+                displayPreview(file);
+            });
+
+            updateFileCount();
+        });
+
+        // Hiển thị preview của ảnh mới
+        function displayPreview(file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const preview = document.createElement("div");
+                preview.classList.add("image-preview");
+
+                const img = document.createElement("img");
+                img.src = e.target.result;
+                preview.appendChild(img);
+
+                const removeBtn = document.createElement("button");
+                removeBtn.classList.add("remove-btn");
+                removeBtn.textContent = "×";
+                removeBtn.onclick = () => removeNewImage(file, preview);
+                preview.appendChild(removeBtn);
+
+                previewContainer.appendChild(preview);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Xóa ảnh sẵn có
+        function removeExistingImage(button, imagePath) {
+            // Thêm ảnh sẵn có bị xóa vào danh sách
+            deletedImages.push(imagePath);
+
+            // Loại bỏ ảnh khỏi danh sách sẵn có
+            currentImages = currentImages.filter(img => !img.includes(imagePath));
+
+            // Xóa phần tử DOM
+            const previewElement = button.parentElement;
+            previewContainer.removeChild(previewElement);
+
+            updateFileCount();
+        }
+
+        // Xóa ảnh mới tải lên
+        function removeNewImage(file, previewElement) {
+            const index = newImages.indexOf(file);
+            if (index > -1) {
+                newImages.splice(index, 1);
+            }
+            previewContainer.removeChild(previewElement);
+
+            updateFileCount();
+        }
+
+        // Cập nhật số lượng file đã chọn
+        function updateFileCount() {
+            const totalFiles = currentImages.length + newImages.length;
+            fileNamesElement.textContent = totalFiles > 0 ? `${totalFiles} Files được chọn` : "Chưa có file nào được chọn";
+        }
+    </script>
+
+
+
+
+
+    <script>
+        const datePicker = flatpickr("#dateInput", {
+            dateFormat: "d-m-Y",
+            locale: "vn",
+            onChange: function (selectedDates, dateStr, instance) {
+                document.getElementById('dateInput').value = dateStr;
+            }
+        });
+
+        const dateIcon = document.querySelector('#dateIcon');
+        dateIcon.addEventListener('click', function () {
+            datePicker.open();
+        });
+
+    </script>
+</div>
+
+</body>
+
+</html>

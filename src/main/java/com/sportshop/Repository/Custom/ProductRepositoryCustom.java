@@ -28,4 +28,5 @@ public interface ProductRepositoryCustom {
             @Param("types") List<String> types,
             Pageable pageable);
 
+
 }

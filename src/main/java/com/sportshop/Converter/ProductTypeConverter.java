@@ -5,7 +5,6 @@ import com.sportshop.ModalDTO.ProductTypeDTO;
 import com.sportshop.Repository.ProductTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -58,5 +57,15 @@ public class ProductTypeConverter {
         return productTypeDTOList;
     }
 
+    public ProductTypeEntity toEntity(ProductTypeDTO dto) {
+        if (dto == null) {
+            return null;
+        }
+        return ProductTypeEntity.builder()
+                .productType_id(dto.getProductType_id())
+                .name(dto.getName())
+                .parent_id(dto.getParent_id())
+                .build();
+    }
 
 }

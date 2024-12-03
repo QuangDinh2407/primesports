@@ -3,12 +3,15 @@ package com.sportshop.Controller;
 import com.sportshop.Converter.AccountConverter;
 import com.sportshop.Converter.ProductTypeConverter;
 import com.sportshop.Entity.*;
+import com.sportshop.Entity.ProductEntity;
+import com.sportshop.Entity.ProductImageEntity;
 import com.sportshop.Modal.Mail;
 import com.sportshop.ModalDTO.AccountDTO;
 import com.sportshop.ModalDTO.ProductDTO;
 import com.sportshop.ModalDTO.ProductTypeDTO;
 import com.sportshop.ModalDTO.UserDTO;
-import com.sportshop.Repository.*;
+import com.sportshop.Repository.ProductImageRepository;
+import com.sportshop.Repository.ProductRepository;
 import com.sportshop.Service.AccountService;
 import com.sportshop.Service.Iml.ProductServiceIml;
 import com.sportshop.Service.Iml.ProductTypeServiceIml;
@@ -18,6 +21,7 @@ import jakarta.mail.MessagingException;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,6 +29,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -68,6 +73,9 @@ public class testController {
     private ProductTypeServiceIml productTypeServiceIml;
     @Autowired
     private ProductServiceIml productServiceIml;
+    private ProductRepository productRepository;
+    @Autowired
+    private ProductImageRepository productImageRepository;
 
     @GetMapping("/test")
     public String test() {
@@ -145,8 +153,6 @@ public class testController {
 
         return "redirect:/upload";
     }
-
-
     @GetMapping("/findall")
     public Page<AccountDTO> getAllCustomer(@RequestParam(defaultValue = "0") int page,
                                            @RequestParam(defaultValue = "5") int size,
@@ -185,5 +191,15 @@ public class testController {
     public List<ProductDTO>  hehe1() {
         List<ProductDTO>  listType = productServiceIml.findTop5Rating("available");
         return listType;
+    @GetMapping("tst")
+    public List<ProductEntity> renderTst (HttpSession session, Model model){
+        List<ProductEntity> a = productRepository.findAll();
+        return a;
+    }
+
+    @GetMapping("image")
+    public List<ProductImageEntity> renderImage (HttpSession session, Model model){
+        List<ProductImageEntity> a = productImageRepository.findAll();
+        return a;
     }
 }
