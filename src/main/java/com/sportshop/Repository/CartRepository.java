@@ -1,4 +1,4 @@
 package com.sportshop.Repository;
 
-public class CartRepository {
+public interface CartRepository {
 }

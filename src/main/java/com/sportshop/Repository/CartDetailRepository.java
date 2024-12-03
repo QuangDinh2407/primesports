@@ -1,5 +1,5 @@
 package com.sportshop.Repository;
 
-public class CartDetailRepository {
+public interface CartDetailRepository {
 
 }
