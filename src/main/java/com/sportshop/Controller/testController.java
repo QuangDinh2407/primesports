@@ -39,7 +39,11 @@ import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 //@Controller
@@ -75,6 +79,9 @@ public class testController {
 
     @Autowired
     private ProductImageRepository productImageRepository;
+
+    @Autowired
+    UserOrderRepository userOrderRepository;
 
     @GetMapping("/test")
     public String test() {
@@ -201,5 +208,28 @@ public class testController {
     public List<ProductImageEntity> renderImage (HttpSession session, Model model){
         List<ProductImageEntity> a = productImageRepository.findAll();
         return a;
+    }
+
+    @GetMapping("/dash")
+    public Map<String, Object> getTotalRevenueByMonth() {
+        // Lấy dữ liệu doanh thu theo tháng từ repository
+        List<Object[]> results = userOrderRepository.getTotalRevenueByMonth();
+        List<String> labels = new ArrayList<>();
+        List<Double> values = new ArrayList<>();
+
+        for (Object[] result : results) {
+            String label = "Tháng " + result[1];  // Tháng
+            Double value = ((Number) result[2]).doubleValue();  // Doanh thu
+
+            labels.add(label);
+            values.add(value);
+        }
+
+        // Trả về một Map chứa cả labels và values
+        Map<String, Object> chartData = new HashMap<>();
+        chartData.put("labels", labels);
+        chartData.put("values", values);
+
+        return chartData;
     }
 }

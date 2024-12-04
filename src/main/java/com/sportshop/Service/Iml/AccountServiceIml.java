@@ -255,6 +255,8 @@ public class AccountServiceIml implements AccountService {
                 AccountEntity accountEntity = new AccountEntity();
                 accountDTO.setIs_disable("1");
                 accountEntity = accountConverter.toEntity(accountDTO);
+                UserInfoEntity userInfoEntity = new UserInfoEntity();
+                userInfoEntity.setEmail(accountDTO.getEmail());
                 accountRepository.save(accountEntity);
                 return accountEntity;
 

@@ -8,6 +8,7 @@ import com.sportshop.ModalDTO.SizeDTO;
 import com.sportshop.ModalDTO.UserDTO;
 import com.sportshop.Repository.ProductRepository;
 import com.sportshop.Repository.ProductTypeRepository;
+import com.sportshop.Repository.UserOrderRepository;
 import com.sportshop.Service.Iml.AccountServiceIml;
 import com.sportshop.Service.Iml.ProductServiceIml;
 import com.sportshop.Service.ProductService;
@@ -30,7 +31,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.List;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -58,7 +61,8 @@ public class AdminController {
     @Autowired
     private ProductTypeService productTypeService;
 
-
+    @Autowired
+    UserOrderRepository userOrderRepository;
     @Autowired
     ServletContext context;
     @Autowired
@@ -85,11 +89,29 @@ public class AdminController {
 
     @GetMapping("/home")
     public String renderHome (HttpSession session, Model model){
-        return "Admin/home";
+        return "redirect:/admin/dashboard";
     }
 
     @GetMapping("/dashboard")
-    public String renderdashboard (HttpSession session, Model model){
+    public String renderdashboard (HttpSession session, Model model)
+    {
+
+        List<Object[]> results = userOrderRepository.getTotalRevenueByMonth();
+        List<String> labels = new ArrayList<>();
+        List<Double> values = new ArrayList<>();
+
+        for (Object[] result : results) {
+            String label = "Tháng " + result[1];  // Tháng
+            Double value = ((Number) result[2]).doubleValue();  // Doanh thu
+
+            labels.add(label);
+            values.add(value);
+        }
+        Map<String, Object> chartData = new HashMap<>();
+        chartData.put("labels", labels);
+        chartData.put("values", values);
+        model.addAttribute("chartData", chartData);
+
         return "Admin/dashboard";
     }
 
