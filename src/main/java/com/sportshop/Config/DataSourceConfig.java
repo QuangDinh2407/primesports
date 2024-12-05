@@ -80,7 +80,7 @@ public class DataSourceConfig {
             @Qualifier("routingDataSource") DataSource dataSource) {
         Map<String, String> properties = new HashMap<>();
         properties.put("hibernate.dialect", "org.hibernate.dialect.SQLServerDialect");
-        properties.put("hibernate.hbm2ddl.auto", "create");
+        properties.put("hibernate.hbm2ddl.auto", "update");
         return builder
                 .dataSource(dataSource)
                 .packages("com.sportshop.Entity")

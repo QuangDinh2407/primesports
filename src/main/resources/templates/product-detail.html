@@ -49,6 +49,49 @@
         font-size: 2.5rem;
         font-weight: 600;
     }
+
+    .quantity-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 10px;
+    }
+
+    .quantity-btn {
+        width: 26px;
+        height: 26px;
+        border: none;
+        border-radius: 50%;
+        background-color: #ffc107; /* Màu vàng đậm */
+        font-size: 16px;
+        font-weight: bold;
+        color: #fff;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .quantity-btn:hover {
+        transform: scale(1.1);
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .quantity-input {
+        width: 40px;
+        height: 32px;
+        text-align: center;
+        font-size: 16px;
+        font-weight: bold;
+        border: none;
+        border-radius: 4px;
+        outline: none;
+        background-color: #f9f9f9;
+        pointer-events: none; /* Ngăn người dùng tự chỉnh sửa */
+    }
+
 </style>
 
 <body>
@@ -132,7 +175,7 @@
                 </div>
                 <div class="col-7 col-xl-6 col-lg-12">
                     <form th:action="@{/add-pro-to-cart}" class="form">
-                        <section class="prod-info">
+                        <section class="prod-info" style="width:115%">
                             <input type="hidden" name="product_id" th:value="${productDTO.product_id}">
                             <input type="hidden" name="cart_id" th:value="${newCart.cart_id}">
 
@@ -145,7 +188,12 @@
                                         <img th:src="@{/Assets/Customer_Shop/Assets/icons/star.svg}" alt="" class="prod-prop__icon" />
                                         <h4 class="prod-prop__title" th:text="${productDTO.rating}"></h4>
                                     </div>
-                                    <label for="" class="form__label prod-info__label">Còn lại</label>
+                                    <div class="quantity-wrapper"  style="margin-top: 25px"><p class="prod-prop__title">Số lượng</p>
+                                        <button type="button" class="quantity-btn quantity-btn--decrease" onclick="decreaseQuantity()">-</button>
+                                        <input type="text" class="quantity-input" value="1" id="quantity" readonly name="quantity"/>
+                                        <button type="button" class="quantity-btn quantity-btn--increase" onclick="increaseQuantity()">+</button>
+                                    </div>
+                                    <label for="" class="form__label prod-info__label" style="margin-top:35%">Còn lại</label>
                                     <div class="filter__form-group">
                                         <div class="form__select-wrap">
                                             <div class="form__select" style="--width: 146px" th:text="${productDTO.quantity}" name="quantity">
@@ -190,7 +238,7 @@
                                                 <p class="prod-prop__desc">Khoảng 30.000VND cho 3-4 ngày</p>
                                             </div>
                                         </div>
-                                        <div class="prod-info__card">
+                                        <div class="prod-info__card" style="width:111%">
                                             <div class="prod-info__row">
                                                 <span class="prod-info__price" th:text="${productDTO.price}+'VND'" name="price"></span>
                                                 <span class="prod-info__tax">(Voucher)</span>
@@ -200,18 +248,10 @@
                                                 <button class="btn btn--primary prod-info__add-to-cart" type="submit">
                                                     Thêm giỏ hàng
                                                 </button>
-                                                <button class="like-btn prod-info__like-btn">
-                                                    <img
-                                                            th:src="@{/Assets/Customer_Shop/Assets/icons/heart.svg}"
-                                                            alt=""
-                                                            class="like-btn__icon icon"
-                                                    />
-                                                    <img
-                                                            th:src="@{/Assets/Customer_Shop/Assets/icons/heart-red.svg}"
-                                                            alt=""
-                                                            class="like-btn__icon--liked"
-                                                    />
+                                                <button class="btn btn--primary prod-info__add-to-cart" type="">
+                                                    Mua ngay
                                                 </button>
+
                                             </div>
                                         </div>
                                     </div>
@@ -311,6 +351,21 @@
 <!-- Footer -->
 
 <footer id="footer" class="footer"></footer>
+<script>
+    function increaseQuantity() {
+        const input = document.getElementById('quantity');
+        let currentValue = parseInt(input.value);
+        input.value = currentValue + 1;
+    }
 
+    function decreaseQuantity() {
+        const input = document.getElementById('quantity');
+        let currentValue = parseInt(input.value);
+        if (currentValue > 1) {
+            input.value = currentValue - 1;
+        }
+    }
+
+</script>
 </body>
 </html>

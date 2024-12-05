@@ -42,20 +42,6 @@ public class ShopController {
     @Autowired
     UserService userService;
 
-//    @ModelAttribute
-//    public void checkLoginToCreateCart(HttpSession session,Model model){
-//        String email = (String) session.getAttribute("email");
-//
-//        if (email == null) {
-//            if(!model.containsAttribute("newCart")){
-//                CartDTO newCart = new CartDTO();
-//                newCart.setCart_id(UUID.randomUUID().toString());
-//                System.out.println(newCart);
-//                model.addAttribute("newCart", newCart);
-//            }
-//        }
-//    }
-
     @ModelAttribute
     public void checkLoginToCreateCart(HttpSession session){
         String email = (String) session.getAttribute("email");
@@ -63,7 +49,7 @@ public class ShopController {
             if(session.getAttribute("newCart")==null){
                 CartDTO newCart = new CartDTO();
                 newCart.setCart_id(UUID.randomUUID().toString());
-                System.out.println(newCart);
+                System.out.println("new Cart là: "+newCart.getCart_id());
                 session.setAttribute("newCart", newCart);
             }
         }
@@ -85,9 +71,10 @@ public class ShopController {
     }
 
     @GetMapping("/header")
-    public String headerRender(CartDTO cart,Model model) {
+    public String headerRender(HttpSession session,Model model) {
         model.addAttribute("listType",productTypeServiceIml.getListHierarchyType());
-        model.addAttribute("newCart", new CartDTO());
+        CartDTO cart=(CartDTO) session.getAttribute("newCart");
+        model.addAttribute("newCart", cart);
         return "templates/header1";
     }
 
@@ -125,7 +112,6 @@ public class ShopController {
     @GetMapping("/product-detail/{id}")
     public String renderDetailProduct(@PathVariable("id") String id, Model model,HttpSession session) {
         ProductDTO proDTO= productServiceIml.findProductById(id);
-        System.out.println(proDTO.getName());
 
         //lấy 5 sản phẩm được rating cao
         List<ProductDTO> relatedProducts=productServiceIml.findTop5Rating("available");
