@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.List;
@@ -47,7 +48,6 @@ public class customerController {
     @ModelAttribute
     public void getUser(HttpSession session, Model model) {
         String email = (String) session.getAttribute("email");
-        System.out.println(email);
         if (email != null) {
             UserDTO userDTO = userService.findbyEmail(email);
             model.addAttribute("userDTO", userDTO);
@@ -62,10 +62,10 @@ public class customerController {
 
 
     @PostMapping("/customer-info")
-    public String updateInfo(UserDTO userDTO, Model model) {
+    public String updateInfo(UserDTO userDTO, Model model,@RequestParam("avatar") MultipartFile file) {
         System.out.println(userDTO);
-//        Result rs = userService.updateInfoUser(userDTO);
-//        model.addAttribute("rs", rs);
+        Result rs = userService.updateInfoUser(userDTO,file);
+        model.addAttribute("rs", rs);
         return "redirect:/customer";
     }
 

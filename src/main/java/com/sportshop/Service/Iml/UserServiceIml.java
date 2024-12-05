@@ -91,6 +91,7 @@ public class UserServiceIml implements UserService {
                 .gender(user.getGender())
                 .status(user.getStatus())
                 .imagePath(user.getImage_path())
+                .cart(cartConverter.toDTO(user.getCart()))
                 .build();
         return userDTO;
     }
@@ -142,13 +143,6 @@ public class UserServiceIml implements UserService {
             userInfoEntity.setAddress(userDTO.getAddress());
             userInfoEntity.setBirth(userDTO.getBirth());
             userInfoEntity.setGender(userDTO.getGender());
-            if (!Objects.equals(userDTO.getAccount().getPassword(), ""))
-            {
-                String passEncrypt = passwordEncoder.encode(userDTO.getAccount().getPassword());
-                AccountEntity accountEntity = accountRepository.findByemail(userDTO.getEmail());
-                accountEntity.setPassword(passEncrypt);
-                accountRepository.save(accountEntity);
-            }
             if (!file.isEmpty())
             {
                 try {

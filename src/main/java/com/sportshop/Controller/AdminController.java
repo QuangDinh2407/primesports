@@ -160,6 +160,7 @@ public class AdminController {
 
     @PostMapping("/admin-info")
     public String updateInfo (UserDTO userDTO,Model model, @RequestParam("avatar") MultipartFile file){
+        System.out.println(userDTO);
         Result rs = userService.updateInfoAdmin(userDTO,file);
         model.addAttribute("rs",rs);
         return "Admin/admin-info";

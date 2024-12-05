@@ -16,9 +16,11 @@ import com.sportshop.Service.Iml.ProductServiceIml;
 import com.sportshop.Service.Iml.ProductTypeServiceIml;
 import com.sportshop.Service.MailService;
 import com.sportshop.Service.UserService;
+import com.sportshop.Service.VNPayService;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +34,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.io.File;
 import java.io.IOException;
@@ -45,8 +48,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@RestController
-//@Controller
+//@RestController
+@Controller
 public class testController {
 
     @Autowired
@@ -121,7 +124,7 @@ public class testController {
     public String render2()
     {
         System.out.println(context.getRealPath("/static"));
-        return "welcome";
+        return "/welcome";
     }
 
 
@@ -232,4 +235,21 @@ public class testController {
 
         return chartData;
     }
+
+    @Autowired
+    private VNPayService vnPayService;
+
+    @GetMapping("/api/vnpay/create-payment")
+    public RedirectView createPayment(@RequestParam("amount") String amount) throws Exception {
+        String paymentUrl = vnPayService.createPaymentUrl(amount);
+        return new RedirectView(paymentUrl);
+    }
+
+    @GetMapping("/api/vnpay/return")
+    public String handleReturn(@RequestParam Map<String, String> params,Model model) {
+        boolean isValid = vnPayService.validateReturn(params);
+        model.addAttribute("isValid", isValid);
+        return "welcome1";
+    }
+
 }

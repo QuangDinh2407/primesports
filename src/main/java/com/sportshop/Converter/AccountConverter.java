@@ -1,6 +1,7 @@
 package com.sportshop.Converter;
 
 import com.sportshop.Entity.AccountEntity;
+import com.sportshop.Entity.CartEntity;
 import com.sportshop.Entity.RoleEntity;
 import com.sportshop.Entity.UserInfoEntity;
 import com.sportshop.ModalDTO.AccountDTO;
@@ -47,7 +48,6 @@ public class AccountConverter {
         }
         String encodePassword = passwordEncoder.encode(accountDTO.getPassword());
         RoleEntity roleEntity = roleRepository.findByName("CUSTOMER");
-
         UserInfoEntity userInfoEntity = UserInfoEntity.builder()
                 .email(accountDTO.getEmail())
                 .name(accountDTO.getUserInfo().getName())
@@ -56,6 +56,7 @@ public class AccountConverter {
                 .birth(accountDTO.getUserInfo().getBirth())
                 .status(accountDTO.getUserInfo().getStatus())
                 .gender(accountDTO.getUserInfo().getGender())
+                .cart(new CartEntity())
                 .created_at(new Date())
                 .build();
 
