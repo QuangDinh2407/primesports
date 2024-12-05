@@ -28,6 +28,39 @@
     <link rel="stylesheet" th:href="@{/Assets/Customer_Shop/Assets/css/styles.css}" />
 
 </head>
+<style>
+    .text-input {
+        position: relative;
+    }
+    .input-setting[type="file"] {
+        z-index: -1;
+        position: absolute;
+        top: 0;
+        left: 0;
+        cursor: pointer;
+        border: none;
+        background: transparent;
+    }
+
+    .input-setting[type="file"]:hover + .custom-file-label {
+        background-color: rgb(16, 123, 238);
+    }
+    .custom-file-label {
+        margin-top: 0 !important;
+        display: inline-block;
+        padding: 10px 15px;
+        background-color:#ffb700;
+        color: black;
+        border-radius: 15px;
+        cursor: pointer;
+        text-align: center;
+    }
+    #file-name {
+        margin-left: 10px;
+        color: #555;
+        font-size: 14px;
+    }
+</style>
 <body>
 
 <!-- MAIN -->
@@ -47,10 +80,9 @@
                         <!-- User -->
                         <div class="profile-user">
                             <label for="avatar-upload" class="profile-user__avatar-label">
-                                <img th:src="@{/Assets/Customer_Shop/Assets/img/avatar/blank-avatar.png}" alt="Profile Avatar" class="profile-user__avatar" />
-
+                                <img th:src="${userDTO.imagePath}" alt="Profile Avatar" class="profile-user__avatar" />
                             </label>
-                            <input type="file" id="avatar-upload" class="profile-user__avatar-input" accept="image/*" style="display: none;" />
+<!--                            <input type="file" id="avatar-upload" class="profile-user__avatar-input" accept="image/*" style="display: none;" />-->
                             <h1 class="profile-user__name" th:text="${userDTO.name}"></h1>
                             <!-- <p class="profile-user__desc">Registered: 17th May 2022</p>-->
                         </div>
@@ -71,7 +103,7 @@
                                                 <span class="profile-menu__icon">
                                                     <img th:src="@{/Assets/Customer_Shop/Assets/icons/message-2.svg}" alt="" class="icon" />
                                                 </span>
-                                        Quyền riêng tư
+                                        Đổi mật khẩu
                                     </a>
                                 </li>
                             </ul>
@@ -90,59 +122,12 @@
                                     </a>
                                 </li>
                                 <li>
-<!--                                    <a th:href="@{/customer/order-history(userInfoId=${userInfo_id})}" class="profile-menu__link">-->
                                     <a th:href="@{/customer/order-history}" class="profile-menu__link">
 
                                                <span class="profile-menu__icon">
                                                     <img th:src="@{/Assets/Customer_Shop/Assets/icons/document.svg}" alt="" class="icon" />
                                                 </span>
                                         Lịch sử mua hàng
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#!" class="profile-menu__link">
-                                                <span class="profile-menu__icon">
-                                                    <img src="./assets/icons/gift-2.svg" alt="" class="icon" />
-                                                </span>
-                                        Registries
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-
-                        <!-- Menu 3 -->
-                        <div class="profile-menu">
-                            <h3 class="profile-menu__title">Subscriptions & plans</h3>
-                            <ul class="profile-menu__list">
-                                <li>
-                                    <a href="#!" class="profile-menu__link">
-                                                <span class="profile-menu__icon">
-                                                    <img src="./assets/icons/shield.svg" alt="" class="icon" />
-                                                </span>
-                                        Protection plans
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-
-                        <!-- Menu 4 -->
-                        <div class="profile-menu">
-                            <h3 class="profile-menu__title">Chăm sóc khách hàng</h3>
-                            <ul class="profile-menu__list">
-                                <li>
-                                    <a href="#!" class="profile-menu__link">
-                                                <span class="profile-menu__icon">
-                                                    <img src="./assets/icons/info.svg" alt="" class="icon" />
-                                                </span>
-                                        Trợ giúp
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#!" class="profile-menu__link">
-                                                <span class="profile-menu__icon">
-                                                    <img src="./assets/icons/danger.svg" alt="" class="icon" />
-                                                </span>
-                                        Terms of Use
                                     </a>
                                 </li>
                             </ul>
@@ -156,55 +141,26 @@
                                 <h2 class="cart-info__heading">
                                     Thông tin cá nhân
                                     <div class="cart-info__card-id">
-                                        <span class="label">Cart ID: <span th:text="${userDTO.cart.cart_id}"></span></span>
+<!--                                        <span class="label">Cart ID: <span th:text="${userDTO.cart.cart_id}"></span></span>-->
                                     </div>
                                 </h2>
 
-                                <form th:action="@{/customer/customer-info}" class="form form-card" th:object="${userDTO}" method="post">
+                                <form th:action="@{/customer/customer-info}" class="form form-card" th:object="${userDTO}" method="post"  enctype="multipart/form-data">
                                     <!-- Form row 1 -->
                                     <div class="form__row">
                                         <div class="form__group">
-                                            <label for="full-name" class="form__label form-card__label">
-                                                Họ và tên
-                                            </label>
+                                            <label for="full-name" class="form__label form-card__label">Họ và tên</label>
                                             <div class="form__text-input">
-                                                <input
-                                                        type="text"
-                                                        id="full-name"
-                                                        th:field="*{name}"
-                                                        placeholder="Full name"
-                                                        class="form__input"
-
-                                                />
-                                                <!--                                                <input type="text" class="form__input" th:field="*{name}">-->
-
-                                                <img
-                                                        th:src="@{/Assets/Customer_Shop/Assets/icons/form-error.svg}"
-                                                        alt=""
-                                                        class="form__input-icon-error"
-                                                />
+                                                <input type="text" id="full-name" th:field="*{name}" placeholder="Full name" class="form__input"/>
+                                                <img th:src="@{/Assets/Customer_Shop/Assets/icons/form-error.svg}" alt="" class="form__input-icon-error"/>
                                             </div>
                                             <p class="form__error">Please enter your full name</p>
                                         </div>
                                         <div class="form__group">
-                                            <label for="email-adress" class="form__label form-card__label">
-                                                Địa chỉ email
-                                            </label>
+                                            <label for="email-adress" class="form__label form-card__label">Địa chỉ email</label>
                                             <div class="form__text-input">
-                                                <input
-                                                        type="text"
-                                                        id="email-adress"
-                                                        placeholder="Email address"
-                                                        class="form__input"
-                                                        th:field="*{email}"
-                                                        readonly
-                                                />
-                                                <!--                                                <input type="text" class="input-setting" readonly th:field="*{email}">-->
-                                                <img
-                                                        th:src="@{/Assets/Customer_Shop/Assets/icons/form-error.svg}"
-                                                        alt=""
-                                                        class="form__input-icon-error"
-                                                />
+                                                <input type="text" id="email-adress" placeholder="Email address" class="form__input" th:field="*{email}" readonly/>
+                                                <img th:src="@{/Assets/Customer_Shop/Assets/icons/form-error.svg}" alt="" class="form__input-icon-error"/>
                                             </div>
                                             <p class="form__error">Please enter a valid email address</p>
                                         </div>
@@ -213,46 +169,19 @@
                                     <!-- Form row 2 -->
                                     <div class="form__row">
                                         <div class="form__group">
-                                            <label for="phone-number" class="form__label form-card__label">
-                                                Điện thoại
-                                            </label>
+                                            <label for="phone-number" class="form__label form-card__label">Điện thoại</label>
                                             <div class="form__text-input">
-                                                <input
-                                                        type="text"
-                                                        id="phone-number"
-                                                        th:field="*{phone}"
-                                                        placeholder="Phone Number"
-                                                        class="form__input"
-                                                        pattern="^0\d{9}$"
-                                                        title="Phone number must be 10 digits and start with 0"
-                                                />
-                                                <img
-                                                        th:src="@{/Assets/Customer_Shop/Assets/icons/form-error.svg}"
-                                                        alt=""
-                                                        class="form__input-icon-error"
-                                                />
+                                                <input type="text" id="phone-number" th:field="*{phone}" placeholder="Phone Number" class="form__input" pattern="^0\d{9}$" title="Phone number must be 10 digits and start with 0"/>
+                                                <img th:src="@{/Assets/Customer_Shop/Assets/icons/form-error.svg}" alt="" class="form__input-icon-error"/>
                                             </div>
                                             <p class="form__error">Please enter a valid phone number</p>
                                         </div>
                                         <div class="form__group">
-                                            <label for="birthday" class="form__label form-card__label">
-                                                Ngày sinh
-                                            </label>
+                                            <label for="birthday" class="form__label form-card__label">Ngày sinh</label>
                                             <div class="form__text-input">
-                                                <input
-                                                        type="text"
-                                                        id="birthday"
-                                                        th:field="*{birth}"
-                                                        class="form__input"
-                                                        placeholder="DD-MM-YYYY"
-                                                        required
-                                                        oninput="validateAndFormatDate(this)"
+                                                <input type="text" id="birthday" th:field="*{birth}" class="form__input" placeholder="DD-MM-YYYY" oninput="validateAndFormatDate(this)"
                                                 />
-                                                <img
-                                                        th:src="@{/Assets/Customer_Shop/Assets/icons/form-error.svg}"
-                                                        alt=""
-                                                        class="form__input-icon-error"
-                                                />
+                                                <img th:src="@{/Assets/Customer_Shop/Assets/icons/form-error.svg}" alt="" class="form__input-icon-error"/>
                                             </div>
                                             <p class="form__error" id="birthday-error">Please enter your birthday in dd-mm-yyyy format.</p>
                                         </div>
@@ -261,52 +190,36 @@
                                     <!-- Form row 3 -->
                                     <div class="form__row">
                                         <div class="form__group">
-                                            <label for="address" class="form__label form-card__label">
-                                                Địa chỉ
-                                            </label>
+                                            <label for="address" class="form__label form-card__label">Địa chỉ</label>
                                             <div class="form__text-input">
-                                                <input
-                                                        type="text"
-                                                        id="address"
-                                                        th:field="*{address}"
-                                                        placeholder="Address"
-                                                        class="form__input"
-                                                />
-                                                <img
-                                                        th:src="@{/Assets/Customer_Shop/Assets/icons/form-error.svg}"
-                                                        alt=""
-                                                        class="form__input-icon-error"
-                                                />
+                                                <input type="text" id="address" th:field="*{address}" placeholder="Address" class="form__input"/>
+                                                <img th:src="@{/Assets/Customer_Shop/Assets/icons/form-error.svg}" alt="" class="form__input-icon-error"/>
                                             </div>
                                             <p class="form__error">Please enter a valid address</p>
                                         </div>
                                         <div class="form__group">
-                                            <label for="gender" class="form__label form-card__label">
-                                                Giới tính
-                                            </label>
+                                            <label for="gender" class="form__label form-card__label">Giới tính</label>
                                             <div class="form__text-input">
-                                                <select id="gender" name="gender" class="form__input" required>
+                                                <select id="gender" name="gender" class="form__input">
                                                 <option th:text="*{gender}" disabled selected></option>
                                                     <option value="Nam">Nam</option>
                                                     <option value="Nữ">Nữ</option>
                                                 </select>
-                                                <img
-                                                        th:src="@{/Assets/Customer_Shop/Assets/icons/form-error.svg}"
-                                                        alt=""
-                                                        class="form__input-icon-error"
-                                                />
+                                                <img th:src="@{/Assets/Customer_Shop/Assets/icons/form-error.svg}" alt="" class="form__input-icon-error"/>
                                             </div>
                                             <p class="form__error">Please select a valid gender</p>
                                         </div>
+                                        <div class="form__group">
+                                            <label for="avatar-upload" class="form__label form-card__label">Ảnh đại diện</label>
+                                            <div class="text-input">
+                                                <input type="file" id="avatar-upload" name="avatar" placeholder="" class="input-setting" accept="image/*">
+                                                <label class="custom-file-label" for="avatar-upload">Chọn ảnh</label>
+                                                <span id="file-name">Chưa có file nào được chọn</span>
+                                            </div>
+                                        </div>
                                     </div>
-
-                                    <!-- Form row 4 -->
-                                    <div class="form__row">
-<!--                                        -->
-                                    </div>
-
                                     <div class="form-card__bottom">
-                                        <a class="btn btn--text" th:href="@{/#}">Quay lại</a>
+                                        <a class="btn btn--text" th:href="@{/}">Quay lại</a>
                                         <button class="btn btn--primary btn--rounded">Cập nhật</button>
                                     </div>
                                 </form>

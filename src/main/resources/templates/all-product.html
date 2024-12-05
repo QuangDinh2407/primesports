@@ -141,7 +141,7 @@
                         </button>
                     </div>
                     <h3 class="product-card__title">
-                        <a href="./product-detail.html" th:text="${product.name}"></a>
+                        <a th:href="@{/product-detail/{id}(id=${product.product_id})}" th:text="${product.name}"></a>
                     </h3>
                     <!--                    <p class="product-card__brand">Lavazza</p>-->
                     <div class="product-card__row">

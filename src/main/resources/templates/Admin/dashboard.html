@@ -4,6 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <title>Dashboard</title>
+    <style>
+        #performanceLine {
+            min-height: 300px; /* Chiều cao tối thiểu cho biểu đồ */
+
+        }
+    </style>
 </head>
 <body>
 <div class="container" layout:fragment="content">
@@ -17,7 +23,24 @@
                 </div>
             </div>
         </div>
+            <div class="chartjs-wrapper mt-5">
+                <canvas id="performanceLine"></canvas>
+            </div>
     </div>
+</div>
+
+<div layout:fragment="script">
+    <script th:src="@{/Assets/Admin_Employee/Assets/vendors/chart.js/Chart.min.js}"></script>
+    <script th:src="@{/Assets/Admin_Employee/Assets/js/dashboardchart.js}"></script>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        const chartData = /*[[${chartData}]]*/ 'default';
+        /*]]>*/
+        console.log(chartData);
+        renderLineChart("performanceLine", chartData);
+    </script>
+
 </div>
 </body>
 </html>

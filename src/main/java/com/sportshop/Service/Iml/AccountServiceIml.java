@@ -3,6 +3,7 @@ package com.sportshop.Service.Iml;
 import com.sportshop.Contants.StringContant;
 import com.sportshop.Converter.AccountConverter;
 import com.sportshop.Entity.AccountEntity;
+import com.sportshop.Entity.CartEntity;
 import com.sportshop.Entity.RoleEntity;
 import com.sportshop.Entity.UserInfoEntity;
 import com.sportshop.Modal.Result;
@@ -84,6 +85,8 @@ public class AccountServiceIml implements AccountService {
         RoleEntity roleEntity = roleRepository.findByName("CUSTOMER");
         accEntity.setRole(roleEntity);
         UserInfoEntity userInfoEntity = new UserInfoEntity();
+        CartEntity cart = new CartEntity();
+        userInfoEntity.setCart(cart);
         userInfoEntity.setEmail(accountDTO.getEmail());
         accEntity.setUser(userInfoEntity);
         try {
@@ -255,6 +258,8 @@ public class AccountServiceIml implements AccountService {
                 AccountEntity accountEntity = new AccountEntity();
                 accountDTO.setIs_disable("1");
                 accountEntity = accountConverter.toEntity(accountDTO);
+//                UserInfoEntity userInfoEntity = new UserInfoEntity();
+//                userInfoEntity.setEmail(accountDTO.getEmail());
                 accountRepository.save(accountEntity);
                 return accountEntity;
 

@@ -21,7 +21,7 @@ public class CartEntity {
 	@OneToMany (mappedBy = "cart", fetch = FetchType.LAZY)
 	private List <CartDetailEntity> cartDetailItems = new ArrayList<CartDetailEntity>();
 	
-	@OneToOne(mappedBy = "cart")
+	@OneToOne(mappedBy = "cart",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id", unique = true, nullable = false, referencedColumnName = "user_id")
 	private UserInfoEntity user;
 

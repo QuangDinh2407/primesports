@@ -11,17 +11,7 @@
 <body>
 <h1> welcome</h1>
 <div id="toast"></div>
-<a th:href="@{/api/vnpay/create-payment?amount=125000}">Pay</a>
+<p th:text="${isValid}"></p>
 </body>
 
-<script th:inline="javascript">
-    /*<![CDATA[*/
-    const message = /*[[${message}]]*/ 'default';
-    /*]]>*/
-    if (message)
-    {
-        console.log(message);
-        showSuccessToast(message);
-    }
-</script>
 </html>

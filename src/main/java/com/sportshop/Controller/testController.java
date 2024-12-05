@@ -16,9 +16,11 @@ import com.sportshop.Service.Iml.ProductServiceIml;
 import com.sportshop.Service.Iml.ProductTypeServiceIml;
 import com.sportshop.Service.MailService;
 import com.sportshop.Service.UserService;
+import com.sportshop.Service.VNPayService;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +34,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,10 +42,14 @@ import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
-@RestController
-//@Controller
+//@RestController
+@Controller
 public class testController {
 
     @Autowired
@@ -75,6 +82,9 @@ public class testController {
 
     @Autowired
     private ProductImageRepository productImageRepository;
+
+    @Autowired
+    UserOrderRepository userOrderRepository;
 
     @GetMapping("/test")
     public String test() {
@@ -114,7 +124,7 @@ public class testController {
     public String render2()
     {
         System.out.println(context.getRealPath("/static"));
-        return "welcome";
+        return "/welcome";
     }
 
 
@@ -202,4 +212,44 @@ public class testController {
         List<ProductImageEntity> a = productImageRepository.findAll();
         return a;
     }
+
+    @GetMapping("/dash")
+    public Map<String, Object> getTotalRevenueByMonth() {
+        // Lấy dữ liệu doanh thu theo tháng từ repository
+        List<Object[]> results = userOrderRepository.getTotalRevenueByMonth();
+        List<String> labels = new ArrayList<>();
+        List<Double> values = new ArrayList<>();
+
+        for (Object[] result : results) {
+            String label = "Tháng " + result[1];  // Tháng
+            Double value = ((Number) result[2]).doubleValue();  // Doanh thu
+
+            labels.add(label);
+            values.add(value);
+        }
+
+        // Trả về một Map chứa cả labels và values
+        Map<String, Object> chartData = new HashMap<>();
+        chartData.put("labels", labels);
+        chartData.put("values", values);
+
+        return chartData;
+    }
+
+    @Autowired
+    private VNPayService vnPayService;
+
+    @GetMapping("/api/vnpay/create-payment")
+    public RedirectView createPayment(@RequestParam("amount") String amount) throws Exception {
+        String paymentUrl = vnPayService.createPaymentUrl(amount);
+        return new RedirectView(paymentUrl);
+    }
+
+    @GetMapping("/api/vnpay/return")
+    public String handleReturn(@RequestParam Map<String, String> params,Model model) {
+        boolean isValid = vnPayService.validateReturn(params);
+        model.addAttribute("isValid", isValid);
+        return "welcome1";
+    }
+
 }

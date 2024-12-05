@@ -73,8 +73,15 @@ public class UserInfoEntity {
     @OneToMany(mappedBy = "userInfo", fetch = FetchType.LAZY)
     private List <UserOrderEntity> customerOrderItems = new ArrayList<UserOrderEntity>();
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "cart_id", unique = true, referencedColumnName = "cart_id")
     private CartEntity cart;
+
+    public void setCart(CartEntity cart) {
+        this.cart = cart;
+        if (cart != null) {
+            cart.setUser(this);
+        }
+    }
 
 }

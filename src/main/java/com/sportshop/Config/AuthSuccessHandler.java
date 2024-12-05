@@ -76,13 +76,15 @@ public class AuthSuccessHandler implements AuthenticationSuccessHandler {
                     updatedAuthorities
             );
             SecurityContextHolder.getContext().setAuthentication(newAuth);
+            HttpSession session = request.getSession();
+            session.setAttribute("email", email);
         }
-        
-        String email = authentication.getName();
-        HttpSession session = request.getSession();
-        session.setAttribute("email", email);
-
-        
+        else {
+            String email = authentication.getName();
+            System.out.println(email);
+            HttpSession session = request.getSession();
+            session.setAttribute("email", email);
+        }
 //        if (isAdmin)
 //        {
 //            response.sendRedirect("/admin");
