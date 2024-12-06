@@ -258,8 +258,12 @@ public class AdminController {
 
     @GetMapping("/product/add-product")
     public String addProduct (HttpSession session, Model model){
-        ProductDTO productDTO = new ProductDTO();
-        model.addAttribute("productDTO", productDTO);
+
+
+        if (!model.containsAttribute("productDTO")) {
+            ProductDTO productDTO = new ProductDTO();
+            model.addAttribute("productDTO", productDTO);
+        }
 
         List<ProductTypeDTO> productTypes = productTypeService.showAllProductTypes();
         model.addAttribute("productTypes", productTypes);
@@ -282,11 +286,31 @@ public class AdminController {
     }
 
     @PostMapping("/product/add-product")
-    public String saveProduct(@ModelAttribute ProductDTO productDTO, RedirectAttributes redirectAttributes,
+    public String saveProduct(@ModelAttribute @Valid ProductDTO productDTO, BindingResult bindingResult, RedirectAttributes redirectAttributes,
                               @RequestParam("images") List <MultipartFile> files,
                               @RequestParam( required = false ) List <String> sizes,
-                              @RequestParam( required = false ) List<String> quantities) {
+                              @RequestParam( required = false ) List<String> quantities,Model model) {
 
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("productDTO", productDTO);
+            List<ProductTypeDTO> productTypes = productTypeService.showAllProductTypes();
+            model.addAttribute("productTypes", productTypes);
+
+            List<ProductTypeDTO> productTypesParent = productTypes.stream()
+                    .filter(type -> type.getParent_id() == null)
+                    .toList();
+
+            List<SizeDTO> size = sizeService.showSizesProduct();
+            model.addAttribute("sizes", size);
+
+            model.addAttribute("productTypesParent", productTypesParent);
+
+            String title = "Thêm sản phẩm";
+            model.addAttribute("title", title);
+
+            model.addAttribute("formAction", "/admin/product/add-product");
+            return "Admin/product";
+        }
         System.out.println("------------------- Vô đây rồi  nè  ---------------");
         System.out.println(productDTO);
         System.out.println(sizes);

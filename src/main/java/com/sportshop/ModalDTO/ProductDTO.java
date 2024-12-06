@@ -1,6 +1,7 @@
 package com.sportshop.ModalDTO;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,6 +17,7 @@ public class ProductDTO {
 
     private String product_id;
 
+    @NotEmpty(message = "Tên sản phẩm không được để trống")
     private String name;
 
     private int quantity;
