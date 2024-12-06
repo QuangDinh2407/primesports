@@ -21,11 +21,13 @@ public class SizeEntity {
     private String name_size;
 
     @OneToMany(mappedBy = "size", fetch = FetchType.LAZY)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private List<SizeDetailEntity> SizeDetailItems = new ArrayList<SizeDetailEntity>();
 
-    @OneToOne(mappedBy = "size", fetch = FetchType.LAZY)
-    @JoinColumn(name = "userOrderDetail_id", unique = true, nullable = false, referencedColumnName = "userOrderDetail_id")
+    @OneToMany(mappedBy = "size", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @ToString.Exclude
-    private  UserOrderDetailEntity userOrderDetailEntity;
+    @EqualsAndHashCode.Exclude
+    private  List<UserOrderDetailEntity> listUserOrderDetailEntity;
 
 }

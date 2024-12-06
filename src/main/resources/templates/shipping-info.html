@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mua hàng</title>
+
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="76x76" th:href="@{/Assets/Customer_Shop/Assets/favicon/logo.png}" />
+    <link rel="icon" type="image/png" sizes="32x32" th:href="@{/Assets/Customer_Shop/Assets/favicon/logo.png}" />
+    <link rel="icon" type="image/png" sizes="16x16" th:href="@{/Assets/Customer_Shop/Assets/favicon/logo.png}" />
+    <link rel="manifest" th:href="@{/Assets/Customer_Shop/Assets/favicon/logo.png}" />
+    <meta name="msapplication-TileColor" content="#da532c" />
+    <meta name="theme-color" content="#ffffff" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA==" crossorigin="anonymous" />
+    <link rel="stylesheet" th:href="@{/Assets/Toast_Message/toastmesscss.css}">
+    <script th:src="@{/Assets/Toast_Message/toastmessjs.js}"></script>
+    <!-- Fonts -->
+    <link rel="stylesheet" th:href="@{/Assets/Customer_Shop/Assets/fonts/stylesheet.css}" />
+
+    <!-- Styles -->
+    <link rel="stylesheet" th:href="@{/Assets/Customer_Shop/Assets/css/main.css}" />
+
+
+    <!-- Scripts -->
+    <script th:src="@{/Assets/Customer_Shop/Assets/js/scripts.js}" ></script>
+</head>
+<body>
+<!-- Header -->
+<header id="header" class="header"></header>
+<script>
+    load("#header", "/header");
+</script>
+<div id="toast"></div>
+<!-- MAIN -->
+<main class="checkout-page">
+    <div class="container">
+        <!-- Search bar -->
+        <div class="checkout-container">
+            <div class="search-bar d-none d-md-flex">
+                <input type="text" name="" id="" placeholder="Search for item" class="search-bar__input" />
+                <button class="search-bar__submit">
+                    <img src="./assets/icons/search.svg" alt="" class="search-bar__icon icon" />
+                </button>
+            </div>
+        </div>
+
+        <!-- Breadcrumbs -->
+        <div class="checkout-container">
+            <ul class="breadcrumbs">
+            </ul>
+        </div>
+
+
+
+        <!-- Checkout content -->
+        <form th:action="@{/order-product}" method="post" class="form" th:object="${userOrderDTO}">
+            <div class="checkout-container">
+                <div class="row gy-xl-3">
+                    <div class="col-8 col-xl-12">
+                            <div class="cart-info">
+                                <h2 class="modal__heading">Thông tin vận chuyển</h2>
+                                <div class="modal__body">
+                                    <div class="form__row">
+                                        <div class="form__group">
+                                            <label for="name" class="form__label form__label--small">Tên</label>
+                                            <div class="form__text-input form__text-input--small">
+                                                <input type="text" th:field="*{shipping_name}" placeholder="Name" class="form__input"/>
+                                                <img src="./assets/icons/form-error.svg" alt="" class="form__input-icon-error" />
+                                            </div>
+                                        </div>
+                                        <div class="form__group">
+                                            <label for="phone" class="form__label form__label--small">Phone</label>
+                                            <div class="form__text-input form__text-input--small">
+                                                <input type="tel" id="phone" placeholder="Số điện thoại" th:field="*{shipping_phone}"/>
+                                                <img src="./assets/icons/form-error.svg" alt="" class="form__input-icon-error" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form__group">
+                                        <label for="address" class="form__label form__label--small">Address</label>
+                                        <div class="form__text-area">
+                                    <textarea id="address" placeholder="Địa chỉ" class="form__text-area-input" th:field="*{shipping_address}"></textarea>
+                                            <img src="./assets/icons/form-error.svg" alt="" class="form__input-icon-error" />
+                                        </div>
+                                    </div>
+                                    <div class="form__group">
+                                        <label for="address" class="form__label form__label--small">Phương thức thanh toán</label>
+                                        <div class="form__text-input" style="margin-top: 10px" th:each="paytype, iterStat : ${listPayment}">
+                                            <label>
+                                                <input type="radio" class="form__radio-input" name="payType" th:field="*{paymentType.name}" th:value="${paytype.name}" >
+                                                <span class="form__radio-label" th:text="${paytype.name}"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <br>
+                        <div class="cart-info">
+                            <h2 class="cart-info__sub-heading">Chi tiết các sản phẩm</h2>
+                            <div class="cart-info__list">
+                                <!-- Cart item 1 -->
+                                <article class="cart-item" th:each="productItem : ${userOrderDTO.userOrderDetails}">
+                                    <a th:href="@{/product-detail/{id}(id=${productItem.product.product_id})}"></a>
+                                    <img src="./assets/img/product/item-1.png" alt="" class="cart-item__thumb"/>
+                                    </a>
+                                    <div class="cart-item__content">
+                                        <div class="cart-item__content-left">
+                                            <h3 class="cart-item__title">
+                                                <a th:href="@{/product-detail/{id}(id=${productItem.product.product_id})}" th:text="${productItem.product.name}"></a>
+                                            </h3>
+                                            <p class="cart-item__price-wrap" th:text="${productItem.product.price}"></p>
+                                            <div class="cart-item__ctrl cart-item__ctrl--md-block">
+                                                <div class="cart-item__input">
+                                                    <span>Số lượng: <span th:text="${productItem.amount}"></span></span>
+                                                </div>
+                                                <div class="cart-item__input">
+                                                    <span>Size: <span th:text="${productItem.size}"></span></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="cart-item__content-right">
+                                            <p class="cart-item__total-price" th:text="${productItem.product.price}"></p>
+                                        </div>
+                                    </div>
+                                </article>
+                            </div>
+                            <div class="cart-info__bottom d-md-none">
+                                <div class="row">
+                                    <div class="col-8 col-xxl-7">
+                                        <div class="cart-info__continue">
+                                            <a th:href="@{/}" class="cart-info__continue-link">
+                                                <img class="cart-info__continue-icon icon" src="./assets/icons/arrow-down-2.svg" alt=""/>Tiếp tục mua hàng
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-4 col-xl-12">
+                        <div class="cart-info">
+                            <div class="cart-info__row">
+                                <span>Tổng số lượng sản phẩm <span class="cart-info__sub-label"></span></span>
+                                <span th:text="${userOrderDTO.userOrderDetails.size()}"></span>
+                            </div>
+                            <div class="cart-info__row">
+                                <span>Tổng tiền sản phẩm<span class="cart-info__sub-label"></span></span>
+                                <span th:text="${userOrderDTO.total_price}">$191.65</span>
+                            </div>
+                            <div class="cart-info__row">
+                                <span>Vận chuyển</span>
+                                <span>30000</span>
+                            </div>
+                            <div class="cart-info__separate"></div>
+                            <div class="cart-info__row">
+                                <span>Tổng tiền</span>
+                                <span th:text="${userOrderDTO.total_price + 30000}"></span>
+                            </div>
+                            <button type="submit" class="cart-info__next-btn btn btn--primary btn--rounded" style="width: 100%;">
+                                Đặt hàng
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</main>
+
+<!-- Footer -->
+<footer id="footer" class="footer"></footer>
+<script>
+    load("#footer", "/footer");
+</script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    const rs = /*[[${rs}]]*/ 'default';
+    /*]]>*/
+    if (rs.message)
+    {
+        console.log(rs.message);
+        if (rs.success)
+        {
+            showSuccessToast(rs.message);
+        }
+        else
+        {
+            showErrorToast(rs.message);
+        }
+    }
+</script>
+</body>
+</html>

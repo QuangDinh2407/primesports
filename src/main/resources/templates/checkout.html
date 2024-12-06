@@ -57,7 +57,7 @@
             <div class="cart-info__list">
               <!-- Cart item 1 -->
               <article class="cart-item" th:each="productItem : ${userOrderDTO.userOrderDetails}">
-                <a href="./product-detail.html">
+                <a th:href="@{/product-detail/{id}(id=${productItem.product.product_id})}"></a>
                   <img src="./assets/img/product/item-1.png" alt="" class="cart-item__thumb"/>
                 </a>
                 <div class="cart-item__content">
@@ -68,13 +68,10 @@
                     <p class="cart-item__price-wrap" th:text="${productItem.product.price}"></p>
                     <div class="cart-item__ctrl cart-item__ctrl--md-block">
                       <div class="cart-item__input">
-                        <button class="cart-item__input-btn">
-                          <img class="icon" th:src="@{/Assets/Customer_Shop/Assets/icons/minus.svg}" alt="" />
-                        </button>
-                        <span>1</span>
-                        <button class="cart-item__input-btn">
-                          <img class="icon" th:src="@{/Assets/Customer_Shop/Assets/icons/plus.svg}" alt="" />
-                        </button>
+                        <span>Số lượng: <span th:text="${productItem.amount}"></span></span>
+                      </div>
+                      <div class="cart-item__input">
+                        <span>Size: <span th:text="${productItem.size}"></span></span>
                       </div>
                     </div>
                   </div>
@@ -121,8 +118,8 @@
               <span>Tổng tiền</span>
               <span th:text="${userOrderDTO.total_price + 30000}"></span>
             </div>
-            <a href="./shipping.html" class="cart-info__next-btn btn btn--primary btn--rounded">
-              Thanh toán đơn hàng
+            <a th:href="@{/shipping-info(userOrderDTO=${userOrderDTO})}" class="cart-info__next-btn btn btn--primary btn--rounded">
+              Nhập thông tin vận chuyển
             </a>
           </div>
         </div>

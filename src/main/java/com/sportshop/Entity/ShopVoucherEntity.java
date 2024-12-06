@@ -65,6 +65,10 @@ public class ShopVoucherEntity {
 	@OneToMany (mappedBy = "shopVoucher", fetch = FetchType.LAZY)
 	private List <ShopCustomerVoucherEntity> shopCustomerVoucherItems = new ArrayList<ShopCustomerVoucherEntity>();
 
+	@OneToMany (mappedBy = "shopVoucher", fetch = FetchType.LAZY)
+	@ToString.Exclude
+	private List <UserOrderDetailEntity> userOrderDetailItems = new ArrayList<UserOrderDetailEntity>();
+
 
 	
 }

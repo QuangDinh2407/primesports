@@ -12,7 +12,9 @@
     <link rel="manifest" th:href="@{/Assets/Customer_Shop/Assets/favicon/logo.png}" />
     <meta name="msapplication-TileColor" content="#da532c" />
     <meta name="theme-color" content="#ffffff" />
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA==" crossorigin="anonymous" />
+    <link rel="stylesheet" th:href="@{/Assets/Toast_Message/toastmesscss.css}">
+    <script th:src="@{/Assets/Toast_Message/toastmessjs.js}"></script>
     <!-- Fonts -->
     <link rel="stylesheet" th:href="@{/Assets/Customer_Shop/Assets/fonts/stylesheet.css}" />
 
@@ -52,6 +54,7 @@
 </style>
 
 <body>
+<div id="toast"></div>
 <!-- Header -->
 <header id="header" class="header"></header>
 <div></div>
@@ -346,6 +349,23 @@
         });
     });
 
+</script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    const rs = /*[[${rs}]]*/ 'default';
+    /*]]>*/
+    if (rs.message)
+    {
+        console.log(rs.message);
+        if (rs.success)
+        {
+            showSuccessToast(rs.message);
+        }
+        else
+        {
+            showErrorToast(rs.message);
+        }
+    }
 </script>
 <script th:inline="javascript">
     /*<![CDATA[*/

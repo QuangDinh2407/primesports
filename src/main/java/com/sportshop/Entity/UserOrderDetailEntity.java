@@ -23,17 +23,20 @@ public class UserOrderDetailEntity {
 	
 	@ManyToOne
 	@JoinColumn(name="userOrder_id", referencedColumnName = "userOrder_id")
+	@ToString.Exclude
 	private UserOrderEntity userOrder;
 	
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name="product_id", referencedColumnName = "product_id")
+	@ToString.Exclude
 	private ProductEntity product;
 
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name="shopVoucher_id", referencedColumnName = "shopVoucher_id")
+	@ToString.Exclude
 	private ShopVoucherEntity shopVoucher;
 
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name = "size_id", referencedColumnName = "size_id")
 	@ToString.Exclude
 	private SizeEntity size;

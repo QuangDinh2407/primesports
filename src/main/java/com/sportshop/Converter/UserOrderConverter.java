@@ -1,21 +1,30 @@
 package com.sportshop.Converter;
 
 import com.sportshop.Entity.PaymentTypeEntity;
+import com.sportshop.Entity.UserInfoEntity;
 import com.sportshop.Entity.UserOrderEntity;
 import com.sportshop.ModalDTO.*;
+import com.sportshop.Repository.PaymentTypeRepository;
+import com.sportshop.Repository.UserInfoRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;
 
 @Component
 public class UserOrderConverter {
-    // Convert UserOrderEntity to UserOrderDTO
+
+    @Autowired
+    UserOrderDetailConverter userOrderDetailConverter;
+    @Autowired
+    private UserInfoRepository userInfoRepository;
+    @Autowired
+    private PaymentTypeRepository paymentTypeRepository;
+
     public UserOrderDTO toDTO(UserOrderEntity entity) {
         if (entity == null) {
             return null;
         }
-
-        // Convert nested objects (PaymentType, Product, UserOrderDetail) to their DTOs
         PaymentTypeDTO paymentTypeDTO = PaymentTypeDTO.builder()
                 .name(entity.getPaymentType().getName())
                 .build();
@@ -38,7 +47,7 @@ public class UserOrderConverter {
                                         .build())
                                 .shopVoucher(ShopVoucherDTO.builder()
                                         .shopVoucher_id(detail.getShopVoucher().getShopVoucher_id())
-                                        .discount_amount(detail.getShopVoucher().getDiscountAmount())
+                                        .discountAmount(detail.getShopVoucher().getDiscountAmount())
                                         .build())
                                 .build())
                         .collect(Collectors.toList()))
@@ -51,18 +60,27 @@ public class UserOrderConverter {
         if (dto == null) {
             return null;
         }
-
         UserOrderEntity entity = new UserOrderEntity();
         entity.setUserOrder_id(dto.getUserOrder_id());
         entity.setCreated_at(dto.getCreated_at());
         entity.setUpdated_at(dto.getUpdated_at());
-        entity.setStatus(dto.getStatus());
+        entity.setStatus("Chờ xác nhận");
+        entity.setTotalPrice(dto.getTotal_price()+30000);
+        entity.setShipping_name(dto.getShipping_name());
+        entity.setShipping_address(dto.getShipping_address());
+        entity.setShipping_phone(dto.getShipping_phone());
 
-        // Setting PaymentTypeEntity manually if required
-        if (dto.getPaymentType() != null) {
-            entity.setPaymentType(new PaymentTypeEntity());
-            entity.getPaymentType().setName(dto.getPaymentType().getName());
-        }
+        UserInfoEntity userInfo = userInfoRepository.findByEmail(dto.getUserEmail());
+        entity.setUserInfo(userInfo);
+
+        PaymentTypeEntity paymentTypeEntity = paymentTypeRepository.findByName(dto.getPaymentType().getName());
+        entity.setPaymentType(paymentTypeEntity);
+
+        entity.setUserOrderDetailItems(
+                dto.getUserOrderDetails().stream()
+                        .map(userOrderDetailDTO -> userOrderDetailConverter.toEntity(userOrderDetailDTO, entity))
+                        .collect(Collectors.toList())
+        );
 
         return entity;
     }

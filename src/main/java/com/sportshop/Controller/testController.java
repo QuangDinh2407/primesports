@@ -7,17 +7,15 @@ import com.sportshop.Entity.*;
 import com.sportshop.Entity.ProductEntity;
 import com.sportshop.Entity.ProductImageEntity;
 import com.sportshop.Modal.Mail;
+import com.sportshop.Modal.ProductSize;
 import com.sportshop.ModalDTO.AccountDTO;
 import com.sportshop.ModalDTO.ProductDTO;
 import com.sportshop.ModalDTO.ProductTypeDTO;
 import com.sportshop.ModalDTO.UserDTO;
 import com.sportshop.Repository.*;
-import com.sportshop.Service.AccountService;
+import com.sportshop.Service.*;
 import com.sportshop.Service.Iml.ProductServiceIml;
 import com.sportshop.Service.Iml.ProductTypeServiceIml;
-import com.sportshop.Service.MailService;
-import com.sportshop.Service.UserService;
-import com.sportshop.Service.VNPayService;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
@@ -244,22 +242,9 @@ public class testController {
     private VNPayService vnPayService;
 
     @GetMapping("/api/vnpay/create-payment")
-    public RedirectView createPayment(@RequestParam("amount") String amount) throws Exception {
+    public RedirectView createPayment(@RequestParam("amount") Float amount) throws Exception {
         String paymentUrl = vnPayService.createPaymentUrl(amount);
         return new RedirectView(paymentUrl);
-    }
-
-    @GetMapping("/api/vnpay/return")
-    public String handleReturn(@RequestParam("vnp_ResponseCode") String vnp_ResponseCode ,Model model) {
-        if (vnp_ResponseCode.equals("00"))
-        {
-            model.addAttribute("isValid", "Giao dịch thành công!");
-        }
-        else{
-            model.addAttribute("isValid", "Giao dịch thất bại!");
-        }
-
-        return "welcome1";
     }
 
     @GetMapping("/prohe")
@@ -267,5 +252,35 @@ public class testController {
         System.out.println(productRepository.findByProductIds(productIds));
         return productRepository.findByProductIds(productIds).stream().map(productConverter::toDTO).collect(Collectors.toList());
     }
+
+    @Autowired
+    private SizeDetailRepository sizeDetailRepository;
+
+    @Autowired
+    SizeDetailService sizeDetailService;
+
+    @GetMapping("/cuu")
+    public String cuu(@RequestParam("product_id") String product_id,@RequestParam("size_id") String size_id,@RequestParam("amount") int amount)  {
+        List <ProductSize> productSizeList = new ArrayList<>();
+        ProductSize a = new ProductSize();
+        a.setProductId(product_id);
+        a.setSizeId(size_id);
+        a.setAmount(amount);
+        productSizeList.add(a);
+
+        productSizeList.forEach(item ->{
+            sizeDetailService.updateProductSize(item.getProductId(), item.getSizeId(), item.getAmount());
+        });
+        System.out.println(productSizeList);
+        return "cuu";
+    }
+
+//    public void updateProductSize(String product_id, String size_id, int amount){
+//        SizeDetailEntity sizeDetail = sizeDetailRepository.findByProductIdAndSizeId(product_id, size_id);
+//        int updateAmount = sizeDetail.getQuantity();
+//        sizeDetail.setQuantity(updateAmount- amount);
+//        sizeDetailRepository.save(sizeDetail);
+//    }
+
 
 }

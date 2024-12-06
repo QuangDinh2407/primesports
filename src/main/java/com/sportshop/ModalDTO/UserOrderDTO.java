@@ -14,11 +14,14 @@ import java.util.List;
 @Builder
 public class UserOrderDTO {
     private String userOrder_id;
+    private String userEmail;
     private Date created_at;
     private String status;
     private Date updated_at;
     private PaymentTypeDTO paymentType;
     private String shipping_address;
-    private List<UserOrderDetailDTO> userOrderDetails; // Danh sách chi tiết đơn hàng
+    private String shipping_name;
+    private String shipping_phone;
+    private List<UserOrderDetailDTO> userOrderDetails;
     private Float total_price;
 }

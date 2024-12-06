@@ -13,4 +13,7 @@ public interface SizeDetailRepository extends JpaRepository<SizeDetailEntity, St
     @Modifying
     @Query("DELETE FROM SizeDetailEntity s WHERE s.product = :product")
     void deleteByProduct(@Param("product") ProductEntity product);
+
+    @Query("SELECT sd FROM SizeDetailEntity sd WHERE sd.product.product_id = :productId AND sd.size.size_id = :sizeId")
+    SizeDetailEntity findByProductIdAndSizeId(@Param("productId") String productId, @Param("sizeId") String sizeId);
 }
