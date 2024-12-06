@@ -17,13 +17,11 @@ import java.util.stream.Collectors;
 
 @Component
 public class ProductConverter {
-
     // Chuyển từ Entity sang DTO
     public ProductDTO toDTO(ProductEntity entity) {
         if (entity == null) {
             return null;
         }
-
         Map<String, Integer> sizeQuantities = entity.getSizeDetailItems()
                 .stream()
                 .collect(Collectors.toMap(

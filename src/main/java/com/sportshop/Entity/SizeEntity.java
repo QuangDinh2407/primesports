@@ -2,10 +2,7 @@ package com.sportshop.Entity;
 
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,5 +23,9 @@ public class SizeEntity {
     @OneToMany(mappedBy = "size", fetch = FetchType.LAZY)
     private List<SizeDetailEntity> SizeDetailItems = new ArrayList<SizeDetailEntity>();
 
+    @OneToOne(mappedBy = "size", fetch = FetchType.LAZY)
+    @JoinColumn(name = "userOrderDetail_id", unique = true, nullable = false, referencedColumnName = "userOrderDetail_id")
+    @ToString.Exclude
+    private  UserOrderDetailEntity userOrderDetailEntity;
 
 }

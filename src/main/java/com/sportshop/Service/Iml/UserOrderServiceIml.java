@@ -1,28 +1,39 @@
 package com.sportshop.Service.Iml;
+import com.sportshop.Converter.ProductConverter;
 import com.sportshop.Entity.UserOrderEntity;
 
 import com.sportshop.Converter.UserOrderConverter;
 import com.sportshop.Entity.UserOrderEntity;
+import com.sportshop.ModalDTO.ProductDTO;
+import com.sportshop.ModalDTO.UserDTO;
 import com.sportshop.ModalDTO.UserOrderDTO;
+import com.sportshop.ModalDTO.UserOrderDetailDTO;
+import com.sportshop.Repository.ProductRepository;
 import com.sportshop.Repository.UserOrderRepository;
 import com.sportshop.Service.UserOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class UserOrderServiceIml implements UserOrderService {
 
-    private final UserOrderRepository userOrderRepository;
-    private final UserOrderConverter userOrderConverter;
+    @Autowired
+    UserOrderRepository userOrderRepository;
 
     @Autowired
-    public UserOrderServiceIml(UserOrderRepository userOrderRepository, UserOrderConverter userOrderConverter) {
-        this.userOrderRepository = userOrderRepository;
-        this.userOrderConverter = userOrderConverter;
-    }
+    UserOrderConverter userOrderConverter;
+
+    @Autowired
+    ProductRepository productRepository;
+
+    @Autowired
+    ProductConverter productConverter;
+
 
     @Override
     public List<UserOrderDTO> findAllOrdersByUserId(String userInfo_id) {
@@ -60,5 +71,28 @@ public class UserOrderServiceIml implements UserOrderService {
             throw new RuntimeException("UserOrder not found with ID: " + userOrderId);
         }
         userOrderRepository.deleteById(userOrderId);
+    }
+
+    @Override
+    public UserOrderDTO checkoutProduct(List<String> productIds) {
+        UserOrderDTO order = new UserOrderDTO();
+        List<ProductDTO> listPro = productRepository.findByProductIds(productIds).stream().map(productConverter::toDTO).collect(Collectors.toList());
+        List<UserOrderDetailDTO> orderDetails = listPro.stream().map(product -> {
+            UserOrderDetailDTO detail = new UserOrderDetailDTO();
+            detail.setProduct(product);
+            detail.setAmount(1);
+            detail.setPrice(product.getPrice());
+            return detail;
+        }).collect(Collectors.toList());
+
+        order.setUserOrderDetails(orderDetails);
+
+        float totalPrice = orderDetails.stream()
+                .map(detail -> detail.getPrice() * detail.getAmount())
+                .reduce(0f, Float::sum);
+
+        order.setTotal_price(totalPrice);
+        order.setCreated_at(new Date());
+        return order;
     }
 }

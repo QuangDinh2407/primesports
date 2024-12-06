@@ -34,4 +34,5 @@ public class ProductDTO {
     private Map<String, Integer> sizeQuantities;
 
     private Date updated_at;
+
 }

@@ -1,10 +1,7 @@
 package com.sportshop.Entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Builder
 @Data
@@ -21,14 +18,14 @@ public class SizeDetailEntity {
     @Column(nullable = false)
     private int quantity;
 
-    @Column(nullable = false)
-    private float price;
-
     @ManyToOne
     @JoinColumn(name="size_id", referencedColumnName = "size_id")
+    @ToString.Exclude
     private SizeEntity size;
 
     @ManyToOne
     @JoinColumn(name="product_id", referencedColumnName = "product_id")
+    @ToString.Exclude
     private ProductEntity product;
+
 }

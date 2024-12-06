@@ -157,8 +157,8 @@ public class ProductServiceIml implements ProductService {
     }
 
     @Override
-    public List<ProductDTO> findTop5Rating(String status) {
-        List<ProductEntity> listPro = productRepository.findTop5ByStatusOrderByRatingDesc(status);
+    public List<ProductDTO> findTop5Rating(int quantity) {
+        List<ProductEntity> listPro = productRepository.findTop5ByQuantityGreaterThanOrderByRatingDesc(quantity);
         return listPro.stream().map(productConverter::toDTO).collect(Collectors.toList());
     }
 

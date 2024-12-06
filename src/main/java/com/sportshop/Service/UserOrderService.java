@@ -10,4 +10,6 @@ public interface UserOrderService {
     public UserOrderDTO saveOrUpdateUserOrder(UserOrderDTO userOrderDTO);
     public void deleteUserOrder(String userOrderId);
     public List<UserOrderDTO> findAllOrdersByUserId(String userInfoId);
+
+    UserOrderDTO checkoutProduct(List<String>productIds);
 }

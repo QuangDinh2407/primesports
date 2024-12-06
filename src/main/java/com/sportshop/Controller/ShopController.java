@@ -2,15 +2,13 @@ package com.sportshop.Controller;
 
 import com.sportshop.Entity.ProductEntity;
 import com.sportshop.Modal.SearchProduct;
-import com.sportshop.ModalDTO.AccountDTO;
-import com.sportshop.ModalDTO.CartDTO;
-import com.sportshop.ModalDTO.ProductDTO;
-import com.sportshop.ModalDTO.UserDTO;
+import com.sportshop.ModalDTO.*;
 import com.sportshop.Repository.ProductRepository;
 import com.sportshop.Repository.ProductTypeRepository;
 import com.sportshop.Service.Iml.ProductServiceIml;
 import com.sportshop.Service.Iml.ProductTypeServiceIml;
 import com.sportshop.Service.ProductService;
+import com.sportshop.Service.UserOrderService;
 import com.sportshop.Service.UserService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -41,6 +39,9 @@ public class ShopController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    UserOrderService userOrderService;
 
 //    @ModelAttribute
 //    public void checkLoginToCreateCart(HttpSession session,Model model){
@@ -79,7 +80,7 @@ public class ShopController {
 
     @GetMapping("")
     public String renderShop(Model model){
-        List<ProductDTO> listPro = productService.findTop5Rating("available");
+        List<ProductDTO> listPro = productService.findTop5Rating(0);
         model.addAttribute("listPro", listPro);
         return "homepage";
     }
@@ -128,13 +129,21 @@ public class ShopController {
         System.out.println(proDTO.getName());
 
         //lấy 5 sản phẩm được rating cao
-        List<ProductDTO> relatedProducts=productServiceIml.findTop5Rating("available");
+        List<ProductDTO> relatedProducts=productServiceIml.findTop5Rating(0);
 
         //xử lý voucher (Từ sản phẩm lấy được voucher -> lấy voucher giảm giá nhiều nhất)
         model.addAttribute("newCart",(CartDTO) session.getAttribute("newCart"));
         model.addAttribute("productDTO", proDTO);
         model.addAttribute("relatedProducts", relatedProducts);
         return "product-detail";
+    }
+
+    @GetMapping("/checkout")
+    public String headerCheckout(@RequestParam("product_id") List<String> productIds,@RequestParam("size") String size, Model model) {
+        System.out.println(size);
+        UserOrderDTO userOrderDTO = userOrderService.checkoutProduct(productIds);
+        model.addAttribute("userOrderDTO",userOrderDTO);
+        return "checkout";
     }
 
 }

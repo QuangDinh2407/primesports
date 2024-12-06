@@ -17,7 +17,7 @@ public interface ProductRepositoryCustom {
             "AND (:minPrice IS NULL OR p.price >= :minPrice) " +
             "AND (:maxPrice IS NULL OR p.price <= :maxPrice) " +
             "AND (:rating IS NULL OR p.rating >= :rating) " +
-            "AND p.status = 'available' " +
+            "AND p.quantity > 0" +
             "AND (:types IS NULL OR pt.name IN :types) " +
             "ORDER BY p.price DESC")
     Page<ProductEntity> searchProducts(

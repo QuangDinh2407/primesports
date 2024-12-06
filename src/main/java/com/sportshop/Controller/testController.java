@@ -1,6 +1,7 @@
 package com.sportshop.Controller;
 
 import com.sportshop.Converter.AccountConverter;
+import com.sportshop.Converter.ProductConverter;
 import com.sportshop.Converter.ProductTypeConverter;
 import com.sportshop.Entity.*;
 import com.sportshop.Entity.ProductEntity;
@@ -48,8 +49,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-//@RestController
-@Controller
+@RestController
+//@Controller
 public class testController {
 
     @Autowired
@@ -85,6 +86,9 @@ public class testController {
 
     @Autowired
     UserOrderRepository userOrderRepository;
+
+    @Autowired
+    ProductConverter productConverter;
 
     @GetMapping("/test")
     public String test() {
@@ -198,7 +202,7 @@ public class testController {
 
     @GetMapping("/5pro")
     public List<ProductDTO>  hehe1() {
-        List<ProductDTO> listType = productServiceIml.findTop5Rating("available");
+        List<ProductDTO> listType = productServiceIml.findTop5Rating(0);
         return listType;
     }
     @GetMapping("tst")
@@ -246,10 +250,22 @@ public class testController {
     }
 
     @GetMapping("/api/vnpay/return")
-    public String handleReturn(@RequestParam Map<String, String> params,Model model) {
-        boolean isValid = vnPayService.validateReturn(params);
-        model.addAttribute("isValid", isValid);
+    public String handleReturn(@RequestParam("vnp_ResponseCode") String vnp_ResponseCode ,Model model) {
+        if (vnp_ResponseCode.equals("00"))
+        {
+            model.addAttribute("isValid", "Giao dịch thành công!");
+        }
+        else{
+            model.addAttribute("isValid", "Giao dịch thất bại!");
+        }
+
         return "welcome1";
+    }
+
+    @GetMapping("/prohe")
+    public List<ProductDTO> prohe(@RequestParam("product_id") List<String> productIds) {
+        System.out.println(productRepository.findByProductIds(productIds));
+        return productRepository.findByProductIds(productIds).stream().map(productConverter::toDTO).collect(Collectors.toList());
     }
 
 }

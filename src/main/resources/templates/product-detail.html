@@ -49,6 +49,9 @@
         font-size: 2.5rem;
         font-weight: 600;
     }
+    .size-focus{
+        border: #0ba1b5 1px solid;
+    }
 </style>
 
 <body>
@@ -148,13 +151,9 @@
                                     <label for="" class="form__label prod-info__label">Còn lại</label>
                                     <div class="filter__form-group">
                                         <div class="form__select-wrap">
-                                            <div class="form__select" style="--width: 146px" th:text="${productDTO.quantity}" name="quantity">
-
-                                                <img
-                                                        th:src="@{/Assets/Customer_Shop/Assets/icons/select-arrow.svg}"
-                                                        alt=""
-                                                        class="form__select-arrow icon"
-                                                />
+                                            <div class="form__select" style="--width: 146px">
+                                                <span class="quantity-size"></span>
+                                                <img th:src="@{/Assets/Customer_Shop/Assets/icons/select-arrow.svg}" alt="" class="form__select-arrow icon"/>
                                             </div>
                                             <div class="form__select">
                                                 cái
@@ -163,9 +162,7 @@
                                     </div>
                                     <div class="filter__form-group">
                                         <div class="form__tags">
-                                            <button class="form__tag prod-info__tag">Nhỏ (S)</button>
-                                            <button class="form__tag prod-info__tag">Vừa (M)</button>
-                                            <button class="form__tag prod-info__tag">Lớn (L)</button>
+                                            <p class="form__tag prod-info__tag" style="color: black" th:each="size : ${productDTO.sizeQuantities}" th:text="${size.key}"></p>
                                         </div>
                                     </div>
                                 </div>
@@ -200,6 +197,9 @@
                                                 <button class="btn btn--primary prod-info__add-to-cart" type="submit">
                                                     Thêm giỏ hàng
                                                 </button>
+                                                <a class="btn btn--primary prod-info__add-to-cart buy-now"  th:href="@{/checkout(product_id=${productDTO.product_id})}">
+                                                    Mua ngay
+                                                </a>
                                                 <button class="like-btn prod-info__like-btn">
                                                     <img
                                                             th:src="@{/Assets/Customer_Shop/Assets/icons/heart.svg}"
@@ -283,8 +283,7 @@
                                             </button>
                                         </div>
                                         <h3 class="product-card__title">
-                                            <a href="/product-detail" th:text="${product.name}"
-                                            ></a
+                                            <a href="/product-detail" th:text="${product.name}"></a
                                             >
                                         </h3>
                                         <p class="product-card__brand" th:text="${product.status}"></p>
@@ -313,4 +312,64 @@
 <footer id="footer" class="footer"></footer>
 
 </body>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    const product = /*[[${productDTO}]]*/ 'default';
+    /*]]>*/
+    console.log(product.sizeQuantities);
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const sizeTags = document.querySelectorAll(".form__tag.prod-info__tag");
+        const quantityDisplay = document.querySelector(".quantity-size");
+        const buyNowBtn = document.querySelector(".buy-now");
+
+        if (sizeTags.length > 0) {
+            const firstTag = sizeTags[0];
+            firstTag.classList.add("size-focus");
+            const sizeKey = firstTag.textContent.trim();
+            if (product.sizeQuantities[sizeKey] !== undefined) {
+                const quantity = product.sizeQuantities[sizeKey];
+                quantityDisplay.textContent = `${quantity}`;
+            }
+            // Cập nhật link của buyNowBtn với size đầu tiên
+            let currentHref = buyNowBtn.getAttribute("href");
+            if (currentHref.includes("?")) {
+                currentHref = currentHref.replace(/([?&])size=[^&]*/, `$1size=${encodeURIComponent(sizeKey)}`);
+                if (!currentHref.includes("size=")) {
+                    currentHref += `&size=${encodeURIComponent(sizeKey)}`;
+                }
+            } else {
+                currentHref += `?size=${encodeURIComponent(sizeKey)}`;
+            }
+            buyNowBtn.setAttribute("href", currentHref);
+        }
+
+        sizeTags.forEach((tag) => {
+            tag.addEventListener("click", function () {
+                sizeTags.forEach((otherTag) => {
+                    otherTag.classList.remove("size-focus");
+                });
+                tag.classList.add("size-focus");
+
+                const sizeKey = tag.textContent.trim();
+                if (product.sizeQuantities[sizeKey] !== undefined) {
+                    const quantity = product.sizeQuantities[sizeKey];
+                    quantityDisplay.textContent = `${quantity}`;
+                }
+                let currentHref = buyNowBtn.getAttribute("href");
+                if (currentHref.includes("?")) {
+                    currentHref = currentHref.replace(/([?&])size=[^&]*/, `$1size=${encodeURIComponent(sizeKey)}`);
+                    if (!currentHref.includes("size=")) {
+                        currentHref += `&size=${encodeURIComponent(sizeKey)}`;
+                    }
+                } else {
+                    currentHref += `?size=${encodeURIComponent(sizeKey)}`;
+                }
+                buyNowBtn.setAttribute("href", currentHref);
+
+            });
+        });
+    });
+</script>
 </html>

@@ -12,9 +12,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class UserOrderDetailDTO {
+
     private String userOrderDetail_id;
     private ProductDTO product;
     private int amount;
     private float price;
     private ShopVoucherDTO shopVoucher;
+
 }

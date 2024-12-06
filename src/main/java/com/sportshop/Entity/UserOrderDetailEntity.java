@@ -33,4 +33,9 @@ public class UserOrderDetailEntity {
 	@JoinColumn(name="shopVoucher_id", referencedColumnName = "shopVoucher_id")
 	private ShopVoucherEntity shopVoucher;
 
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinColumn(name = "size_id", referencedColumnName = "size_id")
+	@ToString.Exclude
+	private SizeEntity size;
+
 }
