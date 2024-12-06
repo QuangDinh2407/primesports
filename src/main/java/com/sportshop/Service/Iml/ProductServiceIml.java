@@ -7,6 +7,7 @@ import com.sportshop.Modal.SearchProduct;
 import com.sportshop.ModalDTO.ProductDTO;
 import com.sportshop.Entity.*;
 import com.sportshop.Repository.*;
+import com.sportshop.Service.CloudinaryService;
 import com.sportshop.Service.ProductService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -29,6 +31,9 @@ import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceIml implements ProductService {
+
+    @Autowired
+    private CloudinaryService cloudinaryService;
 
     @Autowired
     private ProductRepository productRepository;
@@ -109,20 +114,16 @@ public class ProductServiceIml implements ProductService {
             if (files != null && !files.isEmpty()) {
                 for (MultipartFile file : files) {
                     if (!file.isEmpty()) {
-                        // Tạo tên file duy nhất
-                        String filename = System.currentTimeMillis() + "_" + file.getOriginalFilename();
-                        Path filePath = Paths.get(uploadDir + File.separator+ filename);
-                        System.out.println(filePath);
-
-                        // Lưu file vào thư mục
-                        Files.createDirectories(filePath.getParent()); // Tạo thư mục nếu chưa tồn tại
-                        Files.write(filePath, file.getBytes());
-
-                        // Lưu thông tin hình ảnh vào ProductImageEntity
                         ProductImageEntity image = new ProductImageEntity();
-                        image.setImage_path(filename);
-                        image.setProduct(product);
-                        productImageRepository.save(image);
+                        try {
+                            String imagePath = cloudinaryService.uploadFileToFolder(file, "customer");
+                            image.setImage_path(imagePath);
+                            image.setProduct(product);
+                            productImageRepository.save(image);
+                        } catch (IOException e) {
+                            throw new RuntimeException("Upload ảnh thất bại: " + e.getMessage());
+                        }
+
                     } else {
                         System.out.println("File trống, bỏ qua.");
                     }
@@ -252,18 +253,16 @@ public class ProductServiceIml implements ProductService {
 
                 for (MultipartFile file : files) {
                     if (!file.isEmpty()) {
-                        String filename = System.currentTimeMillis() + "_" + file.getOriginalFilename();
-                        Path filePath = Paths.get(uploadDir + File.separator + filename);
-
-                        // Lưu file vào thư mục
-                        Files.createDirectories(filePath.getParent());
-                        Files.write(filePath, file.getBytes());
-
-                        // Lưu hình ảnh vào ProductImageEntity
                         ProductImageEntity image = new ProductImageEntity();
-                        image.setImage_path(filename);
-                        image.setProduct(product);
-                        productImageRepository.save(image);
+                        try {
+                            String imagePath = cloudinaryService.uploadFileToFolder(file, "customer");
+                            image.setImage_path(imagePath);
+                            image.setProduct(product);
+                            productImageRepository.save(image);
+                        } catch (IOException e) {
+                            throw new RuntimeException("Upload ảnh thất bại: " + e.getMessage());
+                        }
+
                     } else {
                         System.out.println("File trống, bỏ qua.");
                     }

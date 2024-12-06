@@ -46,13 +46,13 @@
                                     <div class="form__group form__group__custom">
                                         <label for="">Tên sản phẩm: </label>
                                         <div class="text-input">
-                                            <input type="text" id="name" class="input-setting-custom input-name-product" th:field="*{name}">
+                                            <input type="text" id="name" name="name" class="input-setting-custom input-name-product" th:field="*{name}">
                                         </div>
                                     </div>
                                     <div class="form__group form__group__custom">
                                         <label for="">Giá tiền</label>
                                         <div class="text-input">
-                                            <input type="number" class="input-setting-custom" th:field="*{price}">
+                                            <input type="number" name="price" class="input-setting-custom" th:field="*{price}">
                                         </div>
                                     </div>
                                     <div class="form__group form__group__custom">
@@ -145,7 +145,7 @@
                                         <div id="image-preview-container" class="image-preview-container">
                                             <!-- Thymeleaf render ảnh sẵn có -->
                                             <div th:each="imagePath : ${productDTO.imagePaths}" class="image-preview">
-                                                <img th:src="@{'/Assets/Customer_Shop/Assets/img/product/' + ${imagePath}}" alt="productImage" />
+                                                <img th:src="@{${imagePath}}" alt="productImage" />
                                                 <button type="button" class="remove-btn"
                                                         th:attr="onclick='removeExistingImage(this, \'' + ${imagePath} + '\')'">
                                                     ×
@@ -313,9 +313,6 @@
     </script>
 
 
-
-
-
     <script>
         const datePicker = flatpickr("#dateInput", {
             dateFormat: "d-m-Y",
@@ -331,6 +328,9 @@
         });
 
     </script>
+
+
+
 </div>
 
 </body>

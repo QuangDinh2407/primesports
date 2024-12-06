@@ -1,5 +1,6 @@
 package com.sportshop.ModalDTO;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 

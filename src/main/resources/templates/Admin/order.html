@@ -110,7 +110,7 @@
 
 
                                 </div>
-                                <div class="right__side">
+                                <div class="right__side" style="width: 70%;" >
                                     <h3 class="header__addProduct" style=" margin-bottom: 25px; font-size: large;">Danh sách sản phẩm</h3>
                                     <table class="table table-bordered">
                                         <thead>
@@ -130,7 +130,7 @@
                                             <td>
                                                 <div class="progress-image">
                                                     <img
-                                                            th:src="@{'/Assets/Customer_Shop/Assets/img/product/' + ${userOrder.product.getImagePaths[0]}}"
+                                                            th:src="@{${userOrder.product.getImagePaths[0]}}"
                                                             alt="productImage" class="product-card__thumb" />
                                                 </div>
                                             </td>
@@ -140,8 +140,11 @@
                                         </tr>
                                         </tbody>
                                     </table>
-                                    <div>
-                                        <span>Tổng: </span> <span th:text="${@currencyFormatter.formatCurrency(userOrderDTO.total_price)}">   </span>
+                                    <div style="margin-top: 20px; justify-content: right; display: flex; ">
+                                        <span style=" font-weight: bolder;" >Shipping: </span> <span style=" margin-left: 5px;"> 30.000 VNĐ   </span>
+                                    </div>
+                                    <div style="margin-top: 20px; justify-content: right; display: flex; ">
+                                        <span style=" font-weight: bolder;" >Tổng: </span> <span style=" margin-left: 5px; " th:text="${@currencyFormatter.formatCurrency(userOrderDTO.total_price)}">   </span>
                                     </div>
                                 </div>
 
@@ -303,8 +306,6 @@
 
 
 
-
-
     <script>
         const datePicker = flatpickr("#dateInput", {
             dateFormat: "d-m-Y",
@@ -320,6 +321,9 @@
         });
 
     </script>
+
+
+
 </div>
 
 </body>
