@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Profile | Personal</title>
+    <title>Chi tiết đơn hàng</title>
 
     <!-- Favicon -->
     <link rel="apple-touch-icon" sizes="76x76" th:href="@{/Assets/Customer_Shop/Assets/favicon/apple-touch-icon.png}" />
@@ -25,10 +25,18 @@
     <!-- Scripts -->
     <script th:src="@{/Assets/Customer_Shop/Assets/js/scripts.js}"></script>
     <link rel="stylesheet" th:href="@{/Assets/Customer_Shop/Assets/css/styles.css}" />
-    <link rel='stylesheet prefetch' href='https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css'>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
+<!--    <link rel='stylesheet prefetch' href='https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css'>-->
+<!--    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">-->
 </head>
+<style>
+    select {
+        width: 100%;
+        padding: 8px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        margin-bottom: 10px;
+    }
+</style>
 <body>
 
 <!-- MAIN -->
@@ -48,8 +56,8 @@
                         <!-- User -->
                         <div class="profile-user">
                             <label for="avatar-upload" class="profile-user__avatar-label">
-                                <img th:src="@{/Assets/Customer_Shop/Assets/img/avatar/blank-avatar.png}" alt="Profile Avatar" class="profile-user__avatar" />
-
+<!--                                <img th:src="@{/Assets/Customer_Shop/Assets/img/avatar/blank-avatar.png}" alt="Profile Avatar" class="profile-user__avatar" />-->
+                                <img th:src="${userDTO.imagePath}" alt="Profile Avatar" class="profile-user__avatar" />
                             </label>
                             <input type="file" id="avatar-upload" class="profile-user__avatar-input" accept="image/*" style="display: none;" />
                             <h1 class="profile-user__name" th:text="${userDTO.name}"></h1>
@@ -72,7 +80,7 @@
                                                 <span class="profile-menu__icon">
                                                     <img th:src="@{/Assets/Customer_Shop/Assets/icons/message-2.svg}" alt="" class="icon" />
                                                 </span>
-                                        Quyền riêng tư
+                                        Đổi mật khẩu
                                     </a>
                                 </li>
                             </ul>
@@ -100,52 +108,6 @@
                                         Lịch sử mua hàng
                                     </a>
                                 </li>
-                                <li>
-                                    <a href="#!" class="profile-menu__link">
-                                                <span class="profile-menu__icon">
-                                                    <img src="./assets/icons/gift-2.svg" alt="" class="icon" />
-                                                </span>
-                                        Registries
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-
-                        <!-- Menu 3 -->
-                        <div class="profile-menu">
-                            <h3 class="profile-menu__title">Subscriptions & plans</h3>
-                            <ul class="profile-menu__list">
-                                <li>
-                                    <a href="#!" class="profile-menu__link">
-                                                <span class="profile-menu__icon">
-                                                    <img src="./assets/icons/shield.svg" alt="" class="icon" />
-                                                </span>
-                                        Protection plans
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-
-                        <!-- Menu 4 -->
-                        <div class="profile-menu">
-                            <h3 class="profile-menu__title">Chăm sóc khách hàng</h3>
-                            <ul class="profile-menu__list">
-                                <li>
-                                    <a href="#!" class="profile-menu__link">
-                                                <span class="profile-menu__icon">
-                                                    <img src="./assets/icons/info.svg" alt="" class="icon" />
-                                                </span>
-                                        Trợ giúp
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#!" class="profile-menu__link">
-                                                <span class="profile-menu__icon">
-                                                    <img src="./assets/icons/danger.svg" alt="" class="icon" />
-                                                </span>
-                                        Terms of Use
-                                    </a>
-                                </li>
                             </ul>
                         </div>
                     </aside>
@@ -163,7 +125,7 @@
                                 </a>
                                 Lịch sử mua hàng
                                 <div class="cart-info__card-id">
-                                    <span class="label">Cart ID: <span th:text="${userDTO.cart.cart_id}"></span></span>
+<!--                                    <span class="label">Cart ID: <span th:text="${userDTO.cart.cart_id}"></span></span>-->
                                 </div>
                             </h2>
 
@@ -200,7 +162,7 @@
                                                 <tr th:each="detail : ${orderDetails.userOrderDetails}">
                                                     <td th:text="${detail.product.name}">Tên sản phẩm</td>
                                                     <td>
-                                                        <img src="https://assets.adidas.com/images/w_600,f_auto,q_auto/7bf0c97721d74826bcef5bab82160c03_9366/Ao_DJau_San_Nha_Authentic_Manchester_United_23-24_DJo_IN3520.jpg"
+                                                        <img th:src="@{${detail.product.getImagePaths[0]}}"
                                                              height="auto" width="120px" style="display: block; margin-left: auto; margin-right: auto; border-radius: 8px;">
                                                     </td>
                                                     <td th:text="${detail.amount}">Số lượng</td>
@@ -244,8 +206,12 @@
 <!--                                                <span class="detail-value"> 100%</span>-->
 <!--                                            </div>-->
                                             <div class="detail-row">
+                                                <span class="detail-label">Tiền ship:</span>
+                                                <span class="detail-value">30000 VNĐ</span>
+                                            </div>
+                                            <div class="detail-row">
                                                 <span class="detail-label">Tổng tiền:</span>
-                                                <span class="detail-value" th:text="${orderDetails.total_price}+đ"></span>
+                                                <span class="detail-value" th:text="${@currencyFormatter.formatCurrency(orderDetails.total_price)}"></span>
                                             </div>
                                             <div class="detail-row">
                                                 <span class="detail-label">Trạng thái:</span>

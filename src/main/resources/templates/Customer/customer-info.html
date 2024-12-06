@@ -142,6 +142,7 @@
                                     Thông tin cá nhân
                                     <div class="cart-info__card-id">
 <!--                                        <span class="label">Cart ID: <span th:text="${userDTO.cart.cart_id}"></span></span>-->
+<!--                                        <span class="label">Tuổi: <span th:text="${userDTO.age}"></span></span>-->
                                     </div>
                                 </h2>
 
@@ -198,7 +199,9 @@
                                             <p class="form__error">Please enter a valid address</p>
                                         </div>
                                         <div class="form__group">
-                                            <label for="gender" class="form__label form-card__label">Giới tính</label>
+                                            <label for="gender" class="form__label form-card__label">Giới tính
+<!--                                                <span>Tuổi: <span th:text="${userDTO.age}"></span> </span>-->
+                                            </label>
                                             <div class="form__text-input">
                                                 <select id="gender" name="gender" class="form__input">
                                                 <option th:text="*{gender}" disabled selected></option>
@@ -207,8 +210,18 @@
                                                 </select>
                                                 <img th:src="@{/Assets/Customer_Shop/Assets/icons/form-error.svg}" alt="" class="form__input-icon-error"/>
                                             </div>
+
                                             <p class="form__error">Please select a valid gender</p>
                                         </div>
+<!--                                        <div class="form__group">-->
+<!--                                            <label for="gender" class="form__label form-card__label">Tuổi</label>-->
+<!--                                            <div class="form__text-input">-->
+<!--&lt;!&ndash;                                                <input type="text" id="age" th:field="*{age}" placeholder="Address" class="form__input" readonly/>&ndash;&gt;-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+                                    </div>
+                                    <!-- Form row 4 -->
+                                    <div class="form__row">
                                         <div class="form__group">
                                             <label for="avatar-upload" class="form__label form-card__label">Ảnh đại diện</label>
                                             <div class="text-input">
