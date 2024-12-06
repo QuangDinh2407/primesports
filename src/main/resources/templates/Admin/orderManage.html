@@ -36,74 +36,48 @@
                     <div class="card">
                         <div class="card-body">
                             <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <h4 class="card-title">Quản lý sản phẩm</h4>
-                                <a class="add-product-btn" href="/admin/product/add-product" >Thêm sản phẩm</a>
+                                <h4 class="card-title">Quản lý đơn hàng</h4>
                             </div>
 
                             <p class="card-description">
-                                Sản phẩm<code>.primesports</code>
+                                Đơn hàng<code>.primesports</code>
                             </p>
-                            <form th:action="@{/admin/product/filter}" method="POST" id="filterForm">
-                            <div class="filter-container">
-                                <!-- Filter item to open modal -->
-                                <div class="filter-item">
-                                    <label for="productType" class="filter-label">Loại sản phẩm</label>
-                                    <div id="productType" class="product-type-div" data-toggle="modal" data-target="#productModal">
-                                        Chọn loại sản phẩm
-                                    </div>
-                                </div>
-
-                                <!-- Modal -->
-                                <div class="modal__product__type" id="productModal" style="display: none;">
-                                    <div class="modal__product__type__content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="productModalLabel">Chọn loại sản phẩm</h5>
-                                            <button type="button" class="btn-close" id="closeModal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal__productTypes__content">
-                                            <div th:each="parentType : ${productTypesParent}">
-                                                <div class="group__select">
-                                                    <div class="label">
-                                                        <span th:text="${parentType.name}"></span>
-                                                    </div>
-                                                    <div th:each="childType : ${productTypes}" th:if="${childType.parent_id == parentType.productType_id}">
-                                                        <label class="checkbox-item">
-                                                            <input type="checkbox" name="productTypes" th:value="${childType.productType_id}" th:text="${childType.name}" />
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-primary" id="okButton" data-bs-dismiss="modal">OK</button>
+                            <form th:action="@{/admin/order/filter}" method="POST" id="filterForm">
+                                <div class="filter-container">
+                                    <!-- Filter item to open modal -->
+                                    <div class="filter-item ">
+                                        <label for="priceRange">Khoảng giá</label>
+                                        <div class="price-range filter-price">
+                                            <input type="text" id="beginPrice" name="beginPrice" class="form-control" placeholder="Từ giá">
+                                            <span>-</span>
+                                            <input type="text" id="endPrice" name="endPrice" class="form-control" placeholder="Đến giá">
                                         </div>
                                     </div>
-                                </div>
 
-                                <div class="filter-item ">
-                                    <label for="priceRange">Khoảng giá</label>
-                                    <div class="price-range filter-price">
-                                        <input type="text" id="beginPrice" name="beginPrice" class="form-control" placeholder="Từ giá">
-                                        <span>-</span>
-                                        <input type="text" id="endPrice" name="endPrice" class="form-control" placeholder="Đến giá">
+                                    <div class="filter-item ">
+                                        <label for="dateRange">Thời gian</label>
+                                        <div class="price-range filter-price">
+                                            <input type="date" id="beginDate" name="beginDate" class="form-control" placeholder="Từ ngày">
+                                            <span>-</span>
+                                            <input type="date" id="endDate" name="endDate" class="form-control" placeholder="Đến ngày   ">
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div class="filter-item">
-                                    <label for="status">Tình trạng</label>
-                                    <select id="status" name="status" class="form-control">
-                                        <option value="">Chọn tình trạng</option>
-                                        <option value="IN_STOCK">Còn hàng</option>
-                                        <option value="LOW_STOCK">Còn ít</option>
-                                        <option value="OUT_OF_STOCK">Tạm hết</option>
-                                    </select>
-                                </div>
+                                    <div class="filter-item">
+                                        <label for="status">Tình trạng</label>
+                                        <select id="status" name="status" class="form-control">
+                                            <option value="">Chọn tình trạng</option>
+                                            <option value="IN_STOCK">Còn hàng</option>
+                                            <option value="LOW_STOCK">Còn ít</option>
+                                            <option value="OUT_OF_STOCK">Tạm hết</option>
+                                        </select>
+                                    </div>
 
-                                <div class="filter-item">
-                                    <button type="submit" class="">Tìm kiếm</button>
-                                </div>
+                                    <div class="filter-item">
+                                        <button type="submit" class="">Tìm kiếm</button>
+                                    </div>
 
-                            </div>
+                                </div>
                             </form>
 
                             <div class="">
@@ -115,8 +89,6 @@
                                         <col style="width: 15%;">  <!-- Giá -->
                                         <col style="width: 10%;">  <!-- Số lượng -->
                                         <col style="width: 15%;">  <!-- Trạng thái -->
-                                        <col style="width: 10%;">  <!-- Thời gian tạo -->
-                                        <col style="width: 10%;">  <!-- Hành động -->
                                     </colgroup>
                                     <thead>
                                     <tr>
@@ -124,16 +96,16 @@
                                             #
                                         </th>
                                         <th>
-                                            Tên sản phẩm
+                                            Mã đơn hàng
                                         </th>
                                         <th>
-                                            Ảnh
+                                            Tổng đơn
                                         </th>
                                         <th>
-                                            Giá
+                                            Thanh toán
                                         </th>
                                         <th>
-                                            Số lượng
+                                            Địa chỉ
                                         </th>
                                         <th>
                                             Trạng thái
@@ -147,40 +119,34 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr th:each="product, stat : ${products}" th:if="${product.status == 'ACTIVE'}">
+                                    <tr th:each="order, stat : ${orders}">
                                         <td th:text="${stat.index + 1}"></td> <!-- Thứ tự -->
-<!--                                        <td th:text="${product.name}"></td> &lt;!&ndash; Tên sản phẩm &ndash;&gt;-->
+                                        <!--                                        <td th:text="${product.name}"></td> &lt;!&ndash; Tên sản phẩm &ndash;&gt;-->
                                         <td>
-                                            <a th:href="@{/admin/product/view/{id}(id=${product.product_id})}" th:text="${product.name}"></a>
+                                            <a th:href="@{/admin/order/view/{id}(id=${order.userOrder_id})}" th:text="${order.userOrder_id}"></a>
                                         </td>
 
+                                        <td th:text="${@currencyFormatter.formatCurrency(order.total_price)}"></td>
+                                        <td th:text="${order.paymentType.name}"></td>
+                                        <td th:text="${order.shipping_address}"></td>
 
                                         <td>
-                                            <div class="progress-image">
-                                                <img
-                                                        th:src="@{'/Assets/Customer_Shop/Assets/img/product/' + ${product.getImagePaths[0]}}"
-                                                        alt="productImage" class="product-card__thumb" />
-                                            </div>
-                                        </td>
-                                        <td th:text="${@currencyFormatter.formatCurrency(product.price)}"></td>
-                                        <td th:text="${product.quantity}"></td> <!-- Số lượng -->
+                                        <span th:if="${order.status == 'Đã giao'}"  class="badge badge-success" th:text="${order.status}"></span>
+                                        <span th:if="${order.status == 'Đang giao'}" class="badge badge-warning" th:text="${order.status}"></span>
+                                        <span th:if="${order.status == 'Đã hủy'}" class="badge badge-danger" th:text="${order.status}"></span>
 
-                                        <td>
-                                            <span th:if="${product.quantity > 50}" class="badge badge-success">Còn hàng</span>
-                                            <span th:if="${product.quantity <= 50 && product.quantity > 0}" class="badge badge-warning">Còn ít</span>
-                                            <span th:if="${product.quantity == 0}" class="badge badge-danger">Tạm hết</span>
                                         </td>
-                                        <td th:text="${@dateFormatter.formatDate(product.updated_at)}"></td>
+                                        <td th:text="${order.updated_at}"></td>
                                         <td>
                                             <button type="button" class="btn btn-danger btn-sm"
-                                                    th:attr="onclick='openDeleteModal(' +'\''+ ${product.product_id} + '\''+ ')'">Xóa</button>
+                                                    th:attr="onclick='openDeleteModal(' +'\''+ ${order.updated_at} + '\''+ ')'">Xóa</button>
 
                                         </td>
 
                                     </tr>
                                     </tbody>
                                 </table>
-                                <div th:if="${#lists.isEmpty(products)}">
+                                <div th:if="${#lists.isEmpty(orders)}">
                                     <div th:replace="~{/Common/Admin/NoData :: NoData}"></div>
                                 </div>
                             </div>

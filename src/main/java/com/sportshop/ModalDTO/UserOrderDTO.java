@@ -19,6 +19,7 @@ public class UserOrderDTO {
     private Date updated_at;
     private PaymentTypeDTO paymentType;
     private String shipping_address;
+    private String email;
     private List<UserOrderDetailDTO> userOrderDetails; // Danh sách chi tiết đơn hàng
     private Float total_price;
 }

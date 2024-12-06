@@ -1,20 +1,13 @@
 package com.sportshop.Controller;
 
 import com.sportshop.Modal.Result;
-import com.sportshop.ModalDTO.AccountDTO;
-import com.sportshop.ModalDTO.ProductDTO;
-import com.sportshop.ModalDTO.ProductTypeDTO;
-import com.sportshop.ModalDTO.SizeDTO;
-import com.sportshop.ModalDTO.UserDTO;
+import com.sportshop.ModalDTO.*;
 import com.sportshop.Repository.ProductRepository;
 import com.sportshop.Repository.ProductTypeRepository;
 import com.sportshop.Repository.UserOrderRepository;
+import com.sportshop.Service.*;
 import com.sportshop.Service.Iml.AccountServiceIml;
 import com.sportshop.Service.Iml.ProductServiceIml;
-import com.sportshop.Service.ProductService;
-import com.sportshop.Service.ProductTypeService;
-import com.sportshop.Service.SizeService;
-import com.sportshop.Service.UserService;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -60,6 +53,9 @@ public class AdminController {
     private ProductRepository productRepository;
     @Autowired
     private ProductTypeService productTypeService;
+
+    @Autowired
+    private UserOrderService userOrderService;
 
     @Autowired
     UserOrderRepository userOrderRepository;
@@ -249,6 +245,16 @@ public class AdminController {
         return "Admin/product";
     }
 
+    @GetMapping("/order/view/{id}")
+    public String viewOrderDetails(@PathVariable("id") String orderId, Model model) {
+        System.out.println("------------------- View order  ---------------");
+        UserOrderDTO userOrderDTO = userOrderService.getUserOrderById(orderId);
+        model.addAttribute("userOrderDTO", userOrderDTO);
+        UserDTO userDTO = userService.findbyEmail(userOrderDTO.getEmail());
+        model.addAttribute("userDTO", userDTO);
+        model.addAttribute("orderId", orderId);
+        return "Admin/order";
+    }
 
     @GetMapping("/product/add-product")
     public String addProduct (HttpSession session, Model model){
@@ -348,5 +354,12 @@ public class AdminController {
         model.addAttribute("products", products);
 
         return "Admin/productManage";
+    }
+
+    @GetMapping("/orders")
+    public String renderOrdersManage(HttpSession session, Model model) {
+        List<UserOrderDTO> orders = userOrderService.getAllUserOrders();
+        model.addAttribute("orders", orders);
+        return "Admin/orderManage";
     }
 }
