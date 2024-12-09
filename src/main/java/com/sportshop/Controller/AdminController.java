@@ -241,6 +241,7 @@ public class AdminController {
 
         String title = "Chi tiết sản phẩm";
         model.addAttribute("title", title);
+        model.addAttribute("buttonText", "Cập nhật");
         model.addAttribute("formAction", "/admin/product/update-product");
         return "Admin/product";
     }
@@ -280,6 +281,8 @@ public class AdminController {
         String title = "Thêm sản phẩm";
         model.addAttribute("title", title);
 
+        model.addAttribute("buttonText", "Thêm");
+
         model.addAttribute("formAction", "/admin/product/add-product");
 
         return "Admin/product";
@@ -290,6 +293,23 @@ public class AdminController {
                               @RequestParam("images") List <MultipartFile> files,
                               @RequestParam( required = false ) List <String> sizes,
                               @RequestParam( required = false ) List<String> quantities,Model model) {
+
+        System.out.println("------------------- Vô đây rồi  nè  ---------------");
+        System.out.println(productDTO);
+        System.out.println(sizes);
+        System.out.println(quantities);
+        System.out.println("Received files: " + files.size());
+        for (MultipartFile file : files) {
+            System.out.println("File Name: " + file.getOriginalFilename() + ", Size: " + file.getSize());
+        }
+
+        boolean sizeValid = sizes != null && !sizes.isEmpty() && quantities != null && !quantities.isEmpty();
+        if (!sizeValid) {
+            if (productDTO.getQuantity() == null) {
+                model.addAttribute("errorMessage", "Số lượng sản phẩm không được để trống.");
+            }
+
+        }
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("productDTO", productDTO);
@@ -307,6 +327,8 @@ public class AdminController {
 
             String title = "Thêm sản phẩm";
             model.addAttribute("title", title);
+
+            model.addAttribute("buttonText", "Thêm");
 
             model.addAttribute("formAction", "/admin/product/add-product");
             return "Admin/product";
@@ -343,7 +365,7 @@ public class AdminController {
         Result rs = productService.updateProduct(productDTO,files,sizes,quantities);
         // Thêm đối tượng Result vào redirectAttributes
         redirectAttributes.addFlashAttribute("rs", rs);
-        return "redirect:/admin/product/add-product";
+        return "redirect:/admin/product";
     }
 
     @PostMapping("/product/delete")

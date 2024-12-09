@@ -247,8 +247,8 @@ public class ProductServiceIml implements ProductService {
             }
 
             // 4. Cập nhật ảnh nếu có
-            if (files != null && !files.isEmpty()) {
-                // Xóa ảnh cũ
+            if (files != null && files.stream().anyMatch(file -> !file.isEmpty())) {
+                // Xóa ảnh cũ chỉ khi có ảnh mới
                 productImageRepository.deleteByProduct(product);
 
                 for (MultipartFile file : files) {
@@ -262,12 +262,12 @@ public class ProductServiceIml implements ProductService {
                         } catch (IOException e) {
                             throw new RuntimeException("Upload ảnh thất bại: " + e.getMessage());
                         }
-
-                    } else {
-                        System.out.println("File trống, bỏ qua.");
                     }
                 }
+            } else {
+                System.out.println("Không có ảnh mới, giữ nguyên ảnh cũ.");
             }
+
 
             // 5. Cập nhật loại sản phẩm (nếu có thay đổi)
             List<String> productTypeIds = productDTO.getProductTypeIds();
