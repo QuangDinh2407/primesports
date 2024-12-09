@@ -80,7 +80,12 @@
                         <!-- User -->
                         <div class="profile-user">
                             <label for="avatar-upload" class="profile-user__avatar-label">
-                                <img th:src="${userDTO.imagePath}" alt="Profile Avatar" class="profile-user__avatar" />
+<!--                                <img th:src="${userDTO.imagePath}" alt="Profile Avatar" class="profile-user__avatar" />-->
+                                <img
+                                        th:src="${userDTO.imagePath != null ? userDTO.imagePath : '/Assets/Customer_Shop/Assets/img/avatar.jpg'}"
+                                        alt="Profile Avatar"
+                                        class="profile-user__avatar"
+                                />
                             </label>
 <!--                            <input type="file" id="avatar-upload" class="profile-user__avatar-input" accept="image/*" style="display: none;" />-->
                             <h1 class="profile-user__name" th:text="${userDTO.name}"></h1>

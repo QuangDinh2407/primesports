@@ -1,6 +1,7 @@
 package com.sportshop.Converter;
 
 import com.sportshop.Entity.CartDetailEntity;
+import com.sportshop.Entity.CartEntity;
 import com.sportshop.ModalDTO.CartDTO;
 import com.sportshop.ModalDTO.CartDetailDTO;
 import com.sportshop.ModalDTO.ProductDTO;
@@ -19,4 +20,15 @@ public class CartDetailConverter {
                 .product(productConverter.toDTO(cartDetailEntity.getProduct()))
                 .build();
     }
+
+    public CartDetailEntity toEntity(CartDetailDTO cartDetailDTO, CartEntity cartEntity){
+
+        return CartDetailEntity.builder()
+                .cartdetail_id(cartDetailDTO.getCartdetail_id())
+                .amount(cartDetailDTO.getAmount())
+                .product(productConverter.toEntity(cartDetailDTO.getProduct()))
+                .cart(cartEntity)
+                .build();
+    }
+
 }

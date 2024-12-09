@@ -1,15 +1,11 @@
 package com.sportshop.Controller;
 
-import com.sportshop.Entity.ProductEntity;
 import com.sportshop.Modal.SearchProduct;
-import com.sportshop.ModalDTO.AccountDTO;
-import com.sportshop.ModalDTO.CartDTO;
-import com.sportshop.ModalDTO.ProductDTO;
-import com.sportshop.ModalDTO.UserDTO;
-import com.sportshop.Repository.ProductRepository;
-import com.sportshop.Repository.ProductTypeRepository;
+import com.sportshop.ModalDTO.*;
+import com.sportshop.Service.Iml.CartServicesIml;
 import com.sportshop.Service.Iml.ProductServiceIml;
 import com.sportshop.Service.Iml.ProductTypeServiceIml;
+import com.sportshop.Service.Iml.UserServiceIml;
 import com.sportshop.Service.ProductService;
 import com.sportshop.Service.UserService;
 import jakarta.servlet.http.HttpSession;
@@ -21,7 +17,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -40,18 +35,38 @@ public class ShopController {
     private ProductServiceIml productServiceIml;
 
     @Autowired
-    UserService userService;
+    private UserServiceIml userServiceIml;
+
+    @Autowired
+    private CartServicesIml cartServicesIml;
 
     @ModelAttribute
     public void checkLoginToCreateCart(HttpSession session){
+//        session.invalidate(); // Hủy toàn bộ session
         String email = (String) session.getAttribute("email");
         if (email == null) {
             if(session.getAttribute("newCart")==null){
                 CartDTO newCart = new CartDTO();
-                newCart.setCart_id(UUID.randomUUID().toString());
+//                newCart.setCart_id(UUID.randomUUID().toString());
                 System.out.println("new Cart là: "+newCart.getCart_id());
                 session.setAttribute("newCart", newCart);
             }
+        }
+        else{
+            CartDTO newCart= (CartDTO) session.getAttribute("newCart");
+            UserDTO userDTO=userServiceIml.findbyEmail(email);
+            if(newCart!=null){
+                System.out.println(newCart.getCart_id());
+                userDTO.setCart(cartServicesIml.moveCart(userDTO.getCart(),newCart));
+//                session.removeAttribute("quantityProduct");
+//                session.removeAttribute("totalPrice");
+//                session.removeAttribute("newCart");
+            }
+            session.setAttribute("userCart", userDTO.getCart());
+            for(CartDetailDTO x:userDTO.getCart().getCartDetailItems()){
+                System.out.println(x.getProduct().getName());
+            }
+            session.setAttribute("userInfo",userDTO);
         }
     }
 
@@ -71,7 +86,7 @@ public class ShopController {
     }
 
     @GetMapping("/header")
-    public String headerRender(HttpSession session,Model model) {
+    public String headerRender(HttpSession session,Model model, CartDTO cartDTO) {
         model.addAttribute("listType",productTypeServiceIml.getListHierarchyType());
         CartDTO cart=(CartDTO) session.getAttribute("newCart");
         model.addAttribute("newCart", cart);
