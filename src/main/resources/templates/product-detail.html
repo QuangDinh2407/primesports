@@ -148,7 +148,7 @@
                 </div>
                 <div class="col-7 col-xl-6 col-lg-12">
                     <form th:action="@{/add-pro-to-cart}" class="form">
-                        <section class="prod-info">
+                        <section class="prod-info" style="width:115%">
                             <input type="hidden" name="product_id" th:value="${productDTO.product_id}">
 <!--                            <input type="hidden" name="cart_id" th:value="${newCart.cart_id}">-->
 
@@ -161,7 +161,12 @@
                                         <img th:src="@{/Assets/Customer_Shop/Assets/icons/star.svg}" alt="" class="prod-prop__icon" />
                                         <h4 class="prod-prop__title" th:text="${productDTO.rating}"></h4>
                                     </div>
-                                    <label for="" class="form__label prod-info__label">Còn lại</label>
+                                    <div class="quantity-wrapper"  style="margin-top: 25px"><p class="prod-prop__title">Số lượng</p>
+                                        <button type="button" class="quantity-btn quantity-btn--decrease" onclick="decreaseQuantity()">-</button>
+                                        <input type="text" class="quantity-input" value="1" id="quantity" readonly name="quantity"/>
+                                        <button type="button" class="quantity-btn quantity-btn--increase" onclick="increaseQuantity()">+</button>
+                                    </div>
+                                    <label for="" class="form__label prod-info__label" style="margin-top:35%">Còn lại</label>
                                     <div class="filter__form-group">
                                         <div class="form__select-wrap">
                                             <div class="form__select" style="--width: 146px">
@@ -214,7 +219,7 @@
                                                 <p class="prod-prop__desc">Khoảng 30.000VND cho 3-4 ngày</p>
                                             </div>
                                         </div>
-                                        <div class="prod-info__card">
+                                        <div class="prod-info__card" style="width:111%">
                                             <div class="prod-info__row">
                                                 <span class="prod-info__price" th:text="${productDTO.price}+'VND'" name="price"></span>
                                                 <span class="prod-info__tax">(Voucher)</span>
@@ -227,18 +232,6 @@
                                                 <a class="btn btn--primary prod-info__add-to-cart buy-now"  th:href="@{/checkout(product_id=${productDTO.product_id})}">
                                                     Mua ngay
                                                 </a>
-                                                <button class="like-btn prod-info__like-btn">
-                                                    <img
-                                                            th:src="@{/Assets/Customer_Shop/Assets/icons/heart.svg}"
-                                                            alt=""
-                                                            class="like-btn__icon icon"
-                                                    />
-                                                    <img
-                                                            th:src="@{/Assets/Customer_Shop/Assets/icons/heart-red.svg}"
-                                                            alt=""
-                                                            class="like-btn__icon--liked"
-                                                    />
-                                                </button>
                                             </div>
                                         </div>
                                     </div>
@@ -336,7 +329,22 @@
 <!-- Footer -->
 
 <footer id="footer" class="footer"></footer>
+<script>
+    function increaseQuantity() {
+        const input = document.getElementById('quantity');
+        let currentValue = parseInt(input.value);
+        input.value = currentValue + 1;
+    }
 
+    function decreaseQuantity() {
+        const input = document.getElementById('quantity');
+        let currentValue = parseInt(input.value);
+        if (currentValue > 1) {
+            input.value = currentValue - 1;
+        }
+    }
+
+</script>
 </body>
 <script th:inline="javascript">
     /*<![CDATA[*/

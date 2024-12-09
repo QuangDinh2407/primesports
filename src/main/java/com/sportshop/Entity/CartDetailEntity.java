@@ -10,6 +10,7 @@ import jakarta.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Builder
 @Table(name ="CartDetail")
 public class CartDetailEntity {
 
@@ -22,10 +23,12 @@ public class CartDetailEntity {
 	
 	@ManyToOne
 	@JoinColumn(name="cart_id", nullable = false, referencedColumnName = "cart_id")
+	@ToString.Exclude
 	private CartEntity cart;
 	
 	@ManyToOne
 	@JoinColumn(name="product_id", nullable = false, referencedColumnName = "product_id")
+	@ToString.Exclude
 	private ProductEntity product;
 
 	

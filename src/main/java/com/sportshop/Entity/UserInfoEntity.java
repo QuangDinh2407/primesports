@@ -75,6 +75,7 @@ public class UserInfoEntity {
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "cart_id", unique = true, referencedColumnName = "cart_id")
+    @ToString.Exclude
     private CartEntity cart;
 
     public void setCart(CartEntity cart) {

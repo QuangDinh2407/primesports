@@ -18,11 +18,13 @@ public class CartEntity {
 	@GeneratedValue (strategy = GenerationType.UUID)
 	private String cart_id;
 		
-	@OneToMany (mappedBy = "cart", fetch = FetchType.LAZY)
+	@OneToMany (mappedBy = "cart",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+	@ToString.Exclude
 	private List <CartDetailEntity> cartDetailItems = new ArrayList<CartDetailEntity>();
 	
 	@OneToOne(mappedBy = "cart",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id", unique = true, nullable = false, referencedColumnName = "user_id")
+	@ToString.Exclude
 	private UserInfoEntity user;
 
 }

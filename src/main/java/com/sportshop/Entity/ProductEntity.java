@@ -69,6 +69,7 @@ public class ProductEntity {
 	private List <ShopVoucherDetailEntity> shopVoucherDetailItems = new ArrayList<ShopVoucherDetailEntity>();
 	
 	@OneToMany (mappedBy = "product", fetch = FetchType.LAZY)
+	@ToString.Exclude
 	private List <CartDetailEntity> cartDetailItems = new ArrayList<CartDetailEntity>();
 	
 	@OneToMany (mappedBy = "product", fetch = FetchType.LAZY)
