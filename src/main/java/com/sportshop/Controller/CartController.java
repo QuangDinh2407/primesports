@@ -25,7 +25,7 @@ public class CartController {
     private CartServicesIml cartServiceIml;
 
     @GetMapping("/add-pro-to-cart")
-    public String addProductToCart(Model model, HttpSession session, @RequestParam("product_id") String productId, @RequestParam("quantity") Integer quantity) {
+    public String addProductToCart(Model model, HttpSession session, @RequestParam("product_id") String productId, @RequestParam("amount") Integer quantity) {
         try {
             cartServiceIml.addProductToCart(session, productId, quantity);
         } catch (IllegalArgumentException e) {

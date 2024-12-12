@@ -17,7 +17,7 @@ public interface ProductService {
     @Transactional
     Result addProduct(ProductDTO productDTO, List<MultipartFile> files );
 
-    List<ProductDTO> findTop5Rating(String status);
+    List<ProductDTO> findTop5Rating(int quantity);
 
     Page<ProductDTO> getAll(SearchProduct searchProduct, Pageable pageable);
 

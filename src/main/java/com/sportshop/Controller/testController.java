@@ -198,7 +198,7 @@ public class testController {
 
     @GetMapping("/5pro")
     public List<ProductDTO>  hehe1() {
-        List<ProductDTO> listType = productServiceIml.findTop5Rating("available");
+        List<ProductDTO> listType = productServiceIml.findTop5Rating(0);
         return listType;
     }
     @GetMapping("tst")

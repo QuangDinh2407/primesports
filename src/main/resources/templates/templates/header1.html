@@ -1,3 +1,250 @@
+<!--<style>-->
+<!--    .avatar-image {-->
+<!--        width: 60px; /* Đặt chiều rộng cố định */-->
+<!--        height: 60px; /* Đặt chiều cao cố định */-->
+<!--        object-fit: cover; /* Giữ tỷ lệ ảnh và cắt phần thừa */-->
+<!--        border-radius: 50%; /* Bo tròn 100% để thành hình tròn */-->
+<!--        border: 2px solid #ccc; /* Tùy chọn: thêm viền */-->
+<!--        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Tùy chọn: thêm đổ bóng */-->
+<!--    }-->
+
+<!--</style>-->
+<!--<div class="container">-->
+<!--    <div class="top-bar">-->
+<!--        &lt;!&ndash; More &ndash;&gt;-->
+<!--        <button class="top-bar__more d-none d-lg-block js-toggle" toggle-target="#navbar">-->
+<!--            <img th:src ="@{/Assets/Customer_Shop/Assets/icons/more.svg}" alt="" class="icon top-bar__more-icon" />-->
+<!--        </button>-->
+
+<!--        &lt;!&ndash; Logo &ndash;&gt;-->
+<!--        <a href="" class="logo top-bar__logo">-->
+<!--            <img th:src="@{/Assets/Customer_Shop/Assets/icons/logo.png}" alt="primesports" class="logo__img top-bar__logo-img"/>-->
+<!--            <h1 class="logo__title top-bar__logo-title">primesports</h1>-->
+<!--        </a>-->
+
+<!--        &lt;!&ndash; Navbar &ndash;&gt;-->
+<!--        <nav id="navbar" class="navbar hide">-->
+<!--            <button class="navbar__close-btn js-toggle" toggle-target="#navbar">-->
+<!--                <img class="icon" th:src="@{/Assets/Customer_Shop/Assets/icons/arrow-left.svg}" alt="" />-->
+<!--            </button>-->
+
+<!--            <a href="./checkout.html" class="nav-btn d-none d-md-flex">-->
+<!--                <img th:src="@{/Assets/Customer_Shop/Assets/icons/buy.svg}" alt="" class="nav-btn__icon icon" />-->
+<!--                <span class="nav-btn__title">Cart</span>-->
+<!--                <span class="nav-btn__qnt">3</span>-->
+<!--            </a>-->
+
+<!--            <a href="#!" class="nav-btn d-none d-md-flex">-->
+<!--                <img th:src="@{/Assets/Customer_Shop/Assets/icons/heart.svg}" alt="" class="nav-btn__icon icon" />-->
+<!--                <span class="nav-btn__title">Favorite</span>-->
+<!--                <span class="nav-btn__qnt">3</span>-->
+<!--            </a>-->
+
+<!--            <ul class="navbar__list js-dropdown-list">-->
+<!--                <li class="navbar__item">-->
+<!--                    <a href="#!" class="navbar__link">-->
+<!--                        Sản phẩm-->
+<!--                        <img th:src ="@{/Assets/Customer_Shop/Assets/icons/arrow-down.svg}" alt="" class="icon navbar__arrow" />-->
+<!--                    </a>-->
+<!--                    <div class="dropdown js-dropdown">-->
+<!--                        <div class="dropdown__inner">-->
+<!--                            <div class="top-menu">-->
+<!--                                <div class="sub-menu sub-menu&#45;&#45;not-main">-->
+<!--                                    <div th:each="type: ${listType}">-->
+<!--                                        <div class="sub-menu__column">-->
+<!--                                            &lt;!&ndash; Menu column 1 &ndash;&gt;-->
+<!--                                            <div class="menu-column">-->
+<!--                                                <div class="menu-column__content">-->
+<!--                                                    <h2 class="menu-column__heading">-->
+<!--                                                        <a href="#!"th:text="${type.name}"></a>-->
+<!--                                                    </h2>-->
+<!--                                                    <ul class="menu-column__list" th:each="typeChild : ${type.name_child}">-->
+<!--                                                        <li class="menu-column__item">-->
+<!--                                                            <a href="#!" class="menu-column__link" th:text="${typeChild}"></a>-->
+<!--                                                        </li>-->
+<!--                                                    </ul>-->
+<!--                                                </div>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+
+<!--                                    </div>-->
+
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </li>-->
+<!--            </ul>-->
+<!--        </nav>-->
+<!--        <div class="navbar__overlay js-toggle" toggle-target="#navbar"></div>-->
+
+<!--        &lt;!&ndash; Actions &ndash;&gt;-->
+<!--        <div class="top-act">-->
+<!--            <form th:action="@{/all-product}" method="get" th:object="${searchProduct}">-->
+<!--                <div class="top-act__group d-md-none top-act__group&#45;&#45;single">-->
+<!--                    <div class="form__text-input" style="border: none">-->
+<!--                        <input type="text" th:field="*{name}" id="full-name" placeholder="Tìm kiếm" class="form__input">-->
+<!--                    </div>-->
+<!--                    <button class="top-act__btn" type="submit">-->
+<!--                        <img th:src="@{/Assets/Customer_Shop/Assets/icons/search.svg}" alt="" class="icon top-act__icon" />-->
+<!--                    </button>-->
+
+<!--                </div>-->
+<!--            </form>-->
+
+<!--            <div class="top-act__group d-md-none">-->
+<!--                <div class="top-act__btn-wrap">-->
+<!--                    <button class="top-act__btn">-->
+<!--                        <img th:src="@{/Assets/Customer_Shop/Assets/icons/heart.svg}" alt="" class="icon top-act__icon" />-->
+<!--                        <p th:text="${session.quantityProduct}"></p>-->
+<!--                    </button>-->
+<!--                    &lt;!&ndash; Dropdown &ndash;&gt;-->
+<!--                    <div class="act-dropdown">-->
+<!--                        <div class="act-dropdown__inner" th:if="${#lists.size(session.userInfo != null ? session.userCart?.getCartDetailItems() : session.newCart?.getCartDetailItems()) != 0}">-->
+<!--                            <img th:src="@{/Assets/Customer_Shop/Assets/icons/arrow-up.png}" alt="" class="act-dropdown__arrow" />-->
+<!--                            <div class="act-dropdown__top">-->
+<!--                                <h2 class="act-dropdown__title" th:text="'Hiện có '+${session.quantityProduct != null ? session.quantityProduct : 0}+' sản phẩm'"></h2>-->
+<!--                            </div>-->
+<!--                            <div class="row row-cols-3 gx-2 act-dropdown__list">-->
+<!--                                &lt;!&ndash; Cart preview item &ndash;&gt;-->
+<!--                                <div class="col" th:each="cartDetail : ${session.userInfo != null ? session.userCart.getCartDetailItems() : session.newCart?.getCartDetailItems()}">-->
+<!--                                    <article class="cart-preview-item">-->
+<!--                                        <div class="cart-preview-item__img-wrap">-->
+<!--                                            <img th:src="@{/Assets/Customer_Shop/Assets/img/product/item-1.png}"-->
+<!--                                                 alt=""-->
+<!--                                                 class="cart-preview-item__thumb"/>-->
+<!--                                        </div>-->
+<!--                                        <h3 class="cart-preview-item__title" th:text="${cartDetail.getProduct().getName()}"></h3>-->
+<!--                                        <p class="cart-preview-item__price" th:text="${cartDetail.getProduct().getPrice()}+'VND'"></p>-->
+<!--                                        <p class="cart-preview-item__price" th:text="'Số lượng: '+${cartDetail.getAmount()}"></p>-->
+<!--                                    </article>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="act-dropdown__bottom">-->
+<!--                                <div class="act-dropdown__row">-->
+<!--                                    <span class="act-dropdown__label">Số lượng sản phẩm</span>-->
+<!--                                    <span class="act-dropdown__value" th:text="${session.quantityProduct != null ? session.quantityProduct : 0}"></span>-->
+<!--                                </div>-->
+<!--                                <div class="act-dropdown__row">-->
+<!--                                    <span class="act-dropdown__label">Tổng tiền</span>-->
+<!--                                    <span class="act-dropdown__value" th:text="${session.totalPrice != null ? session.totalPrice : 0}+'VND'"></span>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="act-dropdown__checkout">-->
+<!--                                <a href="./checkout.html" class="btn btn&#45;&#45;primary btn&#45;&#45;rounded act-dropdown__checkout-btn">-->
+<!--                                    Check Out All-->
+<!--                                </a>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+
+<!--                <div class="top-act__separate"></div>-->
+<!--                <div class="top-act__btn-wrap" >-->
+
+<!--                    <button class="top-act__btn">-->
+<!--                        <img th:src="@{/Assets/Customer_Shop/Assets/icons/buy.svg}"  alt="" class="icon top-act__icon" />-->
+<!--                        <p th:text="${session.totalPrice != null ? session.totalPrice + ' VND' : 0 + ' VND'}"></p>-->
+<!--                    </button>-->
+<!--                    &lt;!&ndash; Dropdown &ndash;&gt;-->
+<!--                    <div class="act-dropdown">-->
+<!--                        <div class="act-dropdown__inner" th:if="${#lists.size(session.userInfo != null ? session.userCart.getCartDetailItems() : session.newCart.getCartDetailItems()) != 0}">-->
+<!--                            <img th:src="@{/Assets/Customer_Shop/Assets/icons/arrow-up.png}" alt="" class="act-dropdown__arrow" />-->
+<!--                            <div class="act-dropdown__top">-->
+<!--                                <h2 class="act-dropdown__title" th:text="'Hiện có '+${session.quantityProduct != null ? session.quantityProduct : 0}+' sản phẩm'"></h2>-->
+
+<!--                            </div>-->
+<!--                            <div class="row row-cols-3 gx-2 act-dropdown__list">-->
+<!--                                &lt;!&ndash; Cart preview item &ndash;&gt;-->
+<!--                                <div class="col" th:each="cartDetail : ${session.userInfo != null ? session.userCart.getCartDetailItems() : session.newCart.getCartDetailItems()}">-->
+<!--                                    <article class="cart-preview-item">-->
+<!--                                        <div class="cart-preview-item__img-wrap">-->
+<!--                                            <img th:src="@{/Assets/Customer_Shop/Assets/img/product/item-1.png}"-->
+<!--                                                 alt=""-->
+<!--                                                 class="cart-preview-item__thumb"/>-->
+<!--                                        </div>-->
+<!--                                        <h3 class="cart-preview-item__title" th:text="${cartDetail.getProduct().getName()}"></h3>-->
+<!--                                        <p class="cart-preview-item__price" th:text="${cartDetail.getProduct().getPrice()}+'VND'"></p>-->
+<!--                                        <p class="cart-preview-item__price" th:text="'Số lượng: '+${cartDetail.getAmount()}"></p>-->
+<!--                                    </article>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="act-dropdown__bottom">-->
+<!--                                <div class="act-dropdown__row">-->
+<!--                                    <span class="act-dropdown__label">Số lượng sản phẩm</span>-->
+<!--                                    <span class="act-dropdown__value" th:text="${session.quantityProduct != null ? session.quantityProduct : 0}"></span>-->
+<!--                                </div>-->
+<!--                                <div class="act-dropdown__row">-->
+<!--                                    <span class="act-dropdown__label">Tổng tiền</span>-->
+<!--                                    <span class="act-dropdown__value" th:text="${session.totalPrice != null ? session.totalPrice : 0}+'VND'"></span>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="act-dropdown__checkout">-->
+<!--                                <a href="./checkout.html" class="btn btn&#45;&#45;primary btn&#45;&#45;rounded act-dropdown__checkout-btn">-->
+<!--                                    Check Out All-->
+<!--                                </a>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--&lt;!&ndash;            edit here&ndash;&gt;-->
+<!--                        <div class="top-act__user" th:if="${session.userInfo} != null ">-->
+<!--&lt;!&ndash;                            edit path avatar here&ndash;&gt;-->
+<!--                            <img-->
+<!--                                    th:src="@{/Assets/Customer_Shop/Assets/img/avatar.jpg}"-->
+<!--                                    class="avatar-image"/>-->
+
+<!--                            &lt;!&ndash; Dropdown &ndash;&gt;-->
+<!--                            <div class="act-dropdown top-act__dropdown">-->
+<!--                                <div class="act-dropdown__inner user-menu">-->
+<!--                                    <img-->
+<!--                                            src="./assets/icons/arrow-up.png"-->
+<!--                                            alt=""-->
+<!--                                            class="act-dropdown__arrow top-act__dropdown-arrow"-->
+<!--                                    />-->
+
+<!--                                    <div class="user-menu__top">-->
+<!--                                        <img th:src="@{/Assets/Customer_Shop/Assets/img/avatar.jpg}" alt="" class="user-menu__avatar" />-->
+<!--                                        <div>-->
+<!--                                            <p class="user-menu__name" th:text="${session.userInfo.name}">John Smith</p>-->
+<!--                                            <p></p>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                    <ul class="user-menu__list">-->
+<!--                                        <li>-->
+<!--                                            <a href="/customer" class="user-menu__link">Thông tin cá nhân</a>-->
+<!--                                        </li>-->
+<!--                                        <li>-->
+<!--                                            <a href="#" class="user-menu__link">Thông tin đơn hàng</a>-->
+<!--                                        </li>-->
+<!--                                        <li class="user-menu__separate">-->
+<!--                                            <a href="#!" class="user-menu__link" id="switch-theme-btn">-->
+<!--                                                <span>Dark mode</span>-->
+<!--                                                <img src="./assets/icons/sun.svg" alt="" class="icon user-menu__icon" />-->
+<!--                                            </a>-->
+<!--                                        </li>-->
+<!--                                        <li>-->
+<!--                                            <a href="#!" class="user-menu__link">Settings</a>-->
+<!--                                        </li>-->
+<!--                                        <li class="user-menu__separate">-->
+<!--                                            <a th:href="@{/auth/sign-out}" class="user-menu__link">Logout</a>-->
+<!--                                        </li>-->
+<!--                                    </ul>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--            <div>-->
+
+<!--            </div>-->
+<!--            <a href="/auth/sign-in" class="btn btn&#45;&#45;text d-md-none" th:if="${session.userInfo == null}">Sign In</a>-->
+
+<!--            &lt;!&ndash; Kiểm tra session.userInfo để ẩn nút "Sign Up" &ndash;&gt;-->
+<!--            <a href="/auth/sign-up" class="top-act__sign-up btn btn&#45;&#45;primary" th:if="${session.userInfo == null}">Sign Up</a>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+
 <style>
     .avatar-image {
         width: 60px; /* Đặt chiều rộng cố định */
@@ -96,18 +343,18 @@
                 <div class="top-act__btn-wrap">
                     <button class="top-act__btn">
                         <img th:src="@{/Assets/Customer_Shop/Assets/icons/heart.svg}" alt="" class="icon top-act__icon" />
-                        <p th:text="${session.quantityProduct}"></p>
+                        <p th:text="${cartDTO.quantityProduct}" style="font-size: 14px"></p>
                     </button>
                     <!-- Dropdown -->
                     <div class="act-dropdown">
-                        <div class="act-dropdown__inner" th:if="${#lists.size(session.userInfo != null ? session.userCart?.getCartDetailItems() : session.newCart?.getCartDetailItems()) != 0}">
+                        <div class="act-dropdown__inner">
                             <img th:src="@{/Assets/Customer_Shop/Assets/icons/arrow-up.png}" alt="" class="act-dropdown__arrow" />
                             <div class="act-dropdown__top">
-                                <h2 class="act-dropdown__title" th:text="'Hiện có '+${session.quantityProduct != null ? session.quantityProduct : 0}+' sản phẩm'"></h2>
+                                <h2 class="act-dropdown__title" th:text="'Hiện có '+${cartDTO != null ? cartDTO.quantityProduct : 0}+' sản phẩm'"></h2>
                             </div>
                             <div class="row row-cols-3 gx-2 act-dropdown__list">
                                 <!-- Cart preview item -->
-                                <div class="col" th:each="cartDetail : ${session.userInfo != null ? session.userCart.getCartDetailItems() : session.newCart?.getCartDetailItems()}">
+                                <div class="col" th:each="cartDetail : ${cartDTO.cartDetailItems}">
                                     <article class="cart-preview-item">
                                         <div class="cart-preview-item__img-wrap">
                                             <img th:src="@{/Assets/Customer_Shop/Assets/img/product/item-1.png}"
@@ -123,11 +370,11 @@
                             <div class="act-dropdown__bottom">
                                 <div class="act-dropdown__row">
                                     <span class="act-dropdown__label">Số lượng sản phẩm</span>
-                                    <span class="act-dropdown__value" th:text="${session.quantityProduct != null ? session.quantityProduct : 0}"></span>
+                                    <span class="act-dropdown__value" th:text="${cartDTO != null ? cartDTO.quantityProduct : 0}"></span>
                                 </div>
                                 <div class="act-dropdown__row">
                                     <span class="act-dropdown__label">Tổng tiền</span>
-                                    <span class="act-dropdown__value" th:text="${session.totalPrice != null ? session.totalPrice : 0}+'VND'"></span>
+                                    <span class="act-dropdown__value" th:text="${cartDTO != null ? cartDTO.totalPrice : 0}+'VND'"></span>
                                 </div>
                             </div>
                             <div class="act-dropdown__checkout">
@@ -144,39 +391,39 @@
 
                     <button class="top-act__btn">
                         <img th:src="@{/Assets/Customer_Shop/Assets/icons/buy.svg}"  alt="" class="icon top-act__icon" />
-                        <p th:text="${session.totalPrice != null ? session.totalPrice + ' VND' : 0 + ' VND'}"></p>
+                        <p th:text="${cartDTO.totalPrice != null ? cartDTO.totalPrice + ' VND' : 0 + ' VND'}"></p>
                     </button>
                     <!-- Dropdown -->
                     <div class="act-dropdown">
-                        <div class="act-dropdown__inner" th:if="${#lists.size(session.userInfo != null ? session.userCart.getCartDetailItems() : session.newCart.getCartDetailItems()) != 0}">
+                        <div class="act-dropdown__inner">
                             <img th:src="@{/Assets/Customer_Shop/Assets/icons/arrow-up.png}" alt="" class="act-dropdown__arrow" />
                             <div class="act-dropdown__top">
-                                <h2 class="act-dropdown__title" th:text="'Hiện có '+${session.quantityProduct != null ? session.quantityProduct : 0}+' sản phẩm'"></h2>
+                                <h2 class="act-dropdown__title" th:text="'Hiện có '+${cartDTO.quantityProduct != null ? cartDTO.quantityProduct : 0}+' sản phẩm'"></h2>
 
                             </div>
                             <div class="row row-cols-3 gx-2 act-dropdown__list">
                                 <!-- Cart preview item -->
-                                <div class="col" th:each="cartDetail : ${session.userInfo != null ? session.userCart.getCartDetailItems() : session.newCart.getCartDetailItems()}">
+                                <div class="col" th:each="cartDetail : ${cartDTO.cartDetailItems}">
                                     <article class="cart-preview-item">
                                         <div class="cart-preview-item__img-wrap">
                                             <img th:src="@{/Assets/Customer_Shop/Assets/img/product/item-1.png}"
                                                  alt=""
                                                  class="cart-preview-item__thumb"/>
                                         </div>
-                                        <h3 class="cart-preview-item__title" th:text="${cartDetail.getProduct().getName()}"></h3>
-                                        <p class="cart-preview-item__price" th:text="${cartDetail.getProduct().getPrice()}+'VND'"></p>
-                                        <p class="cart-preview-item__price" th:text="'Số lượng: '+${cartDetail.getAmount()}"></p>
+                                        <h3 class="cart-preview-item__title" th:text="${cartDetail.product.name}"></h3>
+                                        <p class="cart-preview-item__price" th:text="${cartDetail.product.price}+'VND'"></p>
+                                        <p class="cart-preview-item__price" th:text="'Số lượng: '+${cartDetail.amount}"></p>
                                     </article>
                                 </div>
                             </div>
                             <div class="act-dropdown__bottom">
                                 <div class="act-dropdown__row">
                                     <span class="act-dropdown__label">Số lượng sản phẩm</span>
-                                    <span class="act-dropdown__value" th:text="${session.quantityProduct != null ? session.quantityProduct : 0}"></span>
+                                    <span class="act-dropdown__value" th:text="${cartDTO.quantityProduct != null ? cartDTO.quantityProduct : 0}"></span>
                                 </div>
                                 <div class="act-dropdown__row">
                                     <span class="act-dropdown__label">Tổng tiền</span>
-                                    <span class="act-dropdown__value" th:text="${session.totalPrice != null ? session.totalPrice : 0}+'VND'"></span>
+                                    <span class="act-dropdown__value" th:text="${cartDTO.totalPrice != null ? cartDTO.totalPrice : 0}+'VND'"></span>
                                 </div>
                             </div>
                             <div class="act-dropdown__checkout">
@@ -188,52 +435,52 @@
                     </div>
                 </div>
             </div>
-<!--            edit here-->
-                        <div class="top-act__user" th:if="${session.userInfo} != null ">
-<!--                            edit path avatar here-->
-                            <img
-                                    th:src="@{/Assets/Customer_Shop/Assets/img/avatar.jpg}"
-                                    class="avatar-image"/>
+            <!--            edit here-->
+            <div class="top-act__user" th:if="${session.userInfo} != null ">
+                <!--                            edit path avatar here-->
+                <img
+                        th:src="@{/Assets/Customer_Shop/Assets/img/avatar.jpg}"
+                        class="avatar-image"/>
 
-                            <!-- Dropdown -->
-                            <div class="act-dropdown top-act__dropdown">
-                                <div class="act-dropdown__inner user-menu">
-                                    <img
-                                            src="./assets/icons/arrow-up.png"
-                                            alt=""
-                                            class="act-dropdown__arrow top-act__dropdown-arrow"
-                                    />
+                <!-- Dropdown -->
+                <div class="act-dropdown top-act__dropdown">
+                    <div class="act-dropdown__inner user-menu">
+                        <img
+                                src="./assets/icons/arrow-up.png"
+                                alt=""
+                                class="act-dropdown__arrow top-act__dropdown-arrow"
+                        />
 
-                                    <div class="user-menu__top">
-                                        <img th:src="@{/Assets/Customer_Shop/Assets/img/avatar.jpg}" alt="" class="user-menu__avatar" />
-                                        <div>
-                                            <p class="user-menu__name" th:text="${session.userInfo.name}">John Smith</p>
-                                            <p></p>
-                                        </div>
-                                    </div>
-                                    <ul class="user-menu__list">
-                                        <li>
-                                            <a href="/customer" class="user-menu__link">Thông tin cá nhân</a>
-                                        </li>
-                                        <li>
-                                            <a href="#" class="user-menu__link">Thông tin đơn hàng</a>
-                                        </li>
-                                        <li class="user-menu__separate">
-                                            <a href="#!" class="user-menu__link" id="switch-theme-btn">
-                                                <span>Dark mode</span>
-                                                <img src="./assets/icons/sun.svg" alt="" class="icon user-menu__icon" />
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#!" class="user-menu__link">Settings</a>
-                                        </li>
-                                        <li class="user-menu__separate">
-                                            <a th:href="@{/auth/sign-out}" class="user-menu__link">Logout</a>
-                                        </li>
-                                    </ul>
-                                </div>
+                        <div class="user-menu__top">
+                            <img th:src="@{/Assets/Customer_Shop/Assets/img/avatar.jpg}" alt="" class="user-menu__avatar" />
+                            <div>
+                                <p class="user-menu__name" th:text="${session.userInfo.name}">John Smith</p>
+                                <p></p>
                             </div>
                         </div>
+                        <ul class="user-menu__list">
+                            <li>
+                                <a href="/customer" class="user-menu__link">Thông tin cá nhân</a>
+                            </li>
+                            <li>
+                                <a href="#" class="user-menu__link">Thông tin đơn hàng</a>
+                            </li>
+                            <li class="user-menu__separate">
+                                <a href="#!" class="user-menu__link" id="switch-theme-btn">
+                                    <span>Dark mode</span>
+                                    <img src="./assets/icons/sun.svg" alt="" class="icon user-menu__icon" />
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#!" class="user-menu__link">Settings</a>
+                            </li>
+                            <li class="user-menu__separate">
+                                <a th:href="@{/auth/sign-out}" class="user-menu__link">Logout</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
             <div>
 
             </div>

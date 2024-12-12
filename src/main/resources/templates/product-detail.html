@@ -1,3 +1,372 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8" />-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0" />-->
+<!--    <title>primesports</title>-->
+
+<!--    &lt;!&ndash; Favicon &ndash;&gt;-->
+<!--    <link rel="apple-touch-icon" sizes="76x76" th:href="@{/Assets/Customer_Shop/Assets/favicon/logo.png}" />-->
+<!--    <link rel="icon" type="image/png" sizes="32x32" th:href="@{/Assets/Customer_Shop/Assets/favicon/logo.png}" />-->
+<!--    <link rel="icon" type="image/png" sizes="16x16" th:href="@{/Assets/Customer_Shop/Assets/favicon/logo.png}" />-->
+<!--    <link rel="manifest" th:href="@{/Assets/Customer_Shop/Assets/favicon/logo.png}" />-->
+<!--    <meta name="msapplication-TileColor" content="#da532c" />-->
+<!--    <meta name="theme-color" content="#ffffff" />-->
+
+<!--    &lt;!&ndash; Fonts &ndash;&gt;-->
+<!--    <link rel="stylesheet" th:href="@{/Assets/Customer_Shop/Assets/fonts/stylesheet.css}" />-->
+
+<!--    &lt;!&ndash; Styles &ndash;&gt;-->
+<!--    <link rel="stylesheet" th:href="@{/Assets/Customer_Shop/Assets/css/main.css}" />-->
+<!--    <link rel="stylesheet" th:href="@{/Assets/Customer_Shop/Assets/css/pagination.css}" />-->
+<!--    <link rel="stylesheet" th:href="@{/Assets/Customer_Shop/Assets/css/search-bar.css}" />-->
+
+<!--    &lt;!&ndash; Scripts &ndash;&gt;-->
+<!--    <script th:src="@{/Assets/Customer_Shop/Assets/js/scripts.js}" ></script>-->
+<!--</head>-->
+<!--<style>-->
+<!--    img.prev-icon {-->
+<!--        transform: rotate(180deg);-->
+<!--    }-->
+<!--    .error-message {-->
+<!--        color: red;-->
+<!--        font-size: 15px;-->
+<!--        font-weight: 600;-->
+<!--        margin-top: 5px;-->
+<!--        margin-bottom: 5px;-->
+<!--        margin-left: 10px;-->
+<!--    }-->
+<!--    .no-data{-->
+<!--        display: flex;-->
+<!--        justify-content: center;-->
+<!--        align-items: center;-->
+<!--        flex-direction: column;-->
+<!--    }-->
+<!--    .no-data img{-->
+<!--        width: 128px;-->
+<!--    }-->
+<!--    .no-data h1{-->
+<!--        font-size: 2.5rem;-->
+<!--        font-weight: 600;-->
+<!--    }-->
+
+<!--    .quantity-wrapper {-->
+<!--        display: flex;-->
+<!--        align-items: center;-->
+<!--        gap: 8px;-->
+<!--        margin-top: 10px;-->
+<!--    }-->
+
+<!--    .quantity-btn {-->
+<!--        width: 26px;-->
+<!--        height: 26px;-->
+<!--        border: none;-->
+<!--        border-radius: 50%;-->
+<!--        background-color: #ffc107; /* Màu vàng đậm */-->
+<!--        font-size: 16px;-->
+<!--        font-weight: bold;-->
+<!--        color: #fff;-->
+<!--        cursor: pointer;-->
+<!--        display: flex;-->
+<!--        justify-content: center;-->
+<!--        align-items: center;-->
+<!--        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);-->
+<!--        transition: transform 0.2s, box-shadow 0.2s;-->
+<!--    }-->
+
+<!--    .quantity-btn:hover {-->
+<!--        transform: scale(1.1);-->
+<!--        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);-->
+<!--    }-->
+
+<!--    .quantity-input {-->
+<!--        width: 40px;-->
+<!--        height: 32px;-->
+<!--        text-align: center;-->
+<!--        font-size: 16px;-->
+<!--        font-weight: bold;-->
+<!--        border: none;-->
+<!--        border-radius: 4px;-->
+<!--        outline: none;-->
+<!--        background-color: #f9f9f9;-->
+<!--        pointer-events: none; /* Ngăn người dùng tự chỉnh sửa */-->
+<!--    }-->
+
+<!--</style>-->
+
+<!--<body>-->
+<!--&lt;!&ndash; Header &ndash;&gt;-->
+<!--<header id="header" class="header"></header>-->
+<!--<div></div>-->
+<!--<script>-->
+<!--    load("#header", "/header");-->
+<!--</script>-->
+
+<!--&lt;!&ndash; MAIN &ndash;&gt;-->
+<!--<main class="product-page">-->
+<!--    <div class="container">-->
+<!--        &lt;!&ndash; Search bar &ndash;&gt;-->
+<!--        <div class="product-container">-->
+<!--            <div class="search-bar d-none d-md-flex">-->
+<!--                <input type="text" name="" id="" placeholder="Search for item" class="search-bar__input" />-->
+<!--                <button class="search-bar__submit">-->
+<!--                    <img src="./assets/icons/search.svg" alt="" class="search-bar__icon icon" />-->
+<!--                </button>-->
+<!--            </div>-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; Breadcrumbs &ndash;&gt;-->
+<!--        <div class="product-container">-->
+<!--            <ul class="breadcrumbs">-->
+<!--                <li>-->
+<!--                    <a href="#!" class="breadcrumbs__link">-->
+<!--                        Departments-->
+<!--                        <img src="./assets/icons/arrow-right.svg" alt="" />-->
+<!--                    </a>-->
+<!--                </li>-->
+<!--                <li>-->
+<!--                    <a href="#!" class="breadcrumbs__link">-->
+<!--                        Coffee-->
+<!--                        <img src="./assets/icons/arrow-right.svg" alt="" />-->
+<!--                    </a>-->
+<!--                </li>-->
+<!--                <li>-->
+<!--                    <a href="#!" class="breadcrumbs__link">-->
+<!--                        Coffee Beans-->
+<!--                        <img src="./assets/icons/arrow-right.svg" alt="" />-->
+<!--                    </a>-->
+<!--                </li>-->
+<!--                <li>-->
+<!--                    <a href="#!" class="breadcrumbs__link breadcrumbs__link&#45;&#45;current">LavAzza</a>-->
+<!--                </li>-->
+<!--            </ul>-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; Product info &ndash;&gt;-->
+<!--        <div class="product-container prod-info-content">-->
+<!--            <div class="row">-->
+<!--                <div class="col-5 col-xl-6 col-lg-12">-->
+<!--                    <div class="prod-preview">-->
+<!--                        <div class="prod-preview__list">-->
+<!--                            <div class="prod-preview__item">-->
+<!--                                <img src="./assets/img/product/item-1.png" alt="" class="prod-preview__img" />-->
+<!--                            </div>-->
+<!--                            <div class="prod-preview__item">-->
+<!--                                <img src="./assets/img/product/item-2.png" alt="" class="prod-preview__img" />-->
+<!--                            </div>-->
+<!--                            <div class="prod-preview__item">-->
+<!--                                <img src="./assets/img/product/item-3.png" alt="" class="prod-preview__img" />-->
+<!--                            </div>-->
+<!--                            <div class="prod-preview__item">-->
+<!--                                <img src="./assets/img/product/item-4.png" alt="" class="prod-preview__img" />-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="prod-preview__thumbs">-->
+<!--                            <img-->
+<!--                                    th:src="@{/Assets/Customer_Shop/Assets/img/product/item-1.png}"-->
+<!--                                    alt=""-->
+<!--                                    class="prod-preview__thumb-img prod-preview__thumb-img&#45;&#45;current"-->
+<!--                            />-->
+<!--                            <img th:src="@{/Assets/Customer_Shop/Assets/img/product/item-2.png}" alt="" class="prod-preview__thumb-img" />-->
+<!--                            <img th:src="@{/Assets/Customer_Shop/Assets/img/product/item-3.png}" alt="" class="prod-preview__thumb-img" />-->
+<!--                            <img th:src="@{/Assets/Customer_Shop/Assets/img/product/item-4.png}" alt="" class="prod-preview__thumb-img" />-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="col-7 col-xl-6 col-lg-12">-->
+<!--                    <form th:action="@{/add-pro-to-cart}" class="form">-->
+<!--                        <section class="prod-info" style="width:115%">-->
+<!--                            <input type="hidden" name="product_id" th:value="${productDTO.product_id}">-->
+<!--                            <h1 class="prod-info__heading" th:text="${productDTO.name}" name="name">-->
+<!--                            </h1>-->
+<!--                            <div class="row">-->
+<!--                                <div class="col-5 col-xxl-6 col-xl-12">-->
+<!--                                    <div class="prod-prop">-->
+<!--                                        <p class="prod-prop__title">Rating</p>-->
+<!--                                        <img th:src="@{/Assets/Customer_Shop/Assets/icons/star.svg}" alt="" class="prod-prop__icon" />-->
+<!--                                        <h4 class="prod-prop__title" th:text="${productDTO.rating}"></h4>-->
+<!--                                    </div>-->
+<!--                                    <div class="quantity-wrapper"  style="margin-top: 25px"><p class="prod-prop__title">Số lượng</p>-->
+<!--                                        <button type="button" class="quantity-btn quantity-btn&#45;&#45;decrease" onclick="decreaseQuantity()">-</button>-->
+<!--                                        <input type="text" class="quantity-input" value="1" id="quantity" readonly name="quantity"/>-->
+<!--                                        <button type="button" class="quantity-btn quantity-btn&#45;&#45;increase" onclick="increaseQuantity()">+</button>-->
+<!--                                    </div>-->
+<!--                                    <label for="" class="form__label prod-info__label" style="margin-top:35%">Còn lại</label>-->
+<!--                                    <div class="filter__form-group">-->
+<!--                                        <div class="form__select-wrap">-->
+<!--                                            <div class="form__select" style="&#45;&#45;width: 146px" th:text="${productDTO.quantity}" name="quantity">-->
+
+<!--                                                <img-->
+<!--                                                        th:src="@{/Assets/Customer_Shop/Assets/icons/select-arrow.svg}"-->
+<!--                                                        alt=""-->
+<!--                                                        class="form__select-arrow icon"-->
+<!--                                                />-->
+<!--                                            </div>-->
+<!--                                            <div class="form__select">-->
+<!--                                                cái-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                    <div class="filter__form-group">-->
+<!--                                        <div class="form__tags">-->
+<!--                                            <button class="form__tag prod-info__tag">Nhỏ (S)</button>-->
+<!--                                            <button class="form__tag prod-info__tag">Vừa (M)</button>-->
+<!--                                            <button class="form__tag prod-info__tag">Lớn (L)</button>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <div class="col-7 col-xxl-6 col-xl-12">-->
+<!--                                    <div class="prod-props">-->
+<!--                                        <div class="prod-prop">-->
+<!--                                            <img-->
+<!--                                                    th:src="@{/Assets/Customer_Shop/Assets/icons/document.svg}"-->
+<!--                                                    alt=""-->
+<!--                                                    class="prod-prop__icon icon"-->
+<!--                                            />-->
+<!--                                            <h4 class="prod-prop__title">So sánh</h4>-->
+<!--                                        </div>-->
+<!--                                        <div class="prod-prop">-->
+<!--                                            <img-->
+<!--                                                    th:src="@{/Assets/Customer_Shop/Assets/icons/buy.svg}"-->
+<!--                                                    alt=""-->
+<!--                                                    class="prod-prop__icon icon"-->
+<!--                                            />-->
+<!--                                            <div>-->
+<!--                                                <h4 class="prod-prop__title">Vận chuyển</h4>-->
+<!--                                                <p class="prod-prop__desc">Khoảng 30.000VND cho 3-4 ngày</p>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                        <div class="prod-info__card" style="width:111%">-->
+<!--                                            <div class="prod-info__row">-->
+<!--                                                <span class="prod-info__price" th:text="${productDTO.price}+'VND'" name="price"></span>-->
+<!--                                                <span class="prod-info__tax">(Voucher)</span>-->
+<!--                                            </div>-->
+<!--                                            <p class="prod-info__total-price">(giá - voucher)</p>-->
+<!--                                            <div class="prod-info__row">-->
+<!--                                                <button class="btn btn&#45;&#45;primary prod-info__add-to-cart" type="submit">-->
+<!--                                                    Thêm giỏ hàng-->
+<!--                                                </button>-->
+<!--                                                <button class="btn btn&#45;&#45;primary prod-info__add-to-cart" type="">-->
+<!--                                                    Mua ngay-->
+<!--                                                </button>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </section>-->
+<!--                    </form>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; Product content &ndash;&gt;-->
+<!--        <div class="product-container">-->
+<!--            <div class="prod-tab js-tabs">-->
+<!--                <ul class="prod-tab__list">-->
+<!--                    <li class="prod-tab__item prod-tab__item&#45;&#45;current">Miêu tả</li>-->
+<!--&lt;!&ndash;                    <li class="prod-tab__item">Review (1100)</li>&ndash;&gt;-->
+<!--                    <li class="prod-tab__item">Liên quan</li>-->
+<!--                </ul>-->
+<!--                <div class="prod-tab__contents">-->
+<!--                    <div class="prod-tab__content prod-tab__content&#45;&#45;current">-->
+<!--                        <div class="row">-->
+<!--                            <div class="col-8 col-xl-10 col-lg-12">-->
+<!--                                <div class="text-content prod-tab__text-content">-->
+<!--                                    <h2>Thông tin sản phẩm</h2>-->
+<!--                                    <p th:text="${productDTO.description}" name="description"></p>-->
+<!--                                    <blockquote>-->
+<!--                                        <p>-->
+<!--                                            Lorem ipsum dolor sit amet <em>consectetur</em>-->
+<!--                                            <u>adipisicing</u> elit. Aliquid, cupiditate. Modi, quidem, ullam-->
+<!--                                            sint dolorum recusandae voluptates dignissimos similique animi-->
+<!--                                            assumenda praesentium et! Illum dolorem est rem voluptas nam!-->
+<!--                                            Voluptatem.-->
+<!--                                        </p>-->
+<!--                                    </blockquote>-->
+<!--                                    <hr />-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="prod-tab__content">-->
+<!--                        <div class="prod-content">-->
+<!--                            <h2 class="prod-content__heading">Những sản phẩm liên quan bạn có thể thích</h2>-->
+<!--                            <div-->
+<!--                                    class="row row-cols-6 row-cols-xl-4 row-cols-lg-3 row-cols-md-2 row-cols-sm-1 g-2"-->
+<!--                            >-->
+<!--                                &lt;!&ndash; Product card 1 &ndash;&gt;-->
+<!--                                <div class="col" th:each="product : ${relatedProducts}">-->
+<!--                                    <article class="product-card">-->
+<!--                                        <div class="product-card__img-wrap">-->
+<!--                                            <a th:href="@{/product-detail/{id}(id=${product.product_id})}">-->
+<!--                                                <img-->
+<!--                                                        th:src="@{/Assets/Customer_Shop/Assets/img/product/item-1.png}"-->
+<!--                                                        alt=""-->
+<!--                                                        class="product-card__thumb"-->
+<!--                                                />-->
+<!--                                            </a>-->
+<!--                                            <button class="like-btn product-card__like-btn">-->
+<!--                                                <img-->
+<!--                                                        th:src="@{/Assets/Customer_Shop/Assets/icons/heart.svg}"-->
+<!--                                                        alt=""-->
+<!--                                                        class="like-btn__icon icon"-->
+<!--                                                />-->
+<!--                                                <img-->
+<!--                                                        th:src="@{/Assets/Customer_Shop/Assets/icons/heart-red.svg}"-->
+<!--                                                        alt=""-->
+<!--                                                        class="like-btn__icon&#45;&#45;liked"-->
+<!--                                                />-->
+<!--                                            </button>-->
+<!--                                        </div>-->
+<!--                                        <h3 class="product-card__title">-->
+<!--                                            <a href="/product-detail" th:text="${product.name}"-->
+<!--                                            ></a-->
+<!--                                            >-->
+<!--                                        </h3>-->
+<!--                                        <p class="product-card__brand" th:text="${product.status}"></p>-->
+<!--                                        <div class="product-card__row">-->
+<!--                                            <span class="product-card__price" th:text="${product.price}+'VND'"></span>-->
+<!--                                            <img-->
+<!--                                                    th:src="@{/Assets/Customer_Shop/Assets/icons/star.svg}"-->
+<!--                                                    alt=""-->
+<!--                                                    class="product-card__star"-->
+<!--                                            />-->
+<!--                                            <span class="product-card__score" th:text="${product.rating}" name="rating"></span>-->
+<!--                                        </div>-->
+<!--                                    </article>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</main>-->
+
+<!--&lt;!&ndash; Footer &ndash;&gt;-->
+
+<!--<footer id="footer" class="footer"></footer>-->
+<!--<script>-->
+<!--    function increaseQuantity() {-->
+<!--        const input = document.getElementById('quantity');-->
+<!--        let currentValue = parseInt(input.value);-->
+<!--        input.value = currentValue + 1;-->
+<!--    }-->
+
+<!--    function decreaseQuantity() {-->
+<!--        const input = document.getElementById('quantity');-->
+<!--        let currentValue = parseInt(input.value);-->
+<!--        if (currentValue > 1) {-->
+<!--            input.value = currentValue - 1;-->
+<!--        }-->
+<!--    }-->
+
+<!--</script>-->
+<!--</body>-->
+<!--</html>-->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -49,49 +418,22 @@
         font-size: 2.5rem;
         font-weight: 600;
     }
-
-    .quantity-wrapper {
+    .size-focus{
+        border: #0ba1b5 1px solid;
+    }
+    .amount-input{
         display: flex;
+        justify-content: flex-start;
         align-items: center;
-        gap: 8px;
-        margin-top: 10px;
     }
 
-    .quantity-btn {
-        width: 26px;
-        height: 26px;
-        border: none;
-        border-radius: 50%;
-        background-color: #ffc107; /* Màu vàng đậm */
-        font-size: 16px;
-        font-weight: bold;
-        color: #fff;
-        cursor: pointer;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
-        transition: transform 0.2s, box-shadow 0.2s;
+    .amount-input p{
+        margin: 0 10px;
     }
 
-    .quantity-btn:hover {
-        transform: scale(1.1);
-        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+    .amount-input input{
+        width: 25px;
     }
-
-    .quantity-input {
-        width: 40px;
-        height: 32px;
-        text-align: center;
-        font-size: 16px;
-        font-weight: bold;
-        border: none;
-        border-radius: 4px;
-        outline: none;
-        background-color: #f9f9f9;
-        pointer-events: none; /* Ngăn người dùng tự chỉnh sửa */
-    }
-
 </style>
 
 <body>
@@ -174,88 +516,88 @@
                     </div>
                 </div>
                 <div class="col-7 col-xl-6 col-lg-12">
-                    <form th:action="@{/add-pro-to-cart}" class="form">
-                        <section class="prod-info" style="width:115%">
-                            <input type="hidden" name="product_id" th:value="${productDTO.product_id}">
-                            <h1 class="prod-info__heading" th:text="${productDTO.name}" name="name">
-                            </h1>
-                            <div class="row">
-                                <div class="col-5 col-xxl-6 col-xl-12">
-                                    <div class="prod-prop">
-                                        <p class="prod-prop__title">Rating</p>
-                                        <img th:src="@{/Assets/Customer_Shop/Assets/icons/star.svg}" alt="" class="prod-prop__icon" />
-                                        <h4 class="prod-prop__title" th:text="${productDTO.rating}"></h4>
-                                    </div>
-                                    <div class="quantity-wrapper"  style="margin-top: 25px"><p class="prod-prop__title">Số lượng</p>
-                                        <button type="button" class="quantity-btn quantity-btn--decrease" onclick="decreaseQuantity()">-</button>
-                                        <input type="text" class="quantity-input" value="1" id="quantity" readonly name="quantity"/>
-                                        <button type="button" class="quantity-btn quantity-btn--increase" onclick="increaseQuantity()">+</button>
-                                    </div>
-                                    <label for="" class="form__label prod-info__label" style="margin-top:35%">Còn lại</label>
-                                    <div class="filter__form-group">
-                                        <div class="form__select-wrap">
-                                            <div class="form__select" style="--width: 146px" th:text="${productDTO.quantity}" name="quantity">
-
-                                                <img
-                                                        th:src="@{/Assets/Customer_Shop/Assets/icons/select-arrow.svg}"
-                                                        alt=""
-                                                        class="form__select-arrow icon"
-                                                />
-                                            </div>
-                                            <div class="form__select">
-                                                cái
-                                            </div>
+                    <section class="prod-info" style="width:115%">
+                        <h1 class="prod-info__heading" th:text="${productDTO.name}" name="name">
+                        </h1>
+                        <div class="row">
+                            <div class="col-5 col-xxl-6 col-xl-12">
+                                <div class="prod-prop">
+                                    <p class="prod-prop__title">Rating</p>
+                                    <img th:src="@{/Assets/Customer_Shop/Assets/icons/star.svg}" alt="" class="prod-prop__icon" />
+                                    <h4 class="prod-prop__title" th:text="${productDTO.rating}"></h4>
+                                </div>
+                                <label for="" class="form__label prod-info__label" style="margin-top:35%">Còn lại</label>
+                                <div class="filter__form-group">
+                                    <div class="form__select-wrap">
+                                        <div class="form__select" style="--width: 146px">
+                                            <span class="quantity-size"></span>
+                                            <img th:src="@{/Assets/Customer_Shop/Assets/icons/select-arrow.svg}" alt="" class="form__select-arrow icon"/>
                                         </div>
-                                    </div>
-                                    <div class="filter__form-group">
-                                        <div class="form__tags">
-                                            <button class="form__tag prod-info__tag">Nhỏ (S)</button>
-                                            <button class="form__tag prod-info__tag">Vừa (M)</button>
-                                            <button class="form__tag prod-info__tag">Lớn (L)</button>
+                                        <div class="form__select">
+                                            cái
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-7 col-xxl-6 col-xl-12">
-                                    <div class="prod-props">
-                                        <div class="prod-prop">
-                                            <img
-                                                    th:src="@{/Assets/Customer_Shop/Assets/icons/document.svg}"
-                                                    alt=""
-                                                    class="prod-prop__icon icon"
-                                            />
-                                            <h4 class="prod-prop__title">So sánh</h4>
+                                <div class="filter__form-group">
+                                    <div class="form__tags">
+                                        <p class="form__tag prod-info__tag" style="color: black" th:each="size : ${productDTO.sizeQuantities}" th:text="${size.key}"></p>
+                                    </div>
+                                </div>
+
+                                <div class="filter__form-group">
+                                        <span class="amount-input">Số lượng:
+                                             <p class="cart-item__input-btn decrement">
+                                                <img class="icon" th:src="@{/Assets/Customer_Shop/Assets/icons/minus.svg}" alt="" />
+                                            </p>
+                                            <input class="amountItem" id="amount" type="text" value="1">
+                                             <p class="cart-item__input-btn increment">
+                                                 <img class="icon" th:src="@{/Assets/Customer_Shop/Assets/icons/plus.svg}" alt="" />
+                                             </p>
+                                        </span>
+
+                                </div>
+
+                            </div>
+                            <div class="col-7 col-xxl-6 col-xl-12">
+                                <div class="prod-props">
+                                    <div class="prod-prop">
+                                        <img
+                                                th:src="@{/Assets/Customer_Shop/Assets/icons/document.svg}"
+                                                alt=""
+                                                class="prod-prop__icon icon"
+                                        />
+                                        <h4 class="prod-prop__title">So sánh</h4>
+                                    </div>
+                                    <div class="prod-prop">
+                                        <img
+                                                th:src="@{/Assets/Customer_Shop/Assets/icons/buy.svg}"
+                                                alt=""
+                                                class="prod-prop__icon icon"
+                                        />
+                                        <div>
+                                            <h4 class="prod-prop__title">Vận chuyển</h4>
+                                            <p class="prod-prop__desc">Khoảng 30.000VND cho 3-4 ngày</p>
                                         </div>
-                                        <div class="prod-prop">
-                                            <img
-                                                    th:src="@{/Assets/Customer_Shop/Assets/icons/buy.svg}"
-                                                    alt=""
-                                                    class="prod-prop__icon icon"
-                                            />
-                                            <div>
-                                                <h4 class="prod-prop__title">Vận chuyển</h4>
-                                                <p class="prod-prop__desc">Khoảng 30.000VND cho 3-4 ngày</p>
-                                            </div>
+                                    </div>
+                                    <div class="prod-info__card" style="width:111%">
+                                        <div class="prod-info__row">
+                                            <span class="prod-info__price" th:text="${productDTO.price}+'VND'" name="price"></span>
+                                            <span class="prod-info__tax">(Voucher)</span>
                                         </div>
-                                        <div class="prod-info__card" style="width:111%">
-                                            <div class="prod-info__row">
-                                                <span class="prod-info__price" th:text="${productDTO.price}+'VND'" name="price"></span>
-                                                <span class="prod-info__tax">(Voucher)</span>
-                                            </div>
-                                            <p class="prod-info__total-price">(giá - voucher)</p>
-                                            <div class="prod-info__row">
-                                                <button class="btn btn--primary prod-info__add-to-cart" type="submit">
-                                                    Thêm giỏ hàng
-                                                </button>
-                                                <button class="btn btn--primary prod-info__add-to-cart" type="">
-                                                    Mua ngay
-                                                </button>
-                                            </div>
+                                        <p class="prod-info__total-price">(giá - voucher)</p>
+                                        <div class="prod-info__row">
+                                            <a class="btn btn--primary prod-info__add-to-cart add-to-cart" th:href="@{/add-pro-to-cart(product_id=${productDTO.product_id})}">
+                                                Thêm giỏ hàng
+                                            </a>
+                                            <a class="btn btn--primary prod-info__add-to-cart buy-now"  th:href="@{/checkout(product_id=${productDTO.product_id})}">
+                                                Mua ngay
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </section>
-                    </form>
+                        </div>
+                    </section>
                 </div>
             </div>
         </div>
@@ -265,7 +607,7 @@
             <div class="prod-tab js-tabs">
                 <ul class="prod-tab__list">
                     <li class="prod-tab__item prod-tab__item--current">Miêu tả</li>
-<!--                    <li class="prod-tab__item">Review (1100)</li>-->
+                    <!--                    <li class="prod-tab__item">Review (1100)</li>-->
                     <li class="prod-tab__item">Liên quan</li>
                 </ul>
                 <div class="prod-tab__contents">
@@ -320,9 +662,7 @@
                                             </button>
                                         </div>
                                         <h3 class="product-card__title">
-                                            <a href="/product-detail" th:text="${product.name}"
-                                            ></a
-                                            >
+                                            <a href="/product-detail" th:text="${product.name}"></a>
                                         </h3>
                                         <p class="product-card__brand" th:text="${product.status}"></p>
                                         <div class="product-card__row">
@@ -365,4 +705,171 @@
 
 </script>
 </body>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    const product = /*[[${productDTO}]]*/ 'default';
+    /*]]>*/
+    console.log(product.sizeQuantities);
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const sizeTags = document.querySelectorAll(".form__tag.prod-info__tag");
+        const quantityDisplay = document.querySelector(".quantity-size");
+        const buyNowBtn = document.querySelector(".buy-now");
+        const addToCartBtn = document.querySelector(".add-to-cart");
+        const amountInput = document.querySelector(".amountItem");
+        const incrementBtn = document.querySelector(".increment");
+        const decrementBtn = document.querySelector(".decrement");
+
+        let currentSizeKey = null; // Biến lưu giữ key của size hiện tại
+        let amount = parseInt(amountInput.value, 10) || 1; // Giá trị mặc định là 1 nếu không có giá trị
+
+        function updateBuyNowLink() {
+            let currentHref = buyNowBtn.getAttribute("href");
+
+            // Cập nhật param "amount" trong URL
+            if (currentHref.includes("?")) {
+                currentHref = currentHref.replace(/([?&])amount=\d*/, `$1amount=${encodeURIComponent(amount)}`);
+                if (!currentHref.includes("amount=")) {
+                    currentHref += `&amount=${encodeURIComponent(amount)}`;
+                }
+            } else {
+                currentHref += `?amount=${encodeURIComponent(amount)}`;
+            }
+
+            // Cập nhật param "size" trong URL nếu đã chọn size
+            if (currentSizeKey) {
+                if (currentHref.includes("?")) {
+                    currentHref = currentHref.replace(/([?&])size=[^&]*/, `$1size=${encodeURIComponent(currentSizeKey)}`);
+                    if (!currentHref.includes("size=")) {
+                        currentHref += `&size=${encodeURIComponent(currentSizeKey)}`;
+                    }
+                } else {
+                    currentHref += `?size=${encodeURIComponent(currentSizeKey)}`;
+                }
+            }
+
+            buyNowBtn.setAttribute("href", currentHref);
+        }
+
+        function updateAddToCartLink() {
+            let currentHref = addToCartBtn.getAttribute("href");
+
+            // Cập nhật param "amount" trong URL
+            if (currentHref.includes("?")) {
+                currentHref = currentHref.replace(/([?&])amount=\d*/, `$1amount=${encodeURIComponent(amount)}`);
+                if (!currentHref.includes("amount=")) {
+                    currentHref += `&amount=${encodeURIComponent(amount)}`;
+                }
+            } else {
+                currentHref += `?amount=${encodeURIComponent(amount)}`;
+            }
+
+            // Cập nhật param "size" trong URL nếu đã chọn size
+            if (currentSizeKey) {
+                if (currentHref.includes("?")) {
+                    currentHref = currentHref.replace(/([?&])size=[^&]*/, `$1size=${encodeURIComponent(currentSizeKey)}`);
+                    if (!currentHref.includes("size=")) {
+                        currentHref += `&size=${encodeURIComponent(currentSizeKey)}`;
+                    }
+                } else {
+                    currentHref += `?size=${encodeURIComponent(currentSizeKey)}`;
+                }
+            }
+
+            addToCartBtn.setAttribute("href", currentHref);
+        }
+
+        incrementBtn.addEventListener("click", function () {
+            let currentAmount = parseInt(amountInput.value, 10);
+            if (isNaN(currentAmount)) currentAmount = 1; // Đặt mặc định là 1 nếu không hợp lệ
+            else currentAmount += 1;
+
+            // Kiểm tra số lượng không vượt quá số lượng của size hiện tại
+            if (currentSizeKey && product.sizeQuantities[currentSizeKey] !== undefined) {
+                const maxQuantity = product.sizeQuantities[currentSizeKey];
+                if (currentAmount > maxQuantity) {
+                    currentAmount = maxQuantity; // Đặt số lượng bằng tối đa nếu vượt quá
+                }
+            }
+
+            amountInput.value = currentAmount;
+            amount = currentAmount; // Cập nhật giá trị số lượng
+            updateBuyNowLink(); // Cập nhật URL
+            updateAddToCartLink();
+        });
+
+        decrementBtn.addEventListener("click", function () {
+            let currentAmount = parseInt(amountInput.value, 10);
+            if (isNaN(currentAmount) || currentAmount <= 1) currentAmount = 1; // Không cho giảm nhỏ hơn 1
+            else currentAmount -= 1;
+
+            amountInput.value = currentAmount;
+            amount = currentAmount; // Cập nhật giá trị số lượng
+            updateBuyNowLink(); // Cập nhật URL
+            updateAddToCartLink();
+
+        });
+
+        // Xử lý sự kiện blur (mất focus)
+        amountInput.addEventListener("blur", function () {
+            let currentAmount = parseInt(amountInput.value, 10);
+
+            // Nếu số lượng không hợp lệ (trống hoặc nhỏ hơn 1), đặt lại số lượng thành 1
+            if (isNaN(currentAmount) || currentAmount <= 0) {
+                amountInput.value = 1;
+                amount = 1;
+            } else if (currentSizeKey && product.sizeQuantities[currentSizeKey] !== undefined) {
+                // Kiểm tra nếu số lượng vượt quá số lượng của size hiện tại
+                const maxQuantity = product.sizeQuantities[currentSizeKey];
+                if (currentAmount > maxQuantity) {
+                    amountInput.value = maxQuantity;
+                    amount = maxQuantity;
+                } else {
+                    amount = currentAmount;
+                }
+            }
+            updateBuyNowLink(); // Cập nhật URL sau khi mất focus
+            updateAddToCartLink();
+
+        });
+
+        if (sizeTags.length > 0) {
+            const firstTag = sizeTags[0];
+            firstTag.classList.add("size-focus");
+            currentSizeKey = firstTag.textContent.trim();
+            if (product.sizeQuantities[currentSizeKey] !== undefined) {
+                const quantity = product.sizeQuantities[currentSizeKey];
+                quantityDisplay.textContent = `${quantity}`;
+            }
+            updateBuyNowLink(); // Cập nhật URL ban đầu
+            updateAddToCartLink();
+
+        }
+
+        sizeTags.forEach((tag) => {
+            tag.addEventListener("click", function () {
+                sizeTags.forEach((otherTag) => {
+                    otherTag.classList.remove("size-focus");
+                });
+                tag.classList.add("size-focus");
+
+                currentSizeKey = tag.textContent.trim();
+                if (product.sizeQuantities[currentSizeKey] !== undefined) {
+                    const quantity = product.sizeQuantities[currentSizeKey];
+                    quantityDisplay.textContent = `${quantity}`;
+                }
+
+                // Kiểm tra số lượng nếu đã được chọn trước đó
+                let currentAmount = parseInt(amountInput.value, 10);
+                if (product.sizeQuantities[currentSizeKey] !== undefined && currentAmount > product.sizeQuantities[currentSizeKey]) {
+                    amountInput.value = product.sizeQuantities[currentSizeKey]; // Đặt lại số lượng
+                    amount = product.sizeQuantities[currentSizeKey]; // Cập nhật lại số lượng
+                }
+
+                updateBuyNowLink(); // Cập nhật URL khi thay đổi size
+                updateAddToCartLink();
+            });
+        });
+    });
+</script>
 </html>

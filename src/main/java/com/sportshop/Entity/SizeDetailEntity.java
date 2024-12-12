@@ -21,9 +21,6 @@ public class SizeDetailEntity {
     @Column(nullable = false)
     private int quantity;
 
-    @Column(nullable = false)
-    private float price;
-
     @ManyToOne
     @JoinColumn(name="size_id", referencedColumnName = "size_id")
     private SizeEntity size;

@@ -30,21 +30,77 @@ public class CartServicesIml implements CartService {
     @Autowired
     private CartRepository cartRepository;
 
+//    public CartDTO addProductToCart(HttpSession session, String productId, Integer quantity) {
+//        // Lấy giỏ hàng từ session, nếu chưa có thì khởi tạo
+//        CartDTO cartDTO=new CartDTO();
+//
+//        if (session.getAttribute("newCart")==null) {
+//            cartDTO = (CartDTO) session.getAttribute("newCart");
+//        }else{
+//            cartDTO = (CartDTO) session.getAttribute("userCart");
+//        }
+//        if (cartDTO == null) {
+//            cartDTO = new CartDTO();
+//            cartDTO.setCartDetailItems(new ArrayList<>());
+//            session.setAttribute("newCart", cartDTO);
+//            System.out.println("new Cart other là: "+cartDTO.getCart_id());
+//        }
+//        // Lấy thông tin sản phẩm
+//        ProductDTO product = productService.findProductById(productId);
+//        if (product == null) {
+//            throw new IllegalArgumentException("Sản phẩm không tồn tại!");
+//        }
+//
+//        // Kiểm tra sản phẩm đã có trong giỏ hàng hay chưa
+//        CartDetailDTO existingCartDetail = null;
+//        for (CartDetailDTO item : cartDTO.getCartDetailItems()) {
+//            if (item.getProduct().getProduct_id().equals(product.getProduct_id())) {
+//                existingCartDetail = item;
+//                break;
+//            }
+//        }
+//
+//        if (existingCartDetail != null) {
+//            // Tăng số lượng sản phẩm đã có
+//            existingCartDetail.setAmount(existingCartDetail.getAmount() + quantity);
+//        } else {
+//            // Thêm sản phẩm mới
+//            CartDetailDTO newCartDetail = new CartDetailDTO();
+//            newCartDetail.setCartdetail_id(UUID.randomUUID().toString());
+//            newCartDetail.setProduct(product);
+//            newCartDetail.setAmount(quantity);
+//            newCartDetail.setCart(cartDTO);
+//            cartDTO.getCartDetailItems().add(newCartDetail);
+//        }
+//
+//        double total = 0.0;
+//        int quantityProduct=0;
+//        for (CartDetailDTO a : cartDTO.getCartDetailItems()) {
+//            total += a.getProduct().getPrice() * a.getAmount(); // Giả sử mỗi sản phẩm có số lượng
+//            quantityProduct+=a.getAmount();
+//        }
+//        System.out.println(total);
+//
+//        // Cập nhật session
+//        session.setAttribute("quantityProduct", quantityProduct);
+//        session.setAttribute("totalPrice", Math.round(total * 10.0) / 10.0);
+//        session.setAttribute("newCart", cartDTO);
+//        return cartDTO;
+//    }
+
+//    public CartDTO moveCart(CartDTO userCart, CartDTO newCart) {
+//        if(newCart.getCartDetailItems()!=null && !newCart.getCartDetailItems().isEmpty()) {
+//            userCart.getCartDetailItems().addAll(newCart.getCartDetailItems());
+//            saveOrUpdateCart(userCart);
+//        }
+//        return userCart;
+//    }
+
     public CartDTO addProductToCart(HttpSession session, String productId, Integer quantity) {
         // Lấy giỏ hàng từ session, nếu chưa có thì khởi tạo
-        CartDTO cartDTO=new CartDTO();
+        CartDTO cartDTO = (CartDTO) session.getAttribute("cartDTO");
 
-        if (session.getAttribute("newCart")==null) {
-            cartDTO = (CartDTO) session.getAttribute("newCart");
-        }else{
-            cartDTO = (CartDTO) session.getAttribute("userCart");
-        }
-        if (cartDTO == null) {
-            cartDTO = new CartDTO();
-            cartDTO.setCartDetailItems(new ArrayList<>());
-            session.setAttribute("newCart", cartDTO);
-            System.out.println("new Cart other là: "+cartDTO.getCart_id());
-        }
+
         // Lấy thông tin sản phẩm
         ProductDTO product = productService.findProductById(productId);
         if (product == null) {
@@ -59,10 +115,14 @@ public class CartServicesIml implements CartService {
                 break;
             }
         }
+        System.out.println(existingCartDetail);
+        Double total = cartDTO.getTotalPrice();
+        Integer quantityProduct = cartDTO.getQuantityProduct();
 
         if (existingCartDetail != null) {
             // Tăng số lượng sản phẩm đã có
             existingCartDetail.setAmount(existingCartDetail.getAmount() + quantity);
+            total += existingCartDetail.getProduct().getPrice() * quantity;
         } else {
             // Thêm sản phẩm mới
             CartDetailDTO newCartDetail = new CartDetailDTO();
@@ -71,28 +131,48 @@ public class CartServicesIml implements CartService {
             newCartDetail.setAmount(quantity);
             newCartDetail.setCart(cartDTO);
             cartDTO.getCartDetailItems().add(newCartDetail);
-        }
+            total += newCartDetail.getProduct().getPrice() * newCartDetail.getAmount();
 
-        double total = 0.0;
-        int quantityProduct=0;
-        for (CartDetailDTO a : cartDTO.getCartDetailItems()) {
-            total += a.getProduct().getPrice() * a.getAmount(); // Giả sử mỗi sản phẩm có số lượng
-            quantityProduct+=a.getAmount();
         }
-        System.out.println(total);
-
+        quantityProduct += quantity;
+        cartDTO.setTotalPrice(total);
+        cartDTO.setQuantityProduct(quantityProduct);
         // Cập nhật session
-        session.setAttribute("quantityProduct", quantityProduct);
-        session.setAttribute("totalPrice", Math.round(total * 10.0) / 10.0);
-        session.setAttribute("newCart", cartDTO);
+        session.setAttribute("cartDTO", cartDTO);
+
+        // Lưu xuống DB nếu đăng nhập rồi
+        String email = (String) session.getAttribute("email");
+        if (email != null) {
+            saveOrUpdateCart(cartDTO);
+        }
         return cartDTO;
     }
 
     public CartDTO moveCart(CartDTO userCart, CartDTO newCart) {
-        if(newCart.getCartDetailItems()!=null && !newCart.getCartDetailItems().isEmpty()) {
-            userCart.getCartDetailItems().addAll(newCart.getCartDetailItems());
-            saveOrUpdateCart(userCart);
+        if (newCart.getCartDetailItems() != null && !newCart.getCartDetailItems().isEmpty()) {
+            for (CartDetailDTO newItem : newCart.getCartDetailItems()) {
+                boolean found = false;
+                // Duyệt qua danh sách các sản phẩm trong userCart
+                for (CartDetailDTO userItem : userCart.getCartDetailItems()) {
+                    if (userItem.getProduct().getProduct_id().equals(newItem.getProduct().getProduct_id())) {
+                        userItem.setAmount(userItem.getAmount() + newItem.getAmount());
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    userCart.getCartDetailItems().add(newItem);
+                }
+                Double total = userCart.getTotalPrice();
+                Integer quantityProduct = userCart.getQuantityProduct();
+                total +=  newItem.getProduct().getPrice() * newItem.getAmount();
+                quantityProduct += newItem.getAmount();
+                userCart.setTotalPrice(total);
+                userCart.setQuantityProduct(quantityProduct);
+            }
         }
+        userCart.setIsMerge(true);
+        saveOrUpdateCart(userCart);
         return userCart;
     }
 

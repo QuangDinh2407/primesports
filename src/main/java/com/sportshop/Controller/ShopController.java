@@ -40,32 +40,60 @@ public class ShopController {
     @Autowired
     private CartServicesIml cartServicesIml;
 
+//    @ModelAttribute
+//    public void checkLoginToCreateCart(HttpSession session){
+////        session.invalidate(); // Hủy toàn bộ session
+//        String email = (String) session.getAttribute("email");
+//        if (email == null) {
+//            if(session.getAttribute("newCart")==null){
+//                CartDTO newCart = new CartDTO();
+////                newCart.setCart_id(UUID.randomUUID().toString());
+//                System.out.println("new Cart là: "+newCart.getCart_id());
+//                session.setAttribute("newCart", newCart);
+//            }
+//        }
+//        else{
+//            CartDTO newCart= (CartDTO) session.getAttribute("newCart");
+//            UserDTO userDTO=userServiceIml.findbyEmail(email);
+//            if(newCart!=null){
+//                System.out.println(newCart.getCart_id());
+//                userDTO.setCart(cartServicesIml.moveCart(userDTO.getCart(),newCart));
+////                session.removeAttribute("quantityProduct");
+////                session.removeAttribute("totalPrice");
+////                session.removeAttribute("newCart");
+//            }
+//            session.setAttribute("userCart", userDTO.getCart());
+//            for(CartDetailDTO x:userDTO.getCart().getCartDetailItems()){
+//                System.out.println(x.getProduct().getName());
+//            }
+//            session.setAttribute("userInfo",userDTO);
+//        }
+//    }
+
     @ModelAttribute
     public void checkLoginToCreateCart(HttpSession session){
-//        session.invalidate(); // Hủy toàn bộ session
         String email = (String) session.getAttribute("email");
         if (email == null) {
-            if(session.getAttribute("newCart")==null){
+            if(session.getAttribute("cartDTO")==null){
                 CartDTO newCart = new CartDTO();
-//                newCart.setCart_id(UUID.randomUUID().toString());
-                System.out.println("new Cart là: "+newCart.getCart_id());
-                session.setAttribute("newCart", newCart);
+                session.setAttribute("cartDTO", newCart);
             }
         }
         else{
-            CartDTO newCart= (CartDTO) session.getAttribute("newCart");
-            UserDTO userDTO=userServiceIml.findbyEmail(email);
-            if(newCart!=null){
-                System.out.println(newCart.getCart_id());
-                userDTO.setCart(cartServicesIml.moveCart(userDTO.getCart(),newCart));
-//                session.removeAttribute("quantityProduct");
-//                session.removeAttribute("totalPrice");
-//                session.removeAttribute("newCart");
+            CartDTO newCart= (CartDTO) session.getAttribute("cartDTO");
+            UserDTO userDTO= (UserDTO) session.getAttribute("userInfo");
+            if (userDTO == null){
+                userDTO = userServiceIml.findbyEmail(email);
             }
-            session.setAttribute("userCart", userDTO.getCart());
-            for(CartDetailDTO x:userDTO.getCart().getCartDetailItems()){
-                System.out.println(x.getProduct().getName());
+            if (newCart == null){
+                userDTO.getCart().setIsMerge(true);
             }
+            else{
+                if(!newCart.getIsMerge()){
+                    userDTO.setCart(cartServicesIml.moveCart(userDTO.getCart(),newCart));
+                }
+            }
+            session.setAttribute("cartDTO", userDTO.getCart());
             session.setAttribute("userInfo",userDTO);
         }
     }
@@ -80,16 +108,24 @@ public class ShopController {
 
     @GetMapping("")
     public String renderShop(Model model){
-        List<ProductDTO> listPro = productService.findTop5Rating("available");
+        List<ProductDTO> listPro = productService.findTop5Rating(0);
         model.addAttribute("listPro", listPro);
         return "homepage";
     }
 
+//    @GetMapping("/header")
+//    public String headerRender(HttpSession session,Model model, CartDTO cartDTO) {
+//        model.addAttribute("listType",productTypeServiceIml.getListHierarchyType());
+//        CartDTO cart=(CartDTO) session.getAttribute("newCart");
+//        model.addAttribute("newCart", cart);
+//        return "templates/header1";
+//    }
+
     @GetMapping("/header")
-    public String headerRender(HttpSession session,Model model, CartDTO cartDTO) {
+    public String headerRender(HttpSession session,Model model) {
         model.addAttribute("listType",productTypeServiceIml.getListHierarchyType());
-        CartDTO cart=(CartDTO) session.getAttribute("newCart");
-        model.addAttribute("newCart", cart);
+        CartDTO cart=(CartDTO) session.getAttribute("cartDTO");
+        model.addAttribute("cartDTO", cart);
         return "templates/header1";
     }
 
@@ -124,15 +160,29 @@ public class ShopController {
         return "all-product";
     }
 
+//    @GetMapping("/product-detail/{id}")
+//    public String renderDetailProduct(@PathVariable("id") String id, Model model,HttpSession session) {
+//        ProductDTO proDTO= productServiceIml.findProductById(id);
+//
+//        //lấy 5 sản phẩm được rating cao
+//        List<ProductDTO> relatedProducts=productServiceIml.findTop5Rating("available");
+//
+//        //xử lý voucher (Từ sản phẩm lấy được voucher -> lấy voucher giảm giá nhiều nhất)
+//        model.addAttribute("newCart",(CartDTO) session.getAttribute("newCart"));
+//        model.addAttribute("productDTO", proDTO);
+//        model.addAttribute("relatedProducts", relatedProducts);
+//        return "product-detail";
+//    }
+
     @GetMapping("/product-detail/{id}")
     public String renderDetailProduct(@PathVariable("id") String id, Model model,HttpSession session) {
         ProductDTO proDTO= productServiceIml.findProductById(id);
 
         //lấy 5 sản phẩm được rating cao
-        List<ProductDTO> relatedProducts=productServiceIml.findTop5Rating("available");
+        List<ProductDTO> relatedProducts=productServiceIml.findTop5Rating(0);
 
         //xử lý voucher (Từ sản phẩm lấy được voucher -> lấy voucher giảm giá nhiều nhất)
-        model.addAttribute("newCart",(CartDTO) session.getAttribute("newCart"));
+        model.addAttribute("cartDTO",(CartDTO) session.getAttribute("cartDTO"));
         model.addAttribute("productDTO", proDTO);
         model.addAttribute("relatedProducts", relatedProducts);
         return "product-detail";
