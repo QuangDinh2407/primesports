@@ -89,24 +89,131 @@ public class AdminController {
     }
 
     @GetMapping("/dashboard")
-    public String renderdashboard (HttpSession session, Model model)
+    public String renderDashboard(
+            @RequestParam(name = "type", defaultValue = "none") String type,
+            @RequestParam(name = "date", required = false) String date,
+            @RequestParam(name = "date_order", required = false) String dateOrder,
+            HttpSession session,
+            Model model)
     {
-
-        List<Object[]> results = userOrderRepository.getTotalRevenueByMonth();
+        List<Object[]> results = new ArrayList<>();
         List<String> labels = new ArrayList<>();
         List<Double> values = new ArrayList<>();
 
-        for (Object[] result : results) {
-            String label = "Tháng " + result[1];  // Tháng
-            Double value = ((Number) result[2]).doubleValue();  // Doanh thu
+        List<Object[]> orderCountsByStatus = new ArrayList<>();
+        List<String> labels_sales = new ArrayList<>();
+        List<Integer> values_sales = new ArrayList<>();
 
+        List<Object[]> topSellingProduct = new ArrayList<>();
+        List<String> labels_product = new ArrayList<>();
+        List<Integer> values_product = new ArrayList<>();
+
+        int year = 0;
+        Double revenueToday = userOrderRepository.getTotalRevenueToday();
+        Double revenueTotal = userOrderRepository.getTotalRevenueOfShop();
+        Double totalImportPrice = productRepository.getTotalImportPrice();
+        Double profit = revenueTotal - totalImportPrice;
+
+        try {
+            if ("day".equals(type) && date != null && date.matches("\\d{2}/\\d{2}/\\d{4}")) {
+                String[] parts = date.split("/");
+                int day = Integer.parseInt(parts[0]);
+                int month = Integer.parseInt(parts[1]);
+                year = Integer.parseInt(parts[2]);
+                if (day >= 1 && day <= 31 && month >= 1 && month <= 12) {
+                    results = userOrderRepository.getTotalRevenueByDay(day, month, year);
+                }
+            } else if ("month".equals(type) && date != null && date.matches("\\d{2}/\\d{4}")) {
+                String[] parts = date.split("/");
+                int month = Integer.parseInt(parts[0]);
+                year = Integer.parseInt(parts[1]);
+                if (month >= 1 && month <= 12) {
+                    results = userOrderRepository.getTotalRevenueByMonth(month, year);
+                }
+            } else if ("year".equals(type) && date != null && date.matches("\\d{4}")) {
+                year = Integer.parseInt(date);
+                if (year > 0) {
+                    results = userOrderRepository.getTotalRevenueByYear(year);
+                }
+            } else {
+                results = userOrderRepository.getTotalRevenueByMonth();
+                year = ((Number) results.getFirst()[0]).intValue();
+
+            }
+        } catch (NumberFormatException e) {
+            // Log lỗi nếu cần thiết
+        }
+
+        for (Object[] result : results) {
+            String label = "";
+            if ("day".equals(type)) {
+                label = "Ngày " + result[0] + " Tháng " + result[1] + " Năm " + result[2];
+            } else if ("month".equals(type)) {
+                label = "Tháng " + result[0] + " Năm " + result[1];
+            } else if ("year".equals(type)) {
+                label = "Tháng " + result[1];
+            } else {
+                label = "Tháng " + result[1];
+            }
+            Double value = ((Number) result[result.length - 1]).doubleValue();
             labels.add(label);
             values.add(value);
         }
+
+        year = ((Number) results.getFirst()[0]).intValue();
         Map<String, Object> chartData = new HashMap<>();
         chartData.put("labels", labels);
         chartData.put("values", values);
+
+        System.out.println(dateOrder);
+        if (dateOrder != null && dateOrder.matches("\\d{2}/\\d{2}/\\d{4}")) {
+            String[] parts = dateOrder.split("/");
+            int day = Integer.parseInt(parts[0]);
+            int month = Integer.parseInt(parts[1]);
+            year = Integer.parseInt(parts[2]);
+            if (day >= 1 && day <= 31 && month >= 1 && month <= 12) {
+                orderCountsByStatus = userOrderRepository.getOrderCountByDay(day, month, year);
+            }
+
+        } else {
+            orderCountsByStatus = userOrderRepository.getOrderCountByStatus();
+        }
+
+        for (Object[] result : orderCountsByStatus) {
+            String status = (String) result[0];
+            Integer count = ((Number) result[1]).intValue();
+            labels_sales.add(status);
+            values_sales.add(count);
+        }
+
+        Map<String, Object> orderStatusCounts = new HashMap<>();
+        orderStatusCounts.put("labels_sales", labels_sales);
+        orderStatusCounts.put("values_sales", values_sales);
+
+
+        topSellingProduct = userOrderRepository.findTopSellingProducts();
+        for (Object[] result : topSellingProduct) {
+            String status = (String) result[1];
+            Integer count = ((Number) result[2]).intValue();
+            labels_product.add(status);
+            values_product.add(count);
+        }
+
+        Map<String, Object> topSellingProducts = new HashMap<>();
+        topSellingProducts.put("labels_product", labels_product);
+        topSellingProducts.put("values_product", values_product);
+
+
+
+
         model.addAttribute("chartData", chartData);
+        model.addAttribute("orderStatusCounts", orderStatusCounts);
+        model.addAttribute("topSellingProducts", topSellingProducts);
+        model.addAttribute("year", year);
+        model.addAttribute("revenueToday", revenueToday);
+        model.addAttribute("revenueTotal", revenueTotal);
+        model.addAttribute("totalImportPrice", totalImportPrice);
+        model.addAttribute("profit", profit);
 
         return "Admin/dashboard";
     }

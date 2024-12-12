@@ -28,6 +28,10 @@ public class ProductDTO {
 
     @NotNull(message = "Giá tiền không được để trống")
     @Min(value = 0, message = "Giá tiền phải lớn hơn hoặc bằng 0")
+    private Float import_price;
+
+    @NotNull(message = "Giá tiền không được để trống")
+    @Min(value = 0, message = "Giá tiền phải lớn hơn hoặc bằng 0")
     private Float price;
 
     private float rating;

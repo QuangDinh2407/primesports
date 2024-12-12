@@ -61,9 +61,16 @@
                                         </div>
                                     </div>
                                     <div class="form__group form__group__custom">
-                                        <label for="">Giá tiền</label>
+                                        <label for="">Giá nhập</label>
                                         <div class="text-input">
-                                            <input type="number" name="price" th:class="${#fields.hasErrors('name') ? 'input-setting-custom input-error' : 'input-setting-custom'}" placeholder="Nhập giá tiền" th:field="*{price}">
+                                            <input type="number" name="price" th:class="${#fields.hasErrors('import_price') ? 'input-setting-custom input-error' : 'input-setting-custom'}" placeholder="Nhập giá tiền" th:field="*{import_price}">
+                                            <p class="error-message" th:if="${#fields.hasErrors('import_price')}" th:errors="*{import_price}"></p>
+                                        </div>
+                                    </div>
+                                    <div class="form__group form__group__custom">
+                                        <label for="">Giá bán</label>
+                                        <div class="text-input">
+                                            <input type="number" name="price" th:class="${#fields.hasErrors('price') ? 'input-setting-custom input-error' : 'input-setting-custom'}" placeholder="Nhập giá tiền" th:field="*{price}">
                                             <p class="error-message" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></p>
                                         </div>
                                     </div>

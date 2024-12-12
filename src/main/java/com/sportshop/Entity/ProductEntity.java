@@ -28,6 +28,9 @@ public class ProductEntity {
 	private int quantity;
 
 	@Column(nullable = false)
+	private float import_price;
+
+	@Column(nullable = false)
 	private float price;
 
 	@Column(nullable = false)
