@@ -147,11 +147,7 @@
                     </div>
                 </div>
                 <div class="col-7 col-xl-6 col-lg-12">
-                    <form th:action="@{/add-pro-to-cart}" class="form">
                         <section class="prod-info" style="width:115%">
-                            <input type="hidden" name="product_id" th:value="${productDTO.product_id}">
-<!--                            <input type="hidden" name="cart_id" th:value="${newCart.cart_id}">-->
-
                             <h1 class="prod-info__heading" th:text="${productDTO.name}" name="name">
                             </h1>
                             <div class="row">
@@ -160,11 +156,6 @@
                                         <p class="prod-prop__title">Rating</p>
                                         <img th:src="@{/Assets/Customer_Shop/Assets/icons/star.svg}" alt="" class="prod-prop__icon" />
                                         <h4 class="prod-prop__title" th:text="${productDTO.rating}"></h4>
-                                    </div>
-                                    <div class="quantity-wrapper"  style="margin-top: 25px"><p class="prod-prop__title">Số lượng</p>
-                                        <button type="button" class="quantity-btn quantity-btn--decrease" onclick="decreaseQuantity()">-</button>
-                                        <input type="text" class="quantity-input" value="1" id="quantity" readonly name="quantity"/>
-                                        <button type="button" class="quantity-btn quantity-btn--increase" onclick="increaseQuantity()">+</button>
                                     </div>
                                     <label for="" class="form__label prod-info__label" style="margin-top:35%">Còn lại</label>
                                     <div class="filter__form-group">
@@ -226,9 +217,9 @@
                                             </div>
                                             <p class="prod-info__total-price">(giá - voucher)</p>
                                             <div class="prod-info__row">
-                                                <button class="btn btn--primary prod-info__add-to-cart" type="submit">
+                                                <a class="btn btn--primary prod-info__add-to-cart add-to-cart" th:href="@{/add-pro-to-cart(product_id=${productDTO.product_id})}">
                                                     Thêm giỏ hàng
-                                                </button>
+                                                </a>
                                                 <a class="btn btn--primary prod-info__add-to-cart buy-now"  th:href="@{/checkout(product_id=${productDTO.product_id})}">
                                                     Mua ngay
                                                 </a>
@@ -238,7 +229,6 @@
                                 </div>
                             </div>
                         </section>
-                    </form>
                 </div>
             </div>
         </div>
@@ -356,6 +346,7 @@
         const sizeTags = document.querySelectorAll(".form__tag.prod-info__tag");
         const quantityDisplay = document.querySelector(".quantity-size");
         const buyNowBtn = document.querySelector(".buy-now");
+        const addToCartBtn = document.querySelector(".add-to-cart");
         const amountInput = document.querySelector(".amountItem");
         const incrementBtn = document.querySelector(".increment");
         const decrementBtn = document.querySelector(".decrement");
@@ -391,6 +382,34 @@
             buyNowBtn.setAttribute("href", currentHref);
         }
 
+        function updateAddToCartLink() {
+            let currentHref = addToCartBtn.getAttribute("href");
+
+            // Cập nhật param "amount" trong URL
+            if (currentHref.includes("?")) {
+                currentHref = currentHref.replace(/([?&])amount=\d*/, `$1amount=${encodeURIComponent(amount)}`);
+                if (!currentHref.includes("amount=")) {
+                    currentHref += `&amount=${encodeURIComponent(amount)}`;
+                }
+            } else {
+                currentHref += `?amount=${encodeURIComponent(amount)}`;
+            }
+
+            // Cập nhật param "size" trong URL nếu đã chọn size
+            if (currentSizeKey) {
+                if (currentHref.includes("?")) {
+                    currentHref = currentHref.replace(/([?&])size=[^&]*/, `$1size=${encodeURIComponent(currentSizeKey)}`);
+                    if (!currentHref.includes("size=")) {
+                        currentHref += `&size=${encodeURIComponent(currentSizeKey)}`;
+                    }
+                } else {
+                    currentHref += `?size=${encodeURIComponent(currentSizeKey)}`;
+                }
+            }
+
+            addToCartBtn.setAttribute("href", currentHref);
+        }
+
         incrementBtn.addEventListener("click", function () {
             let currentAmount = parseInt(amountInput.value, 10);
             if (isNaN(currentAmount)) currentAmount = 1; // Đặt mặc định là 1 nếu không hợp lệ
@@ -407,6 +426,7 @@
             amountInput.value = currentAmount;
             amount = currentAmount; // Cập nhật giá trị số lượng
             updateBuyNowLink(); // Cập nhật URL
+            updateAddToCartLink();
         });
 
         decrementBtn.addEventListener("click", function () {
@@ -417,6 +437,8 @@
             amountInput.value = currentAmount;
             amount = currentAmount; // Cập nhật giá trị số lượng
             updateBuyNowLink(); // Cập nhật URL
+            updateAddToCartLink();
+
         });
 
         // Xử lý sự kiện blur (mất focus)
@@ -438,6 +460,8 @@
                 }
             }
             updateBuyNowLink(); // Cập nhật URL sau khi mất focus
+            updateAddToCartLink();
+
         });
 
         if (sizeTags.length > 0) {
@@ -449,6 +473,8 @@
                 quantityDisplay.textContent = `${quantity}`;
             }
             updateBuyNowLink(); // Cập nhật URL ban đầu
+            updateAddToCartLink();
+
         }
 
         sizeTags.forEach((tag) => {
@@ -472,6 +498,7 @@
                 }
 
                 updateBuyNowLink(); // Cập nhật URL khi thay đổi size
+                updateAddToCartLink();
             });
         });
     });

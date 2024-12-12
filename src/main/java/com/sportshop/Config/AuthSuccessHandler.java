@@ -101,7 +101,7 @@ public class AuthSuccessHandler implements AuthenticationSuccessHandler {
         }
         else {
 
-            response.sendRedirect("/customer");
+            response.sendRedirect("/");
         }
 
     }

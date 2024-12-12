@@ -25,6 +25,18 @@
     <!-- Scripts -->
     <script th:src="@{/Assets/Customer_Shop/Assets/js/scripts.js}" ></script>
 </head>
+<style>
+    .input-error {
+        border: 2px solid red;
+    }
+    .error-message {
+        color: red;
+        font-size: 15px;
+        font-weight: 600;
+        margin-top: 5px;
+        margin-left: 10px;
+    }
+</style>
 <body>
 <!-- Header -->
 <header id="header" class="header"></header>
@@ -65,23 +77,23 @@
                                         <div class="form__group">
                                             <label for="name" class="form__label form__label--small">Tên</label>
                                             <div class="form__text-input form__text-input--small">
-                                                <input type="text" th:field="*{shipping_name}" placeholder="Name" class="form__input"/>
-                                                <img src="./assets/icons/form-error.svg" alt="" class="form__input-icon-error" />
+                                                <input type="text" th:field="*{shipping_name}" placeholder="Name"  th:class="${#fields.hasErrors('shipping_name') ? 'form__input input-error' : 'form__input'}"/>
+                                                <p class="error-message" th:if="${#fields.hasErrors('shipping_name')}" th:errors="*{shipping_name}"></p>
                                             </div>
                                         </div>
                                         <div class="form__group">
                                             <label for="phone" class="form__label form__label--small">Phone</label>
                                             <div class="form__text-input form__text-input--small">
-                                                <input type="tel" id="phone" placeholder="Số điện thoại" th:field="*{shipping_phone}"/>
-                                                <img src="./assets/icons/form-error.svg" alt="" class="form__input-icon-error" />
+                                                <input type="tel" id="phone" placeholder="Số điện thoại" th:field="*{shipping_phone}" th:class="${#fields.hasErrors('shipping_phone') ? 'form__input input-error' : 'form__input'}"/>
+                                                <p class="error-message" th:if="${#fields.hasErrors('shipping_phone')}" th:errors="*{shipping_phone}"></p>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="form__group">
                                         <label for="address" class="form__label form__label--small">Address</label>
                                         <div class="form__text-area">
-                                    <textarea id="address" placeholder="Địa chỉ" class="form__text-area-input" th:field="*{shipping_address}"></textarea>
-                                            <img src="./assets/icons/form-error.svg" alt="" class="form__input-icon-error" />
+                                    <textarea id="address" placeholder="Địa chỉ" th:class="${#fields.hasErrors('shipping_address') ? 'form__text-area-input input-error' : 'form__text-area-input'}" th:field="*{shipping_address}"></textarea>
+                                            <p class="error-message" th:if="${#fields.hasErrors('shipping_address')}" th:errors="*{shipping_address}"></p>
                                         </div>
                                     </div>
                                     <div class="form__group">

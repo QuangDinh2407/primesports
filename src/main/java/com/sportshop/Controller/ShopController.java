@@ -1,25 +1,16 @@
 package com.sportshop.Controller;
 
-import com.sportshop.Entity.ProductEntity;
-import com.sportshop.Modal.Checkout;
+
 import com.sportshop.Modal.ProductSize;
 import com.sportshop.Modal.Result;
 import com.sportshop.Modal.SearchProduct;
 import com.sportshop.ModalDTO.*;
-import com.sportshop.Repository.ProductRepository;
-import com.sportshop.Repository.ProductTypeRepository;
 import com.sportshop.Service.*;
 import com.sportshop.Service.Iml.ProductServiceIml;
 import com.sportshop.Service.Iml.ProductTypeServiceIml;
-import com.sportshop.Service.Iml.SizeDetailServiceIml;
-import com.sportshop.Modal.SearchProduct;
-import com.sportshop.ModalDTO.*;
 import com.sportshop.Service.Iml.CartServicesIml;
-import com.sportshop.Service.Iml.ProductServiceIml;
-import com.sportshop.Service.Iml.ProductTypeServiceIml;
 import com.sportshop.Service.Iml.UserServiceIml;
 import com.sportshop.Service.ProductService;
-import com.sportshop.Service.UserService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,11 +22,9 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.view.RedirectView;
 
-import java.util.ArrayList;
+
 import java.util.List;
-import java.util.UUID;
 
 @Controller
 public class ShopController {
@@ -64,6 +53,9 @@ public class ShopController {
     @Autowired
     SizeDetailService sizeDetailService;
 
+    @Autowired
+    CartServicesIml cartServicesIml;
+
 //    @ModelAttribute
 //    public void checkLoginToCreateCart(HttpSession session,Model model){
 //        String email = (String) session.getAttribute("email");
@@ -77,34 +69,32 @@ public class ShopController {
 //            }
 //        }
 //    }
-    private CartServicesIml cartServicesIml;
+
 
     @ModelAttribute
     public void checkLoginToCreateCart(HttpSession session){
-//        session.invalidate(); // Hủy toàn bộ session
         String email = (String) session.getAttribute("email");
         if (email == null) {
-            if(session.getAttribute("newCart")==null){
+            if(session.getAttribute("cartDTO")==null){
                 CartDTO newCart = new CartDTO();
-//                newCart.setCart_id(UUID.randomUUID().toString());
-                System.out.println("new Cart là: "+newCart.getCart_id());
-                session.setAttribute("newCart", newCart);
+                session.setAttribute("cartDTO", newCart);
             }
         }
         else{
-            CartDTO newCart= (CartDTO) session.getAttribute("newCart");
-            UserDTO userDTO=userServiceIml.findbyEmail(email);
-            if(newCart!=null){
-                System.out.println(newCart.getCart_id());
-                userDTO.setCart(cartServicesIml.moveCart(userDTO.getCart(),newCart));
-//                session.removeAttribute("quantityProduct");
-//                session.removeAttribute("totalPrice");
-//                session.removeAttribute("newCart");
+            CartDTO newCart= (CartDTO) session.getAttribute("cartDTO");
+            UserDTO userDTO= (UserDTO) session.getAttribute("userInfo");
+            if (userDTO == null){
+                userDTO = userServiceIml.findbyEmail(email);
             }
-            session.setAttribute("userCart", userDTO.getCart());
-            for(CartDetailDTO x:userDTO.getCart().getCartDetailItems()){
-                System.out.println(x.getProduct().getName());
+            if (newCart == null){
+                userDTO.getCart().setIsMerge(true);
             }
+            else{
+                if(!newCart.getIsMerge()){
+                    userDTO.setCart(cartServicesIml.moveCart(userDTO.getCart(),newCart));
+                }
+            }
+            session.setAttribute("cartDTO", userDTO.getCart());
             session.setAttribute("userInfo",userDTO);
         }
     }
@@ -125,10 +115,10 @@ public class ShopController {
     }
 
     @GetMapping("/header")
-    public String headerRender(HttpSession session,Model model, CartDTO cartDTO) {
+    public String headerRender(HttpSession session,Model model) {
         model.addAttribute("listType",productTypeServiceIml.getListHierarchyType());
-        CartDTO cart=(CartDTO) session.getAttribute("newCart");
-        model.addAttribute("newCart", cart);
+        CartDTO cart=(CartDTO) session.getAttribute("cartDTO");
+        model.addAttribute("cartDTO", cart);
         return "templates/header1";
     }
 
@@ -173,7 +163,7 @@ public class ShopController {
         List<ProductDTO> relatedProducts=productServiceIml.findTop5Rating(0);
 
         //xử lý voucher (Từ sản phẩm lấy được voucher -> lấy voucher giảm giá nhiều nhất)
-        model.addAttribute("newCart",(CartDTO) session.getAttribute("newCart"));
+        model.addAttribute("cartDTO",(CartDTO) session.getAttribute("cartDTO"));
         model.addAttribute("productDTO", proDTO);
         model.addAttribute("relatedProducts", relatedProducts);
         return "product-detail";
@@ -202,8 +192,12 @@ public class ShopController {
     }
 
     @PostMapping("/order-product")
-    public String orderProduct(UserOrderDTO userOrderDTOForm, HttpSession session, Model model, RedirectAttributes redirectAttributes) throws Exception {
+    public String orderProduct(@Valid UserOrderDTO userOrderDTOForm, BindingResult bindingResult, HttpSession session, Model model, RedirectAttributes redirectAttributes) throws Exception {
         UserOrderDTO userOrderDTOSession = (UserOrderDTO) session.getAttribute("userOrderDTO");
+        if (bindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.accountDTO", bindingResult);
+            return "redirect:/shipping-info";
+        }
         userOrderDTOSession.setPaymentType(userOrderDTOForm.getPaymentType());
         userOrderDTOSession.setShipping_address(userOrderDTOForm.getShipping_address());
         userOrderDTOSession.setShipping_name(userOrderDTOForm.getShipping_name());

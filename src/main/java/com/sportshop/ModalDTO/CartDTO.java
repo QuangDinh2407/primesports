@@ -21,5 +21,9 @@ public class CartDTO {
 
     private UserDTO user;
 
-//    private int quantityProduct;
+    private Integer quantityProduct = 0;
+
+    private Double totalPrice = 0.0;
+
+    private Boolean isMerge = false;
 }
