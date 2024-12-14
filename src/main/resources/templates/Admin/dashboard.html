@@ -9,12 +9,21 @@
             min-height: 300px; /* Chiều cao tối thiểu cho biểu đồ */
 
         }
+        #salesLine{
+            min-height: 300px; /* Chiều cao tối thiểu cho biểu đồ */
+        }
+        .statistical__header{
+            display: flex;
+            font-weight: bolder;
+        }
     </style>
+    <link rel="stylesheet" th:href="@{/Assets/Admin_Employee/Assets/css/vertical-layout-light/employeeInfocss.css}"/>
+
 </head>
 <body>
 <div class="container" layout:fragment="content">
     <div class="content" >
-        <div class="d-sm-flex align-items-center justify-content-end border-bottom">
+        <div class="d-sm-flex align-items-center justify-content-end border-bottom" style="padding-top: 9px; padding-right: 11px; padding-bottom: 16px;">
             <div>
                 <div class="btn-wrapper">
                     <a href="#" class="btn btn-otline-dark align-items-center"><i class="icon-share"></i> Share</a>
@@ -23,10 +32,92 @@
                 </div>
             </div>
         </div>
-            <div class="chartjs-wrapper mt-5">
-                <canvas id="performanceLine"></canvas>
+        <div class="col-sm-12" style=" margin: 24px 51px; width: 90%;">
+            <div class="statistics-details d-flex align-items-center justify-content-between">
+                <div>
+                    <p class="statistics-title">Doanh thu hôm nay</p>
+                    <h3 class="rate-percentage" th:text = "${@currencyFormatter.formatCurrency(revenueToday)}" ></h3>
+                    <p class="text-success d-flex"><i class="mdi mdi-menu-up"></i><span>+0.5%</span></p>
+                </div>
+                <div>
+                    <p class="statistics-title">Tổng doanh thu</p>
+                    <h3 class="rate-percentage" th:text = "${@currencyFormatter.formatCurrency(revenueTotal)}"></h3>
+                    <p class="text-success d-flex"><i class="mdi mdi-menu-up"></i><span>+0.1%</span></p>
+                </div>
+                <div>
+                    <p class="statistics-title">Tổng tiền nhập hàng</p>
+                    <h3 class="rate-percentage" th:text = "${@currencyFormatter.formatCurrency(totalImportPrice)}"></h3>
+                    <p class="text-danger d-flex"><i class="mdi mdi-menu-up"></i><span>68.8</span></p>
+                </div>
+                <div class="d-none d-md-block">
+                    <p class="statistics-title">Tổng lợi nhuận</p>
+                    <h3 class="rate-percentage" th:text = "${@currencyFormatter.formatCurrency(profit)}"></h3>
+                    <p class="text-danger d-flex"><i class="mdi mdi-menu-down"></i><span>-70.8%</span></p>
+                </div>
             </div>
-    </div>
+        </div>
+        <div>
+            <h2 class="statistical__header justify-content-center">Thống kê doanh thu </h2>
+                <form th:action="@{/admin/dashboard}" method="GET" id="filterForm">
+                <div class="filter-container" style="margin: 0 27px; margin-top: 36px;">
+                    <div class="filter-item">
+                        <label for="status">Thống kê theo</label>
+                        <select id="status" name="type" class="form-control">
+                            <option value="">Vui lòng chọn</option>
+                            <option value="day" selected>Ngày</option>
+                            <option value="month" >Tháng</option>
+                            <option value="year">Năm</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-item" id="dateInputContainer"></div>
+
+                    <div class="filter-item">
+                        <button type="submit" class="">Xem báo cáo</button>
+                    </div>
+                </div>
+                </form>
+
+            <div>
+                <div class="chartjs-wrapper mt-5">
+                    <canvas id="performanceLine"></canvas>
+                </div>
+                <span style=" display: flex; justify-content: center; margin-top: 13px;">Doanh thu trong năm [[${year}]]</span>
+            </div>
+        </div>
+
+        <div>
+            <h2 class="statistical__header justify-content-center" style="margin-bottom: -20px; margin-top: 42px;">Danh sách các sản phẩm bán chạy nhất</h2>
+            <div>
+                <div class="chartjs-wrapper mt-5">
+                    <canvas id="topProductLine"></canvas>
+                </div>
+<!--                <span style=" display: flex; justify-content: center; margin-top: 13px;">Danh sách các sản phẩm bán chạy nhất</span>-->
+            </div>
+        </div>
+
+        <div>
+            <h2 class="statistical__header justify-content-center" style="margin-bottom: -20px; margin-top: 42px;">Tình hình bán hàng </h2>
+            <form th:action="@{/admin/dashboard}" method="GET" id="filterSalesForm">
+                <div class="filter-container" style="margin: 0 27px; margin-top: 36px;">
+                    <div class="filter-item">
+                        <label >Thống kê theo</label>
+                        <input type="text" id="dateInput" name="date_order" class="form-control" placeholder="dd/mm/yyyy" pattern="\d{2}/\d{2}/\d{4}" title="Vui lòng nhập đúng định dạng dd/mm/yyyy" required="">
+                    </div>
+
+                    <div class="filter-item">
+                        <button type="submit" class="">Xem báo cáo</button>
+                    </div>
+                </div>
+            </form>
+
+            <div>
+                <div class="chartjs-wrapper mt-5">
+                    <canvas id="salesLine"></canvas>
+                </div>
+<!--                <span style=" display: flex; justify-content: center; margin-top: 13px;">Tình hình bán hàng ngày [[${year}]]</span>-->
+            </div>
+        </div>
 </div>
 
 <div layout:fragment="script">
@@ -39,6 +130,57 @@
         /*]]>*/
         console.log(chartData);
         renderLineChart("performanceLine", chartData);
+
+        /*<![CDATA[*/
+        const orderStatusCounts = /*[[${orderStatusCounts}]]*/ 'default';
+        /*]]>*/
+        console.log(orderStatusCounts)
+        renderColumnChart("salesLine", orderStatusCounts);
+
+        /*<![CDATA[*/
+        const topSaleProduct = /*[[${topSellingProducts}]]*/ 'default';
+        /*]]>*/
+        console.log(topSaleProduct)
+        renderTopSellingProduct("topProductLine", topSaleProduct);
+    </script>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', function() {
+            statusSelect.dispatchEvent(new Event('change'));
+        });
+        // Lấy phần tử select và container để thêm input
+        const statusSelect = document.getElementById('status');
+        const dateInputContainer = document.getElementById('dateInputContainer');
+
+        // Hàm tạo input với các thuộc tính động
+        function createInput(placeholder, pattern) {
+            return `
+            <label for="dateInput">Nhập giá trị</label>
+            <input type="text" id="dateInput" name="date"
+                   class="form-control"
+                   placeholder="${placeholder}"
+                   pattern="${pattern}"
+                   title="Vui lòng nhập đúng định dạng ${placeholder}"
+                   required>
+        `;
+        }
+
+        // Lắng nghe sự kiện change của select
+        statusSelect.addEventListener('change', function () {
+            const selectedValue = this.value;
+            dateInputContainer.innerHTML = ''; // Xóa input cũ
+
+            if (selectedValue === 'day') {
+                // Hiển thị input ngày (dd/mm/yyyy)
+                dateInputContainer.innerHTML = createInput('dd/mm/yyyy', '\\d{2}/\\d{2}/\\d{4}');
+            } else if (selectedValue === 'month') {
+                // Hiển thị input tháng (mm/yyyy)
+                dateInputContainer.innerHTML = createInput('mm/yyyy', '\\d{2}/\\d{4}');
+            } else if (selectedValue === 'year') {
+                // Hiển thị input năm (yyyy)
+                dateInputContainer.innerHTML = createInput('yyyy', '\\d{4}');
+            }
+        });
     </script>
 
 </div>

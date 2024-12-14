@@ -1,20 +1,13 @@
 package com.sportshop.Controller;
 
 import com.sportshop.Modal.Result;
-import com.sportshop.ModalDTO.AccountDTO;
-import com.sportshop.ModalDTO.ProductDTO;
-import com.sportshop.ModalDTO.ProductTypeDTO;
-import com.sportshop.ModalDTO.SizeDTO;
-import com.sportshop.ModalDTO.UserDTO;
+import com.sportshop.ModalDTO.*;
 import com.sportshop.Repository.ProductRepository;
 import com.sportshop.Repository.ProductTypeRepository;
 import com.sportshop.Repository.UserOrderRepository;
+import com.sportshop.Service.*;
 import com.sportshop.Service.Iml.AccountServiceIml;
 import com.sportshop.Service.Iml.ProductServiceIml;
-import com.sportshop.Service.ProductService;
-import com.sportshop.Service.ProductTypeService;
-import com.sportshop.Service.SizeService;
-import com.sportshop.Service.UserService;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -62,6 +55,9 @@ public class AdminController {
     private ProductTypeService productTypeService;
 
     @Autowired
+    private UserOrderService userOrderService;
+
+    @Autowired
     UserOrderRepository userOrderRepository;
     @Autowired
     ServletContext context;
@@ -93,24 +89,131 @@ public class AdminController {
     }
 
     @GetMapping("/dashboard")
-    public String renderdashboard (HttpSession session, Model model)
+    public String renderDashboard(
+            @RequestParam(name = "type", defaultValue = "none") String type,
+            @RequestParam(name = "date", required = false) String date,
+            @RequestParam(name = "date_order", required = false) String dateOrder,
+            HttpSession session,
+            Model model)
     {
-
-        List<Object[]> results = userOrderRepository.getTotalRevenueByMonth();
+        List<Object[]> results = new ArrayList<>();
         List<String> labels = new ArrayList<>();
         List<Double> values = new ArrayList<>();
 
-        for (Object[] result : results) {
-            String label = "Tháng " + result[1];  // Tháng
-            Double value = ((Number) result[2]).doubleValue();  // Doanh thu
+        List<Object[]> orderCountsByStatus = new ArrayList<>();
+        List<String> labels_sales = new ArrayList<>();
+        List<Integer> values_sales = new ArrayList<>();
 
+        List<Object[]> topSellingProduct = new ArrayList<>();
+        List<String> labels_product = new ArrayList<>();
+        List<Integer> values_product = new ArrayList<>();
+
+        int year = 0;
+        Double revenueToday = userOrderRepository.getTotalRevenueToday();
+        Double revenueTotal = userOrderRepository.getTotalRevenueOfShop();
+        Double totalImportPrice = productRepository.getTotalImportPrice();
+        Double profit = revenueTotal - totalImportPrice;
+
+        try {
+            if ("day".equals(type) && date != null && date.matches("\\d{2}/\\d{2}/\\d{4}")) {
+                String[] parts = date.split("/");
+                int day = Integer.parseInt(parts[0]);
+                int month = Integer.parseInt(parts[1]);
+                year = Integer.parseInt(parts[2]);
+                if (day >= 1 && day <= 31 && month >= 1 && month <= 12) {
+                    results = userOrderRepository.getTotalRevenueByDay(day, month, year);
+                }
+            } else if ("month".equals(type) && date != null && date.matches("\\d{2}/\\d{4}")) {
+                String[] parts = date.split("/");
+                int month = Integer.parseInt(parts[0]);
+                year = Integer.parseInt(parts[1]);
+                if (month >= 1 && month <= 12) {
+                    results = userOrderRepository.getTotalRevenueByMonth(month, year);
+                }
+            } else if ("year".equals(type) && date != null && date.matches("\\d{4}")) {
+                year = Integer.parseInt(date);
+                if (year > 0) {
+                    results = userOrderRepository.getTotalRevenueByYear(year);
+                }
+            } else {
+                results = userOrderRepository.getTotalRevenueByMonth();
+                year = ((Number) results.getFirst()[0]).intValue();
+
+            }
+        } catch (NumberFormatException e) {
+            // Log lỗi nếu cần thiết
+        }
+
+        for (Object[] result : results) {
+            String label = "";
+            if ("day".equals(type)) {
+                label = "Ngày " + result[0] + " Tháng " + result[1] + " Năm " + result[2];
+            } else if ("month".equals(type)) {
+                label = "Tháng " + result[0] + " Năm " + result[1];
+            } else if ("year".equals(type)) {
+                label = "Tháng " + result[1];
+            } else {
+                label = "Tháng " + result[1];
+            }
+            Double value = ((Number) result[result.length - 1]).doubleValue();
             labels.add(label);
             values.add(value);
         }
+
+        year = ((Number) results.getFirst()[0]).intValue();
         Map<String, Object> chartData = new HashMap<>();
         chartData.put("labels", labels);
         chartData.put("values", values);
+
+        System.out.println(dateOrder);
+        if (dateOrder != null && dateOrder.matches("\\d{2}/\\d{2}/\\d{4}")) {
+            String[] parts = dateOrder.split("/");
+            int day = Integer.parseInt(parts[0]);
+            int month = Integer.parseInt(parts[1]);
+            year = Integer.parseInt(parts[2]);
+            if (day >= 1 && day <= 31 && month >= 1 && month <= 12) {
+                orderCountsByStatus = userOrderRepository.getOrderCountByDay(day, month, year);
+            }
+
+        } else {
+            orderCountsByStatus = userOrderRepository.getOrderCountByStatus();
+        }
+
+        for (Object[] result : orderCountsByStatus) {
+            String status = (String) result[0];
+            Integer count = ((Number) result[1]).intValue();
+            labels_sales.add(status);
+            values_sales.add(count);
+        }
+
+        Map<String, Object> orderStatusCounts = new HashMap<>();
+        orderStatusCounts.put("labels_sales", labels_sales);
+        orderStatusCounts.put("values_sales", values_sales);
+
+
+        topSellingProduct = userOrderRepository.findTopSellingProducts();
+        for (Object[] result : topSellingProduct) {
+            String status = (String) result[1];
+            Integer count = ((Number) result[2]).intValue();
+            labels_product.add(status);
+            values_product.add(count);
+        }
+
+        Map<String, Object> topSellingProducts = new HashMap<>();
+        topSellingProducts.put("labels_product", labels_product);
+        topSellingProducts.put("values_product", values_product);
+
+
+
+
         model.addAttribute("chartData", chartData);
+        model.addAttribute("orderStatusCounts", orderStatusCounts);
+        model.addAttribute("topSellingProducts", topSellingProducts);
+        model.addAttribute("year", year);
+        model.addAttribute("revenueToday", revenueToday);
+        model.addAttribute("revenueTotal", revenueTotal);
+        model.addAttribute("totalImportPrice", totalImportPrice);
+        model.addAttribute("profit", profit);
 
         return "Admin/dashboard";
     }
@@ -244,15 +347,30 @@ public class AdminController {
 
         String title = "Chi tiết sản phẩm";
         model.addAttribute("title", title);
+        model.addAttribute("buttonText", "Cập nhật");
         model.addAttribute("formAction", "/admin/product/update-product");
         return "Admin/product";
     }
 
+    @GetMapping("/order/view/{id}")
+    public String viewOrderDetails(@PathVariable("id") String orderId, Model model) {
+        System.out.println("------------------- View order  ---------------");
+        UserOrderDTO userOrderDTO = userOrderService.getUserOrderById(orderId);
+        model.addAttribute("userOrderDTO", userOrderDTO);
+        UserDTO userDTO = userService.findbyEmail(userOrderDTO.getEmail());
+        model.addAttribute("userDTO", userDTO);
+        model.addAttribute("orderId", orderId);
+        return "Admin/order";
+    }
 
     @GetMapping("/product/add-product")
     public String addProduct (HttpSession session, Model model){
-        ProductDTO productDTO = new ProductDTO();
-        model.addAttribute("productDTO", productDTO);
+
+
+        if (!model.containsAttribute("productDTO")) {
+            ProductDTO productDTO = new ProductDTO();
+            model.addAttribute("productDTO", productDTO);
+        }
 
         List<ProductTypeDTO> productTypes = productTypeService.showAllProductTypes();
         model.addAttribute("productTypes", productTypes);
@@ -269,17 +387,58 @@ public class AdminController {
         String title = "Thêm sản phẩm";
         model.addAttribute("title", title);
 
+        model.addAttribute("buttonText", "Thêm");
+
         model.addAttribute("formAction", "/admin/product/add-product");
 
         return "Admin/product";
     }
 
     @PostMapping("/product/add-product")
-    public String saveProduct(@ModelAttribute ProductDTO productDTO, RedirectAttributes redirectAttributes,
+    public String saveProduct(@ModelAttribute @Valid ProductDTO productDTO, BindingResult bindingResult, RedirectAttributes redirectAttributes,
                               @RequestParam("images") List <MultipartFile> files,
                               @RequestParam( required = false ) List <String> sizes,
-                              @RequestParam( required = false ) List<String> quantities) {
+                              @RequestParam( required = false ) List<String> quantities,Model model) {
 
+        System.out.println("------------------- Vô đây rồi  nè  ---------------");
+        System.out.println(productDTO);
+        System.out.println(sizes);
+        System.out.println(quantities);
+        System.out.println("Received files: " + files.size());
+        for (MultipartFile file : files) {
+            System.out.println("File Name: " + file.getOriginalFilename() + ", Size: " + file.getSize());
+        }
+
+        boolean sizeValid = sizes != null && !sizes.isEmpty() && quantities != null && !quantities.isEmpty();
+        if (!sizeValid) {
+            if (productDTO.getQuantity() == null) {
+                model.addAttribute("errorMessage", "Số lượng sản phẩm không được để trống.");
+            }
+
+        }
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("productDTO", productDTO);
+            List<ProductTypeDTO> productTypes = productTypeService.showAllProductTypes();
+            model.addAttribute("productTypes", productTypes);
+
+            List<ProductTypeDTO> productTypesParent = productTypes.stream()
+                    .filter(type -> type.getParent_id() == null)
+                    .toList();
+
+            List<SizeDTO> size = sizeService.showSizesProduct();
+            model.addAttribute("sizes", size);
+
+            model.addAttribute("productTypesParent", productTypesParent);
+
+            String title = "Thêm sản phẩm";
+            model.addAttribute("title", title);
+
+            model.addAttribute("buttonText", "Thêm");
+
+            model.addAttribute("formAction", "/admin/product/add-product");
+            return "Admin/product";
+        }
         System.out.println("------------------- Vô đây rồi  nè  ---------------");
         System.out.println(productDTO);
         System.out.println(sizes);
@@ -312,7 +471,7 @@ public class AdminController {
         Result rs = productService.updateProduct(productDTO,files,sizes,quantities);
         // Thêm đối tượng Result vào redirectAttributes
         redirectAttributes.addFlashAttribute("rs", rs);
-        return "redirect:/admin/product/add-product";
+        return "redirect:/admin/product";
     }
 
     @PostMapping("/product/delete")
@@ -347,5 +506,12 @@ public class AdminController {
         model.addAttribute("products", products);
 
         return "Admin/productManage";
+    }
+
+    @GetMapping("/orders")
+    public String renderOrdersManage(HttpSession session, Model model) {
+        List<UserOrderDTO> orders = userOrderService.getAllUserOrders();
+        model.addAttribute("orders", orders);
+        return "Admin/orderManage";
     }
 }

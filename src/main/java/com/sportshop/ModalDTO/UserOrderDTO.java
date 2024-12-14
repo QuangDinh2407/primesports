@@ -30,6 +30,8 @@ public class UserOrderDTO {
 
     @Pattern(regexp = "^(\\+84|0)\\d{9,10}$", message = "Số điện thoại không hợp lệ")
     private String shipping_phone;
-    private List<UserOrderDetailDTO> userOrderDetails;
+ 
+    private String email;
+    private List<UserOrderDetailDTO> userOrderDetails; // Danh sách chi tiết đơn hàng
     private Float total_price;
 }

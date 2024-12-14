@@ -2,6 +2,7 @@ package com.sportshop.Converter;
 
 import com.sportshop.Entity.PaymentTypeEntity;
 import com.sportshop.Entity.UserInfoEntity;
+import com.sportshop.Entity.ProductImageEntity;
 import com.sportshop.Entity.UserOrderEntity;
 import com.sportshop.ModalDTO.*;
 import com.sportshop.Repository.PaymentTypeRepository;
@@ -21,14 +22,19 @@ public class UserOrderConverter {
     @Autowired
     private PaymentTypeRepository paymentTypeRepository;
 
+public class    UserOrderConverter {
+    // Convert UserOrderEntity to UserOrderDTO
     public UserOrderDTO toDTO(UserOrderEntity entity) {
         if (entity == null) {
             return null;
         }
+
+        // Convert PaymentType to DTO
         PaymentTypeDTO paymentTypeDTO = PaymentTypeDTO.builder()
-                .name(entity.getPaymentType().getName())
+                .name(entity.getPaymentType() != null ? entity.getPaymentType().getName() : null)
                 .build();
 
+        // Return UserOrderDTO
         return UserOrderDTO.builder()
                 .userOrder_id(entity.getUserOrder_id())
                 .created_at(entity.getCreated_at())
@@ -36,24 +42,35 @@ public class UserOrderConverter {
                 .status(entity.getStatus())
                 .paymentType(paymentTypeDTO)
                 .shipping_address(entity.getShipping_address())
+                .email(entity.getUserInfo().getEmail()) // Ánh xạ thông tin người dùng
                 .userOrderDetails(entity.getUserOrderDetailItems().stream()
                         .map(detail -> UserOrderDetailDTO.builder()
                                 .amount(detail.getAmount())
                                 .price(detail.getPrice())
                                 .product(ProductDTO.builder()
-                                        .product_id(detail.getProduct().getProduct_id())
-                                        .rating(detail.getProduct().getRating())
-                                        .name(detail.getProduct().getName())
+                                        .product_id(detail.getProduct() != null ? detail.getProduct().getProduct_id() : null)
+                                        .imagePaths(detail.getProduct() != null
+                                                ? detail.getProduct().getProductImageItems().stream()
+                                                .map(ProductImageEntity::getImage_path)
+                                                .collect(Collectors.toList())
+                                                : null)
+                                        .rating(detail.getProduct() != null ? detail.getProduct().getRating() : null)
+                                        .name(detail.getProduct() != null ? detail.getProduct().getName() : null)
                                         .build())
-                                .shopVoucher(ShopVoucherDTO.builder()
+                                .shopVoucher(detail.getShopVoucher() != null
+                                        ? ShopVoucherDTO.builder()
                                         .shopVoucher_id(detail.getShopVoucher().getShopVoucher_id())
-                                        .discountAmount(detail.getShopVoucher().getDiscountAmount())
+                                        .discount_amount(detail.getShopVoucher().getDiscountAmount())
+                                        .build()
+                                        : ShopVoucherDTO.builder()
+                                        .discount_amount(0)
                                         .build())
                                 .build())
                         .collect(Collectors.toList()))
                 .total_price(entity.getTotalPrice())
                 .build();
     }
+
 
     // Convert UserOrderDTO to UserOrderEntity
     public UserOrderEntity toEntity(UserOrderDTO dto) {
@@ -64,11 +81,13 @@ public class UserOrderConverter {
         entity.setUserOrder_id(dto.getUserOrder_id());
         entity.setCreated_at(dto.getCreated_at());
         entity.setUpdated_at(dto.getUpdated_at());
-        entity.setStatus("Chờ xác nhận");
+        
         entity.setTotalPrice(dto.getTotal_price()+30000);
         entity.setShipping_name(dto.getShipping_name());
         entity.setShipping_address(dto.getShipping_address());
         entity.setShipping_phone(dto.getShipping_phone());
+        entity.setStatus("Chờ xác nhận");
+        entity.setStatus(dto.getStatus());
 
         UserInfoEntity userInfo = userInfoRepository.findByEmail(dto.getUserEmail());
         entity.setUserInfo(userInfo);
