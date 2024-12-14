@@ -19,7 +19,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -194,14 +196,23 @@ public class ShopController {
     @PostMapping("/order-product")
     public String orderProduct(@Valid UserOrderDTO userOrderDTOForm, BindingResult bindingResult, HttpSession session, Model model, RedirectAttributes redirectAttributes) throws Exception {
         UserOrderDTO userOrderDTOSession = (UserOrderDTO) session.getAttribute("userOrderDTO");
-        if (bindingResult.hasErrors()) {
-            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.accountDTO", bindingResult);
-            return "redirect:/shipping-info";
-        }
         userOrderDTOSession.setPaymentType(userOrderDTOForm.getPaymentType());
         userOrderDTOSession.setShipping_address(userOrderDTOForm.getShipping_address());
         userOrderDTOSession.setShipping_name(userOrderDTOForm.getShipping_name());
         userOrderDTOSession.setShipping_phone(userOrderDTOForm.getShipping_phone());
+
+        if (bindingResult.hasErrors()) {
+            userOrderDTOForm.setUserEmail(userOrderDTOSession.getUserEmail());
+            userOrderDTOForm.setTotal_price(userOrderDTOSession.getTotal_price());
+            userOrderDTOForm.setUserOrderDetails(userOrderDTOSession.getUserOrderDetails());
+            List <PaymentTypeDTO> listPayment = paymentTypeService.listPayment();
+            model.addAttribute("listPayment",listPayment);
+            model.addAttribute("userOrderDTO", userOrderDTOForm);
+            // Trả về giao diện chứa form
+            return "shipping-info";
+        }
+
+
         if(userOrderDTOSession.getPaymentType().getName().equals("Chuyển khoản ngân hàng"))
         {
             String paymentUrl = vnPayService.createPaymentUrl(userOrderDTOSession.getTotal_price() + 30000);

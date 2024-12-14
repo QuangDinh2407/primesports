@@ -22,10 +22,10 @@ public class UserOrderDTO {
     private Date updated_at;
     private PaymentTypeDTO paymentType;
 
-    @NotBlank
+    @NotBlank( message = "Địa chỉ không được trống!")
     private String shipping_address;
 
-    @NotBlank
+    @NotBlank(message = "Tên không được trống!")
     private String shipping_name;
 
     @Pattern(regexp = "^(\\+84|0)\\d{9,10}$", message = "Số điện thoại không hợp lệ")
