@@ -21,14 +21,17 @@
 
     <!-- Styles -->
     <link rel="stylesheet" th:href="@{/Assets/Customer_Shop/Assets/css/main.css}" />
+    <link rel="stylesheet" th:href="@{/Assets/Toast_Message/toastmesscss.css}">
+
 
     <!-- Scripts -->
     <script th:src="@{/Assets/Customer_Shop/Assets/js/scripts.js}"></script>
     <link rel="stylesheet" th:href="@{/Assets/Customer_Shop/Assets/css/styles.css}" />
+    <script th:src="@{/Assets/Toast_Message/toastmessjs.js}"></script>
 
 </head>
 <body>
-
+<div id="toast"></div>
 <!-- MAIN -->
 <main class="profile">
     <div class="container">
@@ -68,7 +71,7 @@
                                                 <span class="profile-menu__icon">
                                                     <img th:src="@{/Assets/Customer_Shop/Assets/icons/message-2.svg}" alt="" class="icon" />
                                                 </span>
-                                        Quyền riêng tư
+                                        Đổi mật khẩu
                                     </a>
                                 </li>
                             </ul>
@@ -176,4 +179,21 @@
     </div>
 </main>
 </body>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    const rs = /*[[${rs}]]*/ 'default';
+    /*]]>*/
+    if (rs.message)
+    {
+        console.log(rs.message);
+        if (rs.success)
+        {
+            showSuccessToast(rs.message);
+        }
+        else
+        {
+            showErrorToast(rs.message);
+        }
+    }
+</script>
 </html>

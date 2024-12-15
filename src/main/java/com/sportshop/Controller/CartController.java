@@ -25,9 +25,9 @@ public class CartController {
     private CartServicesIml cartServiceIml;
 
     @GetMapping("/add-pro-to-cart")
-    public String addProductToCart(Model model, HttpSession session, @RequestParam("product_id") String productId, @RequestParam("amount") Integer quantity) {
+    public String addProductToCart(Model model, HttpSession session, @RequestParam("product_id") String productId, @RequestParam("amount") Integer quantity,@RequestParam("size") String size) {
         try {
-            cartServiceIml.addProductToCart(session, productId, quantity);
+            cartServiceIml.addProductToCart(session, productId, quantity,size);
         } catch (IllegalArgumentException e) {
             return "redirect:/error"; // Nếu sản phẩm không tồn tại, chuyển tới trang lỗi
         }

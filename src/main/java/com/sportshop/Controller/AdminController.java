@@ -96,6 +96,7 @@ public class AdminController {
             HttpSession session,
             Model model)
     {
+
         List<Object[]> results = new ArrayList<>();
         List<String> labels = new ArrayList<>();
         List<Double> values = new ArrayList<>();
@@ -202,8 +203,6 @@ public class AdminController {
         Map<String, Object> topSellingProducts = new HashMap<>();
         topSellingProducts.put("labels_product", labels_product);
         topSellingProducts.put("values_product", values_product);
-
-
 
 
         model.addAttribute("chartData", chartData);

@@ -16,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.HashMap;
 import java.util.List;
@@ -33,9 +34,6 @@ public class customerController {
 
     @Autowired
     UserOrderService userOrderService;
-
-    @Autowired
-    private HttpSession httpSession;
 
     @Autowired
     private ProductReviewService productReviewService;
@@ -63,10 +61,10 @@ public class customerController {
 
     @PostMapping("/customer-info")
     public String updateInfo(UserDTO userDTO, Model model,@RequestParam("avatar") MultipartFile file) {
-        System.out.println(userDTO);
+
         Result rs = userService.updateInfoUser(userDTO,file);
         model.addAttribute("rs", rs);
-        return "redirect:/customer";
+        return "/Customer/customer-info";
     }
 
     @RequestMapping("/change-password-form")
@@ -105,15 +103,14 @@ public class customerController {
         }
 
         Result result = accountService.changePassword(email, oldPassword, newPassword);
-        model.addAttribute("result", result);
+        model.addAttribute("rs", result);
         return "Customer/customer-change-password";
     }
 
     @RequestMapping("/order-detail")
     public String OrderDetails(
             @RequestParam(value = "orderId", required = false) String orderId,
-            Model model
-    ) {
+            Model model) {
             List<UserOrderDTO> userOrders = userOrderService.findAllOrdersByUserId(userInfo_id);
 //        model.addAttribute("orders", userOrders);
             model.addAttribute("userOrders", userOrders);  // Thêm danh sách UserOrderDTO vào model
@@ -130,6 +127,7 @@ public class customerController {
                 reviewStatus.put(detail.getProduct().getProduct_id(), hasReviewed);
             }
         }
+        System.out.println(userOrders);
         // Thêm vào model
         model.addAttribute("reviewStatus", reviewStatus);
         // Thêm orderId vào model để có thể dùng trong form đánh giá
@@ -143,10 +141,6 @@ public class customerController {
             @RequestParam(value = "orderId", required = false) String orderId,
             String comment, Float rating, String productId, String userId
             ) {
-        // In ra orderId và các tham số khác để kiểm tra
-        System.out.println("Order ID: " + orderId);
-        System.out.println("Product ID: " + productId);
-        System.out.println("User ID: " + userId);
 
         // Chuyển đổi và lưu đánh giá
         ProductReviewEntity review = productReviewConverter.toEntity(comment, rating, productId, userId);
@@ -155,5 +149,14 @@ public class customerController {
         // Sau khi lưu đánh giá, chuyển hướng về chi tiết đơn hàng
         return "redirect:/customer/order-detail?orderId=" + orderId; // Chuyển hướng về chi tiết đơn hàng
     }
+
+    @GetMapping("/cancel-order/{orderId}")
+    public String cancelOrder(@PathVariable("orderId") String orderId, RedirectAttributes redirectAttributes)
+    {
+        Result rs = userOrderService.cancelOrder(orderId);
+        redirectAttributes.addFlashAttribute("rs",rs);
+        return "redirect:/customer/order-history" ;
+    }
+
 
 }

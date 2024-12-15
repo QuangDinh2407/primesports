@@ -164,7 +164,8 @@
                                                  class="cart-preview-item__thumb"/>
                                         </div>
                                         <h3 class="cart-preview-item__title" th:text="${cartDetail.product.name}"></h3>
-                                        <p class="cart-preview-item__price" th:text="${cartDetail.product.price}+'VND'"></p>
+                                        <p class="cart-preview-item__price" th:text="${cartDetail.product.price}+' VND'"></p>
+                                        <p class="cart-preview-item__price" th:text="'Size: '+${cartDetail.size}"></p>
                                         <p class="cart-preview-item__price" th:text="'Số lượng: '+${cartDetail.amount}"></p>
                                     </article>
                                 </div>
@@ -192,7 +193,7 @@
                         <div class="top-act__user" th:if="${session.userInfo} != null ">
 <!--                            edit path avatar here-->
                             <img
-                                    th:src="@{/Assets/Customer_Shop/Assets/img/avatar.jpg}"
+                                    th:src="${session.userInfo.imagePath}"
                                     class="avatar-image"/>
 
                             <!-- Dropdown -->
@@ -205,7 +206,7 @@
                                     />
 
                                     <div class="user-menu__top">
-                                        <img th:src="@{/Assets/Customer_Shop/Assets/img/avatar.jpg}" alt="" class="user-menu__avatar" />
+                                        <img th:src="${session.userInfo.imagePath}" alt="" class="user-menu__avatar" />
                                         <div>
                                             <p class="user-menu__name" th:text="${session.userInfo.name}">John Smith</p>
                                             <p></p>

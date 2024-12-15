@@ -81,7 +81,6 @@ public class AuthSuccessHandler implements AuthenticationSuccessHandler {
         }
         else {
             String email = authentication.getName();
-            System.out.println(email);
             HttpSession session = request.getSession();
             session.setAttribute("email", email);
         }

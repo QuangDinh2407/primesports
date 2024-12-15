@@ -21,10 +21,12 @@
 
     <!-- Styles -->
     <link rel="stylesheet" th:href="@{/Assets/Customer_Shop/Assets/css/main.css}" />
+    <link rel="stylesheet" th:href="@{/Assets/Toast_Message/toastmesscss.css}">
 
     <!-- Scripts -->
     <script th:src="@{/Assets/Customer_Shop/Assets/js/scripts.js}"></script>
     <link rel="stylesheet" th:href="@{/Assets/Customer_Shop/Assets/css/styles.css}" />
+    <script th:src="@{/Assets/Toast_Message/toastmessjs.js}"></script>
 <!--    <link rel='stylesheet prefetch' href='https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css'>-->
 <!--    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">-->
 </head>
@@ -36,9 +38,19 @@
         border: 1px solid #ccc;
         margin-bottom: 10px;
     }
+    .delete-btn-container{
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .delete-btn{
+        background-color: red;
+        color: white;
+        font-weight: 600;
+    }
 </style>
 <body>
-
+<div id="toast"></div>
 <!-- MAIN -->
 <main class="profile">
     <div class="container">
@@ -152,6 +164,7 @@
                                                     <th style="text-align: center;">Sản phẩm</th>
                                                     <th style="text-align: center;">Ảnh</th>
                                                     <th style="text-align: center;">Số lượng</th>
+                                                    <th style="text-align: center;">Size</th>
                                                     <th style="text-align: center;">Giá</th>
                                                     <th style="text-align: center;">Giảm giá (%)</th>
                                                     <th style="text-align: center;">Thành tiền</th>
@@ -162,40 +175,43 @@
                                                 <tr th:each="detail : ${orderDetails.userOrderDetails}">
                                                     <td th:text="${detail.product.name}">Tên sản phẩm</td>
                                                     <td>
-                                                        <img th:src="@{${detail.product.getImagePaths[0]}}"
-                                                             height="auto" width="120px" style="display: block; margin-left: auto; margin-right: auto; border-radius: 8px;">
+<!--                                                        <img th:src="@{${detail.product.getImagePaths[0]}}"-->
+<!--                                                             height="auto" width="120px" style="display: block; margin-left: auto; margin-right: auto; border-radius: 8px;">-->
                                                     </td>
                                                     <td th:text="${detail.amount}">Số lượng</td>
+                                                    <td th:text="${detail.size}"></td>
                                                     <td th:text="${detail.price}">Giá</td>
-                                                    <td th:text="${detail.shopVoucher.discount_amount}">Giảm giá</td>
+                                                    <td th:text="${detail.shopVoucher.discountAmount}">Giảm giá</td>
 <!--                                                    <td th:text="${detail.amount * detail.price}">Thành tiền</td>-->
-                                                    <td th:text="${detail.amount * detail.price - detail.amount * detail.price * detail.shopVoucher.discount_amount/100}">Thành tiền</td>
+                                                    <td th:text="${detail.amount * detail.price - detail.amount * detail.price * detail.shopVoucher.discountAmount/100}">Thành tiền</td>
                                                     <td>
+                                                        <div th:if="${orderDetails.status.trim().equals('Đã giao')}">
                                                         <div th:if="${reviewStatus[detail.product.product_id]}">
-                                                            <p>Cảm ơn đánh giá của bạn.</p>
-                                                        </div>
-                                                        <div th:if="${!reviewStatus[detail.product.product_id]}">
-                                                            <!-- Form để đánh giá sao -->
-                                                            <form th:action="@{product-review}" method="post">
-                                                                <!-- Nhập nội dung đánh giá -->
-                                                                <textarea name="comment" rows="3" placeholder="Viết đánh giá của bạn..." required></textarea>
+                                                                <p>Cảm ơn đánh giá của bạn.</p>
+                                                            </div>
+                                                            <div th:if="${!reviewStatus[detail.product.product_id]}">
+                                                                <!-- Form để đánh giá sao -->
+                                                                <form th:action="@{product-review}" method="post">
+                                                                    <!-- Nhập nội dung đánh giá -->
+                                                                    <textarea name="comment" rows="3" placeholder="Viết đánh giá của bạn..." required></textarea>
 
-                                                                <!-- Chọn số sao -->
-                                                                <label th:for="rating">Đánh giá: </label>
-                                                                <select name="rating" required>
-                                                                    <option value="1">1 Sao</option>
-                                                                    <option value="2">2 Sao</option>
-                                                                    <option value="3">3 Sao</option>
-                                                                    <option value="4">4 Sao</option>
-                                                                    <option value="5">5 Sao</option>
-                                                                </select>
-                                                                <!-- Gửi kèm ID sản phẩm và ID người dùng -->
-                                                                <input type="hidden" name="productId" th:value="${detail.product.product_id}" />
-                                                                <input type="hidden" name="userId" th:value="${userDTO.user_id}" />
-                                                                <input type="hidden" name="orderId" th:value="${orderId}" /> <!-- Truyền orderId vào -->
-                                                                <!-- Nút gửi -->
-                                                                <button type="submit">Gửi đánh giá</button>
-                                                            </form>
+                                                                    <!-- Chọn số sao -->
+                                                                    <label th:for="rating">Đánh giá: </label>
+                                                                    <select name="rating" required>
+                                                                        <option value="1">1 Sao</option>
+                                                                        <option value="2">2 Sao</option>
+                                                                        <option value="3">3 Sao</option>
+                                                                        <option value="4">4 Sao</option>
+                                                                        <option value="5">5 Sao</option>
+                                                                    </select>
+                                                                    <!-- Gửi kèm ID sản phẩm và ID người dùng -->
+                                                                    <input type="hidden" name="productId" th:value="${detail.product.product_id}" />
+                                                                    <input type="hidden" name="userId" th:value="${userDTO.user_id}" />
+                                                                    <input type="hidden" name="orderId" th:value="${orderId}" /> <!-- Truyền orderId vào -->
+                                                                    <!-- Nút gửi -->
+                                                                    <button type="submit">Gửi đánh giá</button>
+                                                                </form>
+                                                            </div>
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -229,6 +245,9 @@
                                                 <span class="detail-label">Phương thức thanh toán:</span>
                                                 <span class="detail-value" th:text="${orderDetails.paymentType.name}"></span>
                                             </div>
+                                        </div>
+                                        <div th:if="${orderDetails.status.trim().equals('Chờ xác nhận')}" class="delete-btn-container">
+                                            <a th:href="@{/customer/cancel-order/{orderId}(orderId=${orderDetails.userOrder_id})}" class="delete-btn btn btn--text">Hủy đơn hàng</a>
                                         </div>
                                     </div>
                                 </div>
@@ -280,6 +299,23 @@
             });
         });
     });
+</script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    const rs = /*[[${rs}]]*/ 'default';
+    /*]]>*/
+    if (rs.message)
+    {
+        console.log(rs.message);
+        if (rs.success)
+        {
+            showSuccessToast(rs.message);
+        }
+        else
+        {
+            showErrorToast(rs.message);
+        }
+    }
 </script>
 </body>
 </html>

@@ -30,4 +30,9 @@ public class SizeEntity {
     @EqualsAndHashCode.Exclude
     private  List<UserOrderDetailEntity> listUserOrderDetailEntity;
 
+    @OneToMany(mappedBy = "size", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private  List<CartDetailEntity> litsCartDetailEntity;
+
 }

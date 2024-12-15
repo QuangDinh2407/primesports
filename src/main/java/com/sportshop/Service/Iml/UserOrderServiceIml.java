@@ -1,11 +1,13 @@
 package com.sportshop.Service.Iml;
 import com.sportshop.Converter.ProductConverter;
+import com.sportshop.Entity.AccountEntity;
 import com.sportshop.Entity.SizeDetailEntity;
 import com.sportshop.Entity.UserOrderEntity;
 
 import com.sportshop.Converter.UserOrderConverter;
 import com.sportshop.Entity.UserOrderEntity;
 import com.sportshop.Modal.ProductSize;
+import com.sportshop.Modal.Result;
 import com.sportshop.ModalDTO.*;
 import com.sportshop.Repository.ProductRepository;
 import com.sportshop.Repository.SizeDetailRepository;
@@ -124,5 +126,20 @@ public class UserOrderServiceIml implements UserOrderService {
            productSizeList.add(productSize);
        });
         return productSizeList;
+    }
+
+    @Override
+    public Result cancelOrder(String orderId) {
+        try {
+            UserOrderEntity userOrder = userOrderRepository.findById(orderId)
+                    .orElseThrow(() -> new RuntimeException("UserOrder not found with ID: " + orderId));
+            userOrder.setStatus("Đã hủy");
+            userOrderRepository.save(userOrder);
+            return new Result(true, "Hủy đơn hàng thành công!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Trả về kết quả thất bại trong trường hợp xảy ra lỗi
+            return new Result(false, "Hủy đơn hàng thất bại!");
+        }
     }
 }

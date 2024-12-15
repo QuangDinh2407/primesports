@@ -22,7 +22,6 @@ public class UserOrderConverter {
     @Autowired
     private PaymentTypeRepository paymentTypeRepository;
 
-public class    UserOrderConverter {
     // Convert UserOrderEntity to UserOrderDTO
     public UserOrderDTO toDTO(UserOrderEntity entity) {
         if (entity == null) {
@@ -46,6 +45,7 @@ public class    UserOrderConverter {
                 .userOrderDetails(entity.getUserOrderDetailItems().stream()
                         .map(detail -> UserOrderDetailDTO.builder()
                                 .amount(detail.getAmount())
+                                .size(detail.getSize().getName_size())
                                 .price(detail.getPrice())
                                 .product(ProductDTO.builder()
                                         .product_id(detail.getProduct() != null ? detail.getProduct().getProduct_id() : null)
@@ -60,10 +60,10 @@ public class    UserOrderConverter {
                                 .shopVoucher(detail.getShopVoucher() != null
                                         ? ShopVoucherDTO.builder()
                                         .shopVoucher_id(detail.getShopVoucher().getShopVoucher_id())
-                                        .discount_amount(detail.getShopVoucher().getDiscountAmount())
+                                        .discountAmount(detail.getShopVoucher().getDiscountAmount())
                                         .build()
                                         : ShopVoucherDTO.builder()
-                                        .discount_amount(0)
+                                        .discountAmount(0)
                                         .build())
                                 .build())
                         .collect(Collectors.toList()))
