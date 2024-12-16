@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{/Common/Employee/LayoutMaster.html}">
+      layout:decorate="~{/Common/Admin/LayoutMaster.html}">
 <head>
     <title>Product Manage</title>
 
@@ -23,12 +23,22 @@
             color: rgba(0, 0, 0, .8);
             z-index: 1;
         }
-
+        .input-error {
+            border: 2px solid red;
+        }
+        .error-message {
+            color: red;
+            font-size: 15px;
+            font-weight: 600;
+            margin-top: 5px;
+            margin-left: 10px;
+        }
     </style>
+
 </head>
 
 <body>
-<div class="content" layout:fragment="content">
+<div layout:fragment="content">
     <div class="product-manage-container">
         <div class="product-info-content">
             <div class="product-show-display">
@@ -46,13 +56,22 @@
                                     <div class="form__group form__group__custom">
                                         <label for="">Tên sản phẩm: </label>
                                         <div class="text-input">
-                                            <input type="text" id="name" class="input-setting-custom input-name-product" th:field="*{name}">
+                                            <input type="text" id="name" name="name" th:class="${#fields.hasErrors('name') ? 'input-setting-custom input-name-product input-error' : 'input-setting-custom input-name-product'}" placeholder="Nhập tên sản phẩm"  th:field="*{name}">
+                                            <p class="error-message" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
                                         </div>
                                     </div>
                                     <div class="form__group form__group__custom">
-                                        <label for="">Giá tiền</label>
+                                        <label for="">Giá nhập</label>
                                         <div class="text-input">
-                                            <input type="number" class="input-setting-custom" th:field="*{price}">
+                                            <input type="number" name="price" th:class="${#fields.hasErrors('import_price') ? 'input-setting-custom input-error' : 'input-setting-custom'}" placeholder="Nhập giá tiền" th:field="*{import_price}">
+                                            <p class="error-message" th:if="${#fields.hasErrors('import_price')}" th:errors="*{import_price}"></p>
+                                        </div>
+                                    </div>
+                                    <div class="form__group form__group__custom">
+                                        <label for="">Giá bán</label>
+                                        <div class="text-input">
+                                            <input type="number" name="price" th:class="${#fields.hasErrors('price') ? 'input-setting-custom input-error' : 'input-setting-custom'}" placeholder="Nhập giá tiền" th:field="*{price}">
+                                            <p class="error-message" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></p>
                                         </div>
                                     </div>
                                     <div class="form__group form__group__custom">
@@ -73,7 +92,8 @@
                                     <div class="form__group form__group__custom" id="no-size-quantity-section" th:style="${(productDTO.sizeQuantities == null or productDTO.sizeQuantities.isEmpty()) ? '' : 'display: none;'}">
                                         <label for="no-size-quantity">Số lượng:</label>
                                         <div class="text-input">
-                                            <input type="number" id="no-size-quantity" class="input-setting-custom" name="quantity" th:field="*{quantity}" placeholder="Nhập số lượng tổng" min="0" required>
+                                            <input type="number" id="no-size-quantity" th:class="${errorMessage != null ? 'input-setting-custom input-error' : 'input-setting-custom'}" name="quantity" th:field="*{quantity}" placeholder="Nhập số lượng tổng" min="0">
+                                            <p class="error-message" th:if="${errorMessage != null}" th:text="${errorMessage}"></p>
                                         </div>
                                     </div>
 
@@ -96,7 +116,7 @@
                                                        th:value="${entry.value}" placeholder="Số lượng" min="0" required />
                                             </div>
                                         </div>
-                                        <button type="button" id="add-size-btn" class="btn btn-primary btn-sm" style=" margin-top: 19px; margin-left: 7px; width: 93px"> Thêm Size</button>
+                                        <button type="button" id="add-size-btn" class="btn btn-primary btn-sm" style=" color: white; margin-top: 19px; margin-left: 7px; width: 107px"> Thêm Size</button>
                                     </div>
 
 
@@ -122,11 +142,12 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <p class="error-message" th:if="${#fields.hasErrors('productTypeIds')}" th:errors="*{productTypeIds}"></p>
                                     </div>
                                     <div class="form__group form__group__custom">
                                         <label for="">Mô tả</label>
                                         <div class="text-input">
-                                            <textarea  type="number" class="input-setting-custom textarea" th:field="*{description}"></textarea>
+                                            <textarea  type="number" class="input-setting-custom textarea" placeholder="Nhập mô tả sản phẩm" th:field="*{description}"></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -145,7 +166,7 @@
                                         <div id="image-preview-container" class="image-preview-container">
                                             <!-- Thymeleaf render ảnh sẵn có -->
                                             <div th:each="imagePath : ${productDTO.imagePaths}" class="image-preview">
-                                                <img th:src="@{'/Assets/Customer_Shop/Assets/img/product/' + ${imagePath}}" alt="productImage" />
+                                                <img th:src="@{${imagePath}}" alt="productImage" />
                                                 <button type="button" class="remove-btn"
                                                         th:attr="onclick='removeExistingImage(this, \'' + ${imagePath} + '\')'">
                                                     ×
@@ -158,7 +179,7 @@
                                 </div>
                             </div>
                             <div class="button-container">
-                                <button type="submit" class="btn btn-success btn-rounded btn-fw">Thêm</button>
+                                <button type="submit" class="btn btn-success btn-rounded btn-fw" th:text="${buttonText}"></button>
                             </div>
                         </form>
                     </div>
@@ -313,9 +334,6 @@
     </script>
 
 
-
-
-
     <script>
         const datePicker = flatpickr("#dateInput", {
             dateFormat: "d-m-Y",
@@ -331,6 +349,9 @@
         });
 
     </script>
+
+
+
 </div>
 
 </body>

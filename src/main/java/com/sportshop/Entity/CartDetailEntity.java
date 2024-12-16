@@ -20,6 +20,11 @@ public class CartDetailEntity {
 
 	@Column(nullable = false)
 	private Integer amount;
+
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinColumn(name = "size_id", referencedColumnName = "size_id")
+	@ToString.Exclude
+	private SizeEntity size;
 	
 	@ManyToOne
 	@JoinColumn(name="cart_id", nullable = false, referencedColumnName = "cart_id")

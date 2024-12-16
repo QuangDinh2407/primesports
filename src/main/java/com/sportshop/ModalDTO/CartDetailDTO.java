@@ -14,6 +14,8 @@ public class CartDetailDTO {
 
     private Integer amount;
 
+    private String size;
+
     @ToString.Exclude
     private CartDTO cart;
 

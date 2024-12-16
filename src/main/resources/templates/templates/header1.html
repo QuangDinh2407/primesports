@@ -411,7 +411,8 @@
                                                  class="cart-preview-item__thumb"/>
                                         </div>
                                         <h3 class="cart-preview-item__title" th:text="${cartDetail.product.name}"></h3>
-                                        <p class="cart-preview-item__price" th:text="${cartDetail.product.price}+'VND'"></p>
+                                        <p class="cart-preview-item__price" th:text="${cartDetail.product.price}+' VND'"></p>
+                                        <p class="cart-preview-item__price" th:text="'Size: '+${cartDetail.size}"></p>
                                         <p class="cart-preview-item__price" th:text="'Số lượng: '+${cartDetail.amount}"></p>
                                     </article>
                                 </div>
@@ -435,12 +436,12 @@
                     </div>
                 </div>
             </div>
-            <!--            edit here-->
-            <div class="top-act__user" th:if="${session.userInfo} != null ">
-                <!--                            edit path avatar here-->
-                <img
-                        th:src="@{/Assets/Customer_Shop/Assets/img/avatar.jpg}"
-                        class="avatar-image"/>
+<!--            edit here-->
+                        <div class="top-act__user" th:if="${session.userInfo} != null ">
+<!--                            edit path avatar here-->
+                            <img
+                                    th:src="${session.userInfo.imagePath}"
+                                    class="avatar-image"/>
 
                 <!-- Dropdown -->
                 <div class="act-dropdown top-act__dropdown">
@@ -451,11 +452,34 @@
                                 class="act-dropdown__arrow top-act__dropdown-arrow"
                         />
 
-                        <div class="user-menu__top">
-                            <img th:src="@{/Assets/Customer_Shop/Assets/img/avatar.jpg}" alt="" class="user-menu__avatar" />
-                            <div>
-                                <p class="user-menu__name" th:text="${session.userInfo.name}">John Smith</p>
-                                <p></p>
+                                    <div class="user-menu__top">
+                                        <img th:src="${session.userInfo.imagePath}" alt="" class="user-menu__avatar" />
+                                        <div>
+                                            <p class="user-menu__name" th:text="${session.userInfo.name}">John Smith</p>
+                                            <p></p>
+                                        </div>
+                                    </div>
+                                    <ul class="user-menu__list">
+                                        <li>
+                                            <a href="/customer" class="user-menu__link">Thông tin cá nhân</a>
+                                        </li>
+                                        <li>
+                                            <a href="#" class="user-menu__link">Thông tin đơn hàng</a>
+                                        </li>
+                                        <li class="user-menu__separate">
+                                            <a href="#!" class="user-menu__link" id="switch-theme-btn">
+                                                <span>Dark mode</span>
+                                                <img src="./assets/icons/sun.svg" alt="" class="icon user-menu__icon" />
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#!" class="user-menu__link">Settings</a>
+                                        </li>
+                                        <li class="user-menu__separate">
+                                            <a th:href="@{/auth/sign-out}" class="user-menu__link">Logout</a>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                         <ul class="user-menu__list">

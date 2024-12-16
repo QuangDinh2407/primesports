@@ -15,4 +15,7 @@ public interface UserOrderRepository extends JpaRepository<UserOrderEntity, Stri
 
     @Query("SELECT uo FROM UserOrderEntity uo WHERE uo.userInfo.userInfo_id = :userInfoId")
     List<UserOrderEntity> findAllOrdersByUser(@Param("userInfoId") String userInfoId);
+
+//    @Query("SELECT uo FROM UserOrderEntity uo WHERE uo.userOrder_id = :orderId")
+//    UserOrderEntity findById (@Param("orderId") String orderId));
 }

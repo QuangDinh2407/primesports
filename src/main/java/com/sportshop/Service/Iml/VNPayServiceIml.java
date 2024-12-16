@@ -21,7 +21,7 @@ import java.util.*;
 public class VNPayServiceIml implements VNPayService {
 
     @Override
-    public String createPaymentUrl(String amount) throws Exception {
+    public String createPaymentUrl(Float price) throws Exception {
         String vnp_Version = "2.1.0";
         String vnp_Command = "pay";
 //        String vnp_OrderInfo = req.getParameter("vnp_OrderInfo");
@@ -30,7 +30,9 @@ public class VNPayServiceIml implements VNPayService {
 //        String vnp_IpAddr = VNPAYConfig.getIpAddress(req);
         String vnp_TmnCode = VNPAYConfig.vnp_TmnCode;
 
-        int amount1 = Integer.parseInt(amount) * 100;
+//        int amount1 = Integer.parseInt(price) * 100;
+        int amount1 = Math.round(price * 100);
+        System.out.println(amount1);
         Map<String,String> vnp_Params = new HashMap<>();
         vnp_Params.put("vnp_Version", vnp_Version);
         vnp_Params.put("vnp_Command", vnp_Command);

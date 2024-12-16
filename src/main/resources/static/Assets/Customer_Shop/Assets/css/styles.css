@@ -26,42 +26,94 @@ iframe {
     height: 600px;
 }
 
+/* Cải thiện giao diện bảng */
 .table {
     width: 100%;
     border-collapse: collapse;
-    margin: 20px 0;
-    font-size: 16px;
-    text-align: left;
+    background-color: #f9f9f9;
+    font-family: 'Arial', sans-serif;
 }
 
-.table thead tr {
-    background-color: #007BFF; /* Màu nền tiêu đề bảng */
-    color: #ffffff;           /* Màu chữ tiêu đề */
-    text-align: left;
+/* Các tiêu đề cột */
+.table thead {
+    background-color: #007BFF;
+    color: white;
+}
+
+.table th {
+    padding: 10px;
+    text-align: center;
     font-weight: bold;
 }
 
-.table tbody tr {
-    border-bottom: 1px solid #dddddd;
+/* Các ô dữ liệu trong bảng */
+.table td {
+    padding: 10px;
+    text-align: center;
+    vertical-align: middle;
+    border-bottom: 1px solid #ddd;
 }
 
-.table tbody tr:nth-of-type(even) {
-    background-color: #f9f9f9; /* Màu nền xen kẽ */
+/* Đổi màu cho các hàng chẵn và lẻ để dễ nhìn */
+.table tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
 }
 
 .table tbody tr:hover {
-    background-color: #f1f1f1; /* Hiệu ứng hover */
+    background-color: #e0e0e0;
+    cursor: pointer;
 }
 
-.table td, .table th {
-    /*padding: 12px 15px;*/
-    padding: 15px;
-    text-align: center;
+/* Cải thiện hình ảnh sản phẩm */
+.table img {
+    border-radius: 8px;
+    max-height: 120px;
+    object-fit: cover;
+    margin: 0 auto;
+}
+
+/* Cải thiện form đánh giá */
+textarea {
+    width: 100%;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    resize: none;
+    margin-bottom: 10px;
+}
+
+button[type="submit"] {
+    background-color: #28a745;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+button[type="submit"]:hover {
+    background-color: #218838;
+}
+
+/* Cải thiện giao diện cảm ơn sau khi đánh giá */
+.table td p {
+    color: #28a745;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+/* Cải thiện đường viền của bảng */
+.table {
     border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
 }
 
-.table td {
-    color: #333333;
+/* Tùy chỉnh các ô input ẩn */
+input[type="hidden"] {
+    display: none;
 }
 
 .status.completed {
@@ -154,50 +206,4 @@ button:hover {
 
 .status {
     font-weight: bold;
-}
-/* Căn chỉnh khu vực sao */
-.star-rating {
-    display: inline-flex;
-    flex-direction: row-reverse;
-    font-size: 25px;
-    justify-content: center;
-    margin: 0 auto;
-    position: relative;
-    cursor: pointer;
-}
-
-/* Ẩn radio button */
-.star-rating input[type="radio"] {
-    display: none;
-}
-
-/* Style cho các ngôi sao */
-.star-rating label {
-    color: #ddd;
-    font-size: 30px;
-    padding: 0 5px;
-    transition: color 0.2s ease-in-out;
-    cursor: pointer;
-}
-
-/* Hiệu ứng khi di chuột */
-.star-rating label:hover,
-.star-rating label:hover ~ label {
-    color: #f5b301; /* Màu vàng */
-}
-
-/* Hiển thị ngôi sao đã chọn */
-.star-rating input[type="radio"]:checked ~ label {
-    color: #f5b301; /* Màu vàng */
-}
-
-textarea {
-    width: 100%;
-    height: 70px;
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    resize: vertical; /* Cho phép thay đổi chiều cao */
-    box-sizing: border-box; /* Bao gồm padding và border trong kích thước */
 }

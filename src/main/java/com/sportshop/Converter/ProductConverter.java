@@ -17,13 +17,11 @@ import java.util.stream.Collectors;
 
 @Component
 public class ProductConverter {
-
     // Chuyển từ Entity sang DTO
     public ProductDTO toDTO(ProductEntity entity) {
         if (entity == null) {
             return null;
         }
-
         Map<String, Integer> sizeQuantities = entity.getSizeDetailItems()
                 .stream()
                 .collect(Collectors.toMap(
@@ -36,6 +34,7 @@ public class ProductConverter {
                 .product_id(entity.getProduct_id())
                 .name(entity.getName())
                 .quantity(entity.getQuantity())
+                .import_price(entity.getImport_price())
                 .price(entity.getPrice())
                 .rating(entity.getRating())
                 .description(entity.getDescription())
@@ -80,6 +79,7 @@ public class ProductConverter {
         return ProductEntity.builder()
                 .product_id(dto.getProduct_id())
                 .name(dto.getName())
+                .import_price(dto.getImport_price())
                 .quantity(dto.getQuantity())
                 .price(dto.getPrice())
                 .rating(dto.getRating())

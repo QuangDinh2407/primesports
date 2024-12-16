@@ -41,14 +41,23 @@ public class UserOrderEntity {
 	@Column(nullable = false, columnDefinition = "nvarchar(MAX)")
 	private String shipping_address;
 
+	@Column(nullable = false, columnDefinition = "nvarchar(MAX)")
+	private String shipping_name;
+
+	@Column(nullable = false, columnDefinition = "nvarchar(MAX)")
+	private String shipping_phone;
+
 	@ManyToOne
 	@JoinColumn(name="userInfo_id", referencedColumnName = "userInfo_id")
+	@ToString.Exclude
 	private UserInfoEntity userInfo;
 	
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name="paymentType_id", referencedColumnName = "paymentType_id")
+	@ToString.Exclude
 	private PaymentTypeEntity paymentType;
 	
-	@OneToMany(mappedBy = "userOrder", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "userOrder", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+	@ToString.Exclude
 	private List <UserOrderDetailEntity> userOrderDetailItems = new ArrayList<UserOrderDetailEntity>();
 }

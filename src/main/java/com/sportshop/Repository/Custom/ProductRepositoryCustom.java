@@ -28,5 +28,10 @@ public interface ProductRepositoryCustom {
             @Param("types") List<String> types,
             Pageable pageable);
 
+    @Query("""
+        SELECT SUM(p.quantity * p.import_price) 
+        FROM ProductEntity p
+    """)
+    Double getTotalImportPrice();
 
 }

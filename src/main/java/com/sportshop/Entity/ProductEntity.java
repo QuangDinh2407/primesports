@@ -28,6 +28,9 @@ public class ProductEntity {
 	private int quantity;
 
 	@Column(nullable = false)
+	private float import_price;
+
+	@Column(nullable = false)
 	private float price;
 
 	@Column(nullable = false)
@@ -73,9 +76,11 @@ public class ProductEntity {
 	private List <CartDetailEntity> cartDetailItems = new ArrayList<CartDetailEntity>();
 	
 	@OneToMany (mappedBy = "product", fetch = FetchType.LAZY)
+	@ToString.Exclude
 	private List <UserOrderDetailEntity> UserOrderDetailItems = new ArrayList<UserOrderDetailEntity>();
 
-	@OneToMany (mappedBy = "product", fetch = FetchType.LAZY)
+	@OneToMany (mappedBy = "product", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+	@ToString.Exclude
 	private List <SizeDetailEntity> SizeDetailItems = new ArrayList<SizeDetailEntity>();
 
 }

@@ -4,7 +4,10 @@ import com.sportshop.ModalDTO.CartDTO;
 import jakarta.servlet.http.HttpSession;
 
 public interface CartService {
-    public String saveOrUpdateCart(CartDTO cartDTO);
 
-    CartDTO addProductToCart(HttpSession session, String productId, Integer quantity);
+    String saveOrUpdateCart(CartDTO cartDTO);
+
+    CartDTO moveCart(CartDTO userCart, CartDTO newCart);
+
+    CartDTO addProductToCart(HttpSession session, String productId, Integer quantity, String size);
 }

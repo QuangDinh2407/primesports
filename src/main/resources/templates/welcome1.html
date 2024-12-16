@@ -11,7 +11,23 @@
 <body>
 <h1> welcome</h1>
 <div id="toast"></div>
-<p th:text="${isValid}"></p>
-</body>
 
+</body>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    const rs = /*[[${rs}]]*/ 'default';
+    /*]]>*/
+    if (rs.message)
+    {
+        console.log(rs.message);
+        if (rs.success)
+        {
+            showSuccessToast(rs.message);
+        }
+        else
+        {
+            showErrorToast(rs.message);
+        }
+    }
+</script>
 </html>

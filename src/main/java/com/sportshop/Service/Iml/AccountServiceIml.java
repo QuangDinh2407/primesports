@@ -290,7 +290,6 @@ public class AccountServiceIml implements AccountService {
             accountRepository.save(accEntity);
 
             // Trả về kết quả thành công
-            System.out.println("Đổi mật khẩu thành công");
             return new Result(true, "Đổi mật khẩu thành công!");
         } catch (Exception e) {
             e.printStackTrace();
