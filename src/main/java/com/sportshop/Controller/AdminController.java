@@ -22,6 +22,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -123,9 +126,10 @@ public class AdminController {
         List<Integer> values_product = new ArrayList<>();
 
         int year = 0;
-        Double revenueToday = userOrderRepository.getTotalRevenueToday();
-        Double revenueTotal = userOrderRepository.getTotalRevenueOfShop();
-        Double totalImportPrice = productRepository.getTotalImportPrice();
+        Double revenueToday = userOrderRepository.getTotalRevenueToday() != null ? userOrderRepository.getTotalRevenueToday() : 0.0;
+        Double revenueTotal = userOrderRepository.getTotalRevenueOfShop() != null ? userOrderRepository.getTotalRevenueOfShop() : 0.0;
+        Double totalImportPrice = productRepository.getTotalImportPrice() != null ? productRepository.getTotalImportPrice() : 0.0;
+
         Double profit = revenueTotal - totalImportPrice;
 
         try {
@@ -151,8 +155,6 @@ public class AdminController {
                 }
             } else {
                 results = userOrderRepository.getTotalRevenueByMonth();
-                year = ((Number) results.getFirst()[0]).intValue();
-
             }
         } catch (NumberFormatException e) {
             // Log lỗi nếu cần thiết
@@ -174,7 +176,17 @@ public class AdminController {
             values.add(value);
         }
 
-        year = ((Number) results.getFirst()[0]).intValue();
+        if (!results.isEmpty()) {
+            Object[] firstResult = results.getFirst();
+            if (firstResult != null && firstResult[0] != null) {
+                year = ((Number) firstResult[0]).intValue();
+            } else {
+                year = LocalDate.now().getYear();
+            }
+        } else {
+            year = LocalDate.now().getYear();
+        }
+
         Map<String, Object> chartData = new HashMap<>();
         chartData.put("labels", labels);
         chartData.put("values", values);
@@ -409,7 +421,7 @@ public class AdminController {
                               @RequestParam( required = false ) List <String> sizes,
                               @RequestParam( required = false ) List<String> quantities,Model model) {
 
-        System.out.println("------------------- Vô đây rồi  nè  ---------------");
+        System.out.println("------------------- Vô đây rồi  nè 1 ---------------");
         System.out.println(productDTO);
         System.out.println(sizes);
         System.out.println(quantities);
@@ -427,6 +439,7 @@ public class AdminController {
         }
 
         if (bindingResult.hasErrors()) {
+            System.out.println(bindingResult);
             model.addAttribute("productDTO", productDTO);
             List<ProductTypeDTO> productTypes = productTypeService.showAllProductTypes();
             model.addAttribute("productTypes", productTypes);
@@ -518,9 +531,14 @@ public class AdminController {
     }
 
     @GetMapping("/orders")
-    public String renderOrdersManage(HttpSession session, Model model) {
-        List<UserOrderDTO> orders = userOrderService.getAllUserOrders();
-        model.addAttribute("orders", orders);
+    public String renderOrdersManage(@RequestParam(value = "page", defaultValue = "0") int page,
+                                     @RequestParam(value = "pageSize", defaultValue = "5") int pageSize,
+                                     HttpSession session, Model model) {
+        Page<UserOrderDTO> orders = userOrderService.getAllUserOrdersPagination(page, pageSize);
+        model.addAttribute("orders", orders.getContent()); // Danh sách đơn hàng
+        model.addAttribute("currentPage", page); // Trang hiện tại
+        model.addAttribute("totalPages", orders.getTotalPages()); // Tổng số trang
+        model.addAttribute("pageSize", pageSize);
         return "Admin/orderManage";
     }
 
