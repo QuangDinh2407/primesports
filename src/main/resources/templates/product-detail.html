@@ -335,12 +335,12 @@
     }
 
 </script>
+
 </body>
 <script th:inline="javascript">
     /*<![CDATA[*/
     const product = /*[[${productDTO}]]*/ 'default';
     /*]]>*/
-    console.log(product.sizeQuantities);
 
     document.addEventListener("DOMContentLoaded", function () {
         const sizeTags = document.querySelectorAll(".form__tag.prod-info__tag");

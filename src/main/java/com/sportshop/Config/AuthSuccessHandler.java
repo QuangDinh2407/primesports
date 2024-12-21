@@ -99,8 +99,12 @@ public class AuthSuccessHandler implements AuthenticationSuccessHandler {
             response.sendRedirect("/admin");
         }
         else {
-
-            response.sendRedirect("/");
+            HttpSession session = request.getSession();
+            String currentURL = (String) session.getAttribute("currentURL");
+            if (currentURL == null) {
+                currentURL = "/";
+            }
+            response.sendRedirect(currentURL);
         }
 
     }

@@ -11,6 +11,7 @@ import com.sportshop.Service.Iml.ProductTypeServiceIml;
 import com.sportshop.Service.Iml.CartServicesIml;
 import com.sportshop.Service.Iml.UserServiceIml;
 import com.sportshop.Service.ProductService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -146,7 +147,6 @@ public class ShopController {
 
         model.addAttribute("listPro", listPro);
         model.addAttribute("size", size);
-        model.addAttribute("listPro", listPro);
         model.addAttribute("listType",productTypeServiceIml.getListHierarchyType());
         model.addAttribute("searchProduct", searchProduct);
         model.addAttribute("rs",rs);
@@ -158,7 +158,7 @@ public class ShopController {
     }
 
     @GetMapping("/product-detail/{id}")
-    public String renderDetailProduct(@PathVariable("id") String id, Model model,HttpSession session) {
+    public String renderDetailProduct(@PathVariable("id") String id, Model model,HttpSession session, HttpServletRequest request) {
         ProductDTO proDTO= productServiceIml.findProductById(id);
 
         //lấy 5 sản phẩm được rating cao
@@ -168,6 +168,9 @@ public class ShopController {
         model.addAttribute("cartDTO",(CartDTO) session.getAttribute("cartDTO"));
         model.addAttribute("productDTO", proDTO);
         model.addAttribute("relatedProducts", relatedProducts);
+        String currentURL = request.getRequestURL().toString();
+        session.setAttribute("currentURL", currentURL);
+
         return "product-detail";
     }
 
@@ -201,6 +204,7 @@ public class ShopController {
         userOrderDTOSession.setShipping_name(userOrderDTOForm.getShipping_name());
         userOrderDTOSession.setShipping_phone(userOrderDTOForm.getShipping_phone());
 
+        System.out.println(userOrderDTOForm);
         if (bindingResult.hasErrors()) {
             userOrderDTOForm.setUserEmail(userOrderDTOSession.getUserEmail());
             userOrderDTOForm.setTotal_price(userOrderDTOSession.getTotal_price());
