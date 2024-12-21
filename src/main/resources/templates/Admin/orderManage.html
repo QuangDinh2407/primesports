@@ -23,6 +23,62 @@
             z-index: 1;
         }
 
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .pagination ul {
+            list-style: none;
+            display: flex;
+            gap: 10px;
+            padding: 0;
+            margin: 0;
+        }
+
+        .pagination ul li {
+            display: inline;
+        }
+
+        .pagination ul li a {
+            display: inline-block;
+            padding: 8px 12px;
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .pagination ul li a:hover {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .pagination ul li.active a {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+            cursor: default;
+        }
+
+        .pagination ul li a[disabled] {
+            color: #aaa;
+            pointer-events: none;
+            cursor: not-allowed;
+            background-color: #f8f9fa;
+            border-color: #ddd;
+        }
+
+        #pageSize{
+            width: 210px;
+            background-color: white;
+            color: black;
+        }
+
+
     </style>
 </head>
 
@@ -36,17 +92,33 @@
                     <div class="card">
                         <div class="card-body">
                             <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
                                 <h4 class="card-title">Quản lý đơn hàng</h4>
+                                    <p class="card-description">
+                                        Đơn hàng<code>.primesports</code>
+                                    </p>
+                                </div>
+                                <div class="size-page">
+                                    <form method="get" th:action="@{/admin/orders}">
+                                        <div class="form-group">
+                                            <label for="pageSize">Số lượng đơn hàng hiển thị:</label>
+                                            <select id="pageSize" name="pageSize" class="form-control" onchange="this.form.submit()">
+                                                <option th:selected="${pageSize == 5}" value="5">5</option>
+                                                <option th:selected="${pageSize == 10}" value="10">10</option>
+                                                <option th:selected="${pageSize == 20}" value="20">20</option>
+                                            </select>
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
 
-                            <p class="card-description">
-                                Đơn hàng<code>.primesports</code>
-                            </p>
+
+
                             <form th:action="@{/admin/order/filter}" method="POST" id="filterForm">
                                 <div class="filter-container">
                                     <!-- Filter item to open modal -->
                                     <div class="filter-item ">
-                                        <label for="priceRange">Khoảng giá</label>
+                                        <label for="priceRange">Tổng đơn</label>
                                         <div class="price-range filter-price">
                                             <input type="text" id="beginPrice" name="beginPrice" class="form-control" placeholder="Từ giá">
                                             <span>-</span>
@@ -55,7 +127,7 @@
                                     </div>
 
                                     <div class="filter-item ">
-                                        <label for="dateRange">Thời gian</label>
+                                        <label for="dateRange">Thời gian đặt</label>
                                         <div class="price-range filter-price">
                                             <input type="date" id="beginDate" name="beginDate" class="form-control" placeholder="Từ ngày">
                                             <span>-</span>
@@ -64,12 +136,13 @@
                                     </div>
 
                                     <div class="filter-item">
-                                        <label for="status">Tình trạng</label>
+                                        <label for="status">Trạng thái</label>
                                         <select id="status" name="status" class="form-control">
                                             <option value="">Chọn tình trạng</option>
-                                            <option value="IN_STOCK">Còn hàng</option>
-                                            <option value="LOW_STOCK">Còn ít</option>
-                                            <option value="OUT_OF_STOCK">Tạm hết</option>
+                                            <option value="Đã giao">Đã giao</option>
+                                            <option value="Đang giao">Đang giao</option>
+                                            <option value="Đã hủy">Đã hủy</option>
+                                            <option value="Đang chuẩn bị">Đang chuẩn bị</option>
                                         </select>
                                     </div>
 
@@ -111,7 +184,7 @@
                                             Trạng thái
                                         </th>
                                         <th>
-                                            Thời gian tạo
+                                            Đặt lúc
                                         </th>
                                         <th>
                                             Hành động
@@ -133,6 +206,7 @@
                                         <td>
                                         <span th:if="${order.status == 'Đã giao'}"  class="badge badge-success" th:text="${order.status}"></span>
                                         <span th:if="${order.status == 'Đang giao'}" class="badge badge-warning" th:text="${order.status}"></span>
+                                        <span th:if="${order.status == 'Đang chuẩn bị'}" class="badge badge-info" th:text="${order.status}"></span>
                                         <span th:if="${order.status == 'Đã hủy'}" class="badge badge-danger" th:text="${order.status}"></span>
 
                                         </td>
@@ -150,6 +224,27 @@
                                     <div th:replace="~{/Common/Admin/NoData :: NoData}"></div>
                                 </div>
                             </div>
+
+                            <div class="pagination">
+                                <ul>
+                                    <li th:if="${currentPage > 0}">
+                                        <a th:href="@{/admin/orders(page=${currentPage - 1}, pageSize=${pageSize})}">&laquo; Previous</a>
+                                    </li>
+                                    <li th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                                        th:classappend="${i == currentPage} ? 'active'">
+                                        <a th:href="@{/admin/orders(page=${i}, pageSize=${pageSize})}" th:text="${i + 1}"></a>
+                                    </li>
+                                    <li th:if="${currentPage < totalPages - 1}">
+                                        <a th:href="@{/admin/orders(page=${currentPage + 1}, pageSize=${pageSize})}">Next &raquo;</a>
+                                    </li>
+                                </ul>
+                            </div>
+
+<!--                            <div class="pagination">-->
+<!--                                <ul id="pagination"></ul>-->
+<!--                            </div>-->
+
+
                         </div>
                     </div>
                 </div>
@@ -242,6 +337,46 @@
             modal.style.display = "none";
         }
     </script>
+
+<!--    <script th:inline="javascript">-->
+<!--        /*<![CDATA[*/-->
+<!--        const currentPage = /*[[${currentPage}]]*/ 0;-->
+<!--        const totalPages = /*[[${totalPages}]]*/ 0;-->
+<!--        const pageSize = /*[[${pageSize}]]*/ 10; // Hoặc giá trị thích hợp từ backend-->
+
+<!--        function renderPagination(currentPage, totalPages) {-->
+<!--            const pagination = document.querySelector(".pagination ul");-->
+<!--            pagination.innerHTML = ""; // Xóa nội dung cũ-->
+
+<!--            // Tạo nút "Previous"-->
+<!--            if (currentPage > 0) {-->
+<!--                const prev = document.createElement("li");-->
+<!--                prev.innerHTML = `<a href="@{/admin/orders(page=${currentPage - 1}, pageSize=${pageSize})}">&laquo; Previous</a>`;-->
+<!--                pagination.appendChild(prev);-->
+<!--            }-->
+
+<!--            // Tạo các nút số trang-->
+<!--            for (let i = 0; i < totalPages; i++) {-->
+<!--                const pageItem = document.createElement("li");-->
+<!--                pageItem.className = i === currentPage ? "active" : "";-->
+<!--                pageItem.innerHTML = `<a href="@{/admin/orders(page=${i}, pageSize=${pageSize})}">${i + 1}</a>`;-->
+<!--                pagination.appendChild(pageItem);-->
+<!--            }-->
+
+<!--            // Tạo nút "Next"-->
+<!--            if (currentPage < totalPages - 1) {-->
+<!--                const next = document.createElement("li");-->
+<!--                next.innerHTML = `<a href="@{/admin/orders(page=${currentPage + 1}, pageSize=${pageSize})}">Next &raquo;</a>`;-->
+<!--                pagination.appendChild(next);-->
+<!--            }-->
+<!--        }-->
+
+<!--        document.addEventListener("DOMContentLoaded", () => {-->
+<!--            renderPagination(currentPage, totalPages);-->
+<!--        });-->
+<!--        /*]]>*/-->
+<!--    </script>-->
+
 
 </div>
 

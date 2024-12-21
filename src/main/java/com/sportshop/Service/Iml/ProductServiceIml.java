@@ -64,7 +64,6 @@ public class ProductServiceIml implements ProductService {
             ProductEntity product = new ProductEntity();
             product.setName(productDTO.getName());
             product.setPrice(productDTO.getPrice());
-            product.setQuantity(productDTO.getQuantity());
             if (sizes != null && quantities != null) {
                 int totalQuantity = 0;
                 for (String quantity : quantities) {

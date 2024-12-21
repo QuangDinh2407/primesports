@@ -12,6 +12,9 @@ import com.sportshop.Repository.ProductRepository;
 import com.sportshop.Repository.UserOrderRepository;
 import com.sportshop.Service.UserOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -49,6 +52,13 @@ public class UserOrderServiceIml implements UserOrderService {
         return userOrders.stream()
                 .map(userOrderConverter::toDTO)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Page<UserOrderDTO> getAllUserOrdersPagination(int page, int pageSize) {
+        Pageable pageable = PageRequest.of(page, pageSize);
+        Page<UserOrderEntity> userOrders = userOrderRepository.findAll(pageable);
+        return userOrders.map(userOrderConverter::toDTO); // Chuyển đổi từng phần tử từ Entity sang DTO
     }
 
     @Override
