@@ -49,8 +49,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@RestController
-//@Controller
+//@RestController
+@Controller
 public class testController {
 
     @Autowired
@@ -99,7 +99,6 @@ public class testController {
         return "test";
     }
 
-
     @GetMapping("/repo")
     @ResponseBody
     public List<UserDTO> getAll()
@@ -131,7 +130,10 @@ public class testController {
         return "/welcome";
     }
 
-
+    @GetMapping("/verify-email")
+    public String verifyEmail() {
+        return "Auth/inform-verify-email";
+    }
 
     private static String UPLOAD_DIRECTORY = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\Assets\\image\\Employee";
 

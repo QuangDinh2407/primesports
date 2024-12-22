@@ -52,9 +52,9 @@ public class AuthController {
     @PostMapping("/sign-up")
     public String renderSignUp(@ModelAttribute AccountDTO accountDTO, Model model, HttpServletRequest request) {
         Result rs = accountService.createAccount(accountDTO,request);
-        model.addAttribute("message", rs.getMessage());
+        model.addAttribute("rs", rs);
         model.addAttribute("accountDTO", accountDTO);
-        return rs.isSuccess() ? "welcome" : "Auth/sign-up";
+        return rs.isSuccess() ? "Auth/inform-verify-email" : "Auth/sign-up";
     }
 
     @GetMapping ("/confirm-signup")
