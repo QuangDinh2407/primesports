@@ -14,6 +14,7 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
@@ -312,13 +313,15 @@ public class AdminController {
     }
 
     @GetMapping("/product")
-    public String renderProductManage(HttpSession session, Model model) {
-        List<ProductDTO> products = productService.showProducts();
-        List<ProductDTO> activeProducts = products.stream()
-                .filter(product -> "ACTIVE".equals(product.getStatus()))
-                .collect(Collectors.toList());
-        model.addAttribute("products", activeProducts);
+    public String renderProductManage(@RequestParam(value = "page", defaultValue = "0") int page,
+                                      @RequestParam(value = "pageSize", defaultValue = "3") int pageSize,
+                                      HttpSession session, Model model) {
+        Page<ProductDTO> products = productService.showProductsPagination("ACTIVE",page,pageSize);
 
+        model.addAttribute("products", products.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", products.getTotalPages());
+        model.addAttribute("pageSize", pageSize);
 
         List<ProductTypeDTO> productTypes = productTypeService.showAllProductTypes();
         model.addAttribute("productTypes", productTypes);
@@ -335,6 +338,7 @@ public class AdminController {
         session.setAttribute("productTypes", productTypes);
         session.setAttribute("productTypesParent", productTypesParent);
         session.setAttribute("sizes", sizes);
+
 
         return "Admin/productManage";
     }
@@ -412,7 +416,6 @@ public class AdminController {
                               @RequestParam( required = false ) List <String> sizes,
                               @RequestParam( required = false ) List<String> quantities,Model model) {
 
-        System.out.println("------------------- Vô đây rồi  nè 1 ---------------");
         System.out.println(productDTO);
         System.out.println(sizes);
         System.out.println(quantities);
@@ -526,10 +529,42 @@ public class AdminController {
                                      @RequestParam(value = "pageSize", defaultValue = "5") int pageSize,
                                      HttpSession session, Model model) {
         Page<UserOrderDTO> orders = userOrderService.getAllUserOrdersPagination(page, pageSize);
-        model.addAttribute("orders", orders.getContent()); // Danh sách đơn hàng
-        model.addAttribute("currentPage", page); // Trang hiện tại
-        model.addAttribute("totalPages", orders.getTotalPages()); // Tổng số trang
+        model.addAttribute("orders", orders.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", orders.getTotalPages());
         model.addAttribute("pageSize", pageSize);
         return "Admin/orderManage";
     }
+
+    @PostMapping("/order/status_update")
+    public String updateStatusOrder(@RequestParam String status,
+                                    @RequestParam String userOrderId,
+                                    RedirectAttributes redirectAttributes,
+                                    HttpSession session,
+                                    Model model) {
+        Result rs = userOrderService.updateUserOrderStatus(status, userOrderId);
+        redirectAttributes.addFlashAttribute("rs", rs);
+        return "redirect:/admin/orders";
+    }
+
+    @PostMapping("/order/filter")
+    public String filterOrders(  @RequestParam(required = false) String beginPrice,
+                                 @RequestParam(required = false) String endPrice,
+                                 @RequestParam(required = false) String beginDate,
+                                 @RequestParam(required = false) String endDate,
+                                 @RequestParam(required = false) String status,
+                                 Model model) {
+
+        System.out.println("Begin price: " + beginPrice);
+        System.out.println("End price: " + endPrice);
+        System.out.println("Begin date: " + beginDate);
+        System.out.println("End date: " + endDate);
+        System.out.println("status: " + status);
+        List<UserOrderDTO> orders = userOrderService.filterOrders(beginPrice, endPrice,beginDate,endDate, status);
+
+        model.addAttribute("orders", orders);
+
+        return "Admin/orderManage";
+    }
+
 }

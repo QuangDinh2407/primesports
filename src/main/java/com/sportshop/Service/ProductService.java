@@ -4,6 +4,7 @@ package com.sportshop.Service;
 import com.sportshop.Modal.Result;
 import com.sportshop.Modal.SearchProduct;
 import com.sportshop.ModalDTO.ProductDTO;
+import com.sportshop.ModalDTO.UserOrderDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,7 +32,9 @@ public interface ProductService {
 
     List<ProductDTO> showProducts();
 
+    Page<ProductDTO> showProductsPagination(String status,int page, int pageSize);
+
     List<ProductDTO> filterProducts(List<String> productTypes,String beginPrice,String endPrice, String status);
-    
+
     ProductDTO getProductById(String productId);
 }
