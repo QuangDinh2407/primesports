@@ -112,7 +112,7 @@
                             <h3 class="profile-menu__title">My items</h3>
                             <ul class="profile-menu__list">
                                 <li>
-                                    <a th:href="@{/customer/cart-detail}" class="profile-menu__link">
+                                    <a th:href="@{/cart-detail/{cart_id}(cart_id=${cartDTO.cart_id})}" class="profile-menu__link">
                                                 <span class="profile-menu__icon">
                                                     <img th:src="@{/Assets/Customer_Shop/Assets/icons/buy.svg}" alt="" class="icon" />
                                                 </span>
@@ -194,7 +194,7 @@
 <!--                                                    <td th:text="${detail.amount * detail.price}">Thành tiền</td>-->
                                                     <td th:text="${detail.amount * detail.price - detail.amount * detail.price * detail.shopVoucher.discountAmount/100}">Thành tiền</td>
                                                     <td>
-                                                        <div th:if="${orderDetails.status.trim().equals('Đã giao')}">
+                                                        <div th:if="${orderDetails.status.trim().equals('Đã giao')}">
                                                         <div th:if="${reviewStatus[detail.product.product_id]}">
                                                                 <p>Cảm ơn đánh giá của bạn.</p>
                                                             </div>
@@ -241,9 +241,9 @@
                                             <div class="detail-row">
                                                 <span class="detail-label">Trạng thái:</span>
                                                 <span class="status"
-                                                      th:classappend="${orderDetails.status == 'Đã giao' ? 'completed' :
+                                                      th:classappend="${orderDetails.status == 'Đã giao' ? 'completed' :
                                             (orderDetails.status == 'Đang giao' ? 'in-progress' :
-                                             (orderDetails.status == 'Đã hủy' ? 'cancelled' : 'pending'))}">
+                                             (orderDetails.status == 'Đã hủy' ? 'cancelled' : 'pending'))}">
                                                     <span th:text="${orderDetails.status}"></span></span>
                                             </div>
                                             <div class="detail-row">
@@ -255,7 +255,7 @@
                                                 <span class="detail-value" th:text="${orderDetails.paymentType.name}"></span>
                                             </div>
                                         </div>
-                                        <div th:if="${orderDetails.status.trim().equals('Chờ xác nhận')}" class="delete-btn-container">
+                                        <div th:if="${orderDetails.status.trim().equals('Đang chuẩn bị')}" class="delete-btn-container">
                                             <a th:href="@{/customer/cancel-order/{orderId}(orderId=${orderDetails.userOrder_id})}" class="delete-btn btn btn--text">Hủy đơn hàng</a>
                                         </div>
                                     </div>

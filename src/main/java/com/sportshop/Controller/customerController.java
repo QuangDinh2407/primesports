@@ -66,13 +66,14 @@ public class customerController {
     public String updateInfo(@Valid @ModelAttribute("userDTO") UserDTO userDTO,
                              BindingResult bindingResult,
                              @RequestParam("avatar") MultipartFile file,
-                             Model model) {
+                             Model model, HttpSession session) {
         if (bindingResult.hasErrors()) {
             // Nếu có lỗi validate, trả về form cùng thông báo lỗi
             model.addAttribute("errors", bindingResult.getAllErrors());
             return "/Customer/customer-info";
         }
-
+        CartDTO cartDTO = (CartDTO) session.getAttribute("cartDTO");
+        model.addAttribute("cartDTO", cartDTO);
         // Nếu không có lỗi validate, tiến hành cập nhật thông tin
         Result rs = userService.updateInfoUser(userDTO, file);
         model.addAttribute("rs", rs);
@@ -80,15 +81,20 @@ public class customerController {
     }
 
     @RequestMapping("/change-password-form")
-    public String changePassword() {
+    public String changePassword(HttpSession session, Model model) {
+
+        CartDTO cartDTO = (CartDTO) session.getAttribute("cartDTO");
+        model.addAttribute("cartDTO", cartDTO);
         return "Customer/customer-change-password";
     }
 //        System.out.println(userInfo_id);
 
     @RequestMapping("/order-history")
-    public String viewOrderHistory(Model model) {
+    public String viewOrderHistory(Model model,HttpSession session) {
         List<UserOrderDTO> userOrders = userOrderService.findAllOrdersByUserId(userInfo_id);
         // Thêm vào model
+        CartDTO cartDTO = (CartDTO) session.getAttribute("cartDTO");
+        model.addAttribute("cartDTO", cartDTO);
         model.addAttribute("userOrders", userOrders);// Thêm danh sách UserOrderDTO vào model
         return "Customer/orders-history";  // Trả về view 'order-history'
     }
@@ -123,7 +129,8 @@ public class customerController {
 
         // Gọi service để thay đổi mật khẩu
         Result result = accountService.changePassword(email, oldPassword, newPassword);
-
+        CartDTO cartDTO = (CartDTO) session.getAttribute("cartDTO");
+        model.addAttribute("cartDTO", cartDTO);
         // Trả kết quả về giao diện
         model.addAttribute("rs", result);
         return "Customer/customer-change-password";
@@ -133,7 +140,7 @@ public class customerController {
     @RequestMapping("/order-detail")
     public String OrderDetails(
             @RequestParam(value = "orderId", required = false) String orderId,
-            Model model) {
+            Model model,HttpSession session) {
             List<UserOrderDTO> userOrders = userOrderService.findAllOrdersByUserId(userInfo_id);
 //        model.addAttribute("orders", userOrders);
             model.addAttribute("userOrders", userOrders);  // Thêm danh sách UserOrderDTO vào model
@@ -151,6 +158,8 @@ public class customerController {
             }
         }
         System.out.println(userOrders);
+        CartDTO cartDTO = (CartDTO) session.getAttribute("cartDTO");
+        model.addAttribute("cartDTO", cartDTO);
         // Thêm vào model
         model.addAttribute("reviewStatus", reviewStatus);
         // Thêm orderId vào model để có thể dùng trong form đánh giá
@@ -162,8 +171,7 @@ public class customerController {
     @RequestMapping("/product-review")
     public String saveProductReview(
             @RequestParam(value = "orderId", required = false) String orderId,
-            String comment, Float rating, String productId, String userId
-            ) {
+            String comment, Float rating, String productId, String userId) {
 
         // Chuyển đổi và lưu đánh giá
         ProductReviewEntity review = productReviewConverter.toEntity(comment, rating, productId, userId);

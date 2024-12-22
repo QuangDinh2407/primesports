@@ -165,7 +165,7 @@
                             <div class="cart-item__content">
                                 <div class="cart-item__content-left">
                                     <div th:if="${not #lists.isEmpty(productItem.getProduct().getImagePaths())}">
-                                        <img th:src="${productItem.getProduct().getImagePaths().getFirst()}" alt="" class="cart-item__thumb"/>
+                                        <img th:src="@{${productItem.product.getImagePaths[0]}}"  alt="" class="cart-item__thumb"/>
                                     </div>
                                     <div class="pro-content">
                                         <h2 class="cart-item__title">

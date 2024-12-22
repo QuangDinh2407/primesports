@@ -93,7 +93,8 @@
                             <h3 class="profile-menu__title">My items</h3>
                             <ul class="profile-menu__list">
                                 <li>
-                                    <a th:href="@{/customer/cart-detail}" class="profile-menu__link">
+
+                                    <a th:href="@{/cart-detail/{cart_id}(cart_id=${cartDTO.cart_id})}" class="profile-menu__link">
                                                 <span class="profile-menu__icon">
                                                     <img th:src="@{/Assets/Customer_Shop/Assets/icons/buy.svg}" alt="" class="icon" />
                                                 </span>
@@ -145,9 +146,9 @@
                                             <td th:text="${#dates.format(order.created_at, 'yyyy-MM-dd')}"></td>
                                             <td th:text="${order.total_price}"></td>
                                             <td class="status"
-                                                th:classappend="${order.status == 'Đã giao' ? 'completed' :
+                                                th:classappend="${order.status == 'Đã giao' ? 'completed' :
                                             (order.status == 'Đang giao' ? 'in-progress' :
-                                             (order.status == 'Đã hủy' ? 'cancelled' : 'pending'))}">
+                                             (order.status == 'Đã hủy' ? 'cancelled' : 'pending'))}">
                                                 <span th:text="${order.status}"></span>
                                             </td>
                                             <td th:text="${order.paymentType.name}"></td>

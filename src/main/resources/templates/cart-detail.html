@@ -102,9 +102,13 @@
                                         </div>
                                     </div>
                                 </article>
+                                <div th:if="${#lists.isEmpty(cartDTO.cartDetailItems)}"  class="no-data">
+                                    <img th:src="@{/Assets/Customer_Shop/Assets/icons/no-data128px.png}">
+                                    <h1>Không có sản phẩm trong giỏ hàng!</h1>
+                                </div>
                                 <article class="cart-item" th:each="productItem : ${cartDTO.cartDetailItems}">
                                     <a th:href="@{/product-detail/{id}(id=${productItem.product.product_id})}">
-                                        <img src="./assets/img/product/item-1.png" alt="" class="cart-item__thumb"/>
+                                        <img th:src="@{${productItem.product.getImagePaths[0]}}"  alt="" class="cart-item__thumb"/>
                                     </a>
                                     <div class="cart-item__content">
                                         <div class="cart-item__content-left">

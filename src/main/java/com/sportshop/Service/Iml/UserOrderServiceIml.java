@@ -153,7 +153,7 @@ public class UserOrderServiceIml implements UserOrderService {
     public List <ProductSize> createOrder(UserOrderDTO userOrderDTO, String email) throws MessagingException, UnsupportedEncodingException {
        UserOrderEntity userOrderEntity = new UserOrderEntity();
        userOrderEntity = userOrderConverter.toEntity(userOrderDTO);
-       userOrderEntity.setStatus("Chờ xác nhận");
+       userOrderEntity.setStatus("Đang chuẩn bị");
        userOrderRepository.save(userOrderEntity);
        List <ProductSize> productSizeList = new ArrayList<>();
        userOrderEntity.getUserOrderDetailItems().forEach(item ->{
