@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns="http://www.w3.org/1999/html">
 
 <head>
     <meta charset="UTF-8" />
@@ -62,8 +62,22 @@
         color: #555;
         font-size: 14px;
     }
+    .error-message {
+        color: red;
+        font-size: 14px;
+        margin-top: 5px;
+    }
+    .profile{
+        margin-top: 115px;
+    }
 </style>
 <body>
+<!-- Header -->
+<header id="header" class="header"></header>
+<div></div>
+<script>
+    load("#header", "/header");
+</script>
 
 <!-- MAIN -->
 <main class="profile">
@@ -163,7 +177,10 @@
                                                 <input type="text" id="full-name" th:field="*{name}" placeholder="Full name" class="form__input"/>
                                                 <img th:src="@{/Assets/Customer_Shop/Assets/icons/form-error.svg}" alt="" class="form__input-icon-error"/>
                                             </div>
-                                            <p class="form__error">Please enter your full name</p>
+<!--                                            <p class="form__error">Please enter your full name</p>-->
+                                            <div class="error-message">
+                                                <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+                                            </div>
                                         </div>
                                         <div class="form__group">
                                             <label for="email-adress" class="form__label form-card__label">Địa chỉ email</label>
@@ -171,7 +188,10 @@
                                                 <input type="text" id="email-adress" placeholder="Email address" class="form__input" th:field="*{email}" readonly/>
                                                 <img th:src="@{/Assets/Customer_Shop/Assets/icons/form-error.svg}" alt="" class="form__input-icon-error"/>
                                             </div>
-                                            <p class="form__error">Please enter a valid email address</p>
+<!--                                            <p class="form__error">Please enter a valid email address</p>-->
+                                            <div class="error-message">
+                                                <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+                                            </div>
                                         </div>
                                     </div>
 
@@ -183,7 +203,10 @@
                                                 <input type="text" id="phone-number" th:field="*{phone}" placeholder="Phone Number" class="form__input" pattern="^0\d{9}$" title="Phone number must be 10 digits and start with 0"/>
                                                 <img th:src="@{/Assets/Customer_Shop/Assets/icons/form-error.svg}" alt="" class="form__input-icon-error"/>
                                             </div>
-                                            <p class="form__error">Please enter a valid phone number</p>
+<!--                                            <p class="form__error">Please enter a valid phone number</p>    -->
+                                            <div class="error-message">
+                                                <span th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></span>
+                                            </div>
                                         </div>
                                         <div class="form__group">
                                             <label for="birthday" class="form__label form-card__label">Ngày sinh</label>
@@ -192,7 +215,10 @@
                                                 />
                                                 <img th:src="@{/Assets/Customer_Shop/Assets/icons/form-error.svg}" alt="" class="form__input-icon-error"/>
                                             </div>
-                                            <p class="form__error" id="birthday-error">Please enter your birthday in dd-mm-yyyy format.</p>
+<!--                                            <p class="form__error" id="birthday-error">Please enter your birthday in dd-mm-yyyy format.</p>-->
+                                            <div class="error-message">
+                                                <span th:if="${#fields.hasErrors('birth')}" th:errors="*{birth}"></span>
+                                            </div>
                                         </div>
                                     </div>
 
@@ -204,7 +230,10 @@
                                                 <input type="text" id="address" th:field="*{address}" placeholder="Address" class="form__input"/>
                                                 <img th:src="@{/Assets/Customer_Shop/Assets/icons/form-error.svg}" alt="" class="form__input-icon-error"/>
                                             </div>
-                                            <p class="form__error">Please enter a valid address</p>
+<!--                                            <p class="form__error">Please enter a valid address</p>-->
+                                            <div class="error-message">
+                                                <span th:if="${#fields.hasErrors('address')}" th:errors="*{address}"></span>
+                                            </div>
                                         </div>
                                         <div class="form__group">
                                             <label for="gender" class="form__label form-card__label">Giới tính
@@ -218,8 +247,10 @@
                                                 </select>
                                                 <img th:src="@{/Assets/Customer_Shop/Assets/icons/form-error.svg}" alt="" class="form__input-icon-error"/>
                                             </div>
-
-                                            <p class="form__error">Please select a valid gender</p>
+                                            <div class="error-message">
+                                                <span th:if="${#fields.hasErrors('gender')}" th:errors="*{gender}"></span>
+                                            </div>
+<!--                                            <p class="form__error">Please select a valid gender</p>-->
                                         </div>
 <!--                                        <div class="form__group">-->
 <!--                                            <label for="gender" class="form__label form-card__label">Tuổi</label>-->
@@ -297,5 +328,10 @@
         }
     </script>
 </div>
+<!-- Footer -->
+<footer id="footer" class="footer"></footer>
+<script>
+    load("#footer", "/footer");
+</script>
 </body>
 </html>

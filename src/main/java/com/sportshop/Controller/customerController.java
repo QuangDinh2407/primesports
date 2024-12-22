@@ -11,12 +11,15 @@ import com.sportshop.Service.ProductReviewService;
 import com.sportshop.Service.UserOrderService;
 import com.sportshop.Service.UserService;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import com.sportshop.Utils.ValidationUtil;
 
 import java.util.HashMap;
 import java.util.List;
@@ -58,11 +61,19 @@ public class customerController {
         return "/Customer/customer-info";
     }
 
-
     @PostMapping("/customer-info")
-    public String updateInfo(UserDTO userDTO, Model model,@RequestParam("avatar") MultipartFile file) {
+    public String updateInfo(@Valid @ModelAttribute("userDTO") UserDTO userDTO,
+                             BindingResult bindingResult,
+                             @RequestParam("avatar") MultipartFile file,
+                             Model model) {
+        if (bindingResult.hasErrors()) {
+            // Nếu có lỗi validate, trả về form cùng thông báo lỗi
+            model.addAttribute("errors", bindingResult.getAllErrors());
+            return "/Customer/customer-info";
+        }
 
-        Result rs = userService.updateInfoUser(userDTO,file);
+        // Nếu không có lỗi validate, tiến hành cập nhật thông tin
+        Result rs = userService.updateInfoUser(userDTO, file);
         model.addAttribute("rs", rs);
         return "/Customer/customer-info";
     }
@@ -84,28 +95,39 @@ public class customerController {
 
     @PostMapping("/change-password-customer")
     public String changePassword(
-            @ModelAttribute("oldPassword") String oldPassword,
-            @ModelAttribute("newPassword") String newPassword,
-            @ModelAttribute("confirmPassword") String confirmPassword,
+            @RequestParam("oldPassword") String oldPassword,
+            @RequestParam("newPassword") String newPassword,
+            @RequestParam("confirmPassword") String confirmPassword,
             HttpSession session,
             Model model
     ) {
+        // Lấy email từ session
         String email = (String) session.getAttribute("email");
-
         if (email == null) {
-            model.addAttribute("result", new Result(false, "Không tìm thấy email người dùng!"));
+            model.addAttribute("rs", new Result(false, "Không tìm thấy email người dùng!"));
             return "Customer/customer-change-password";
         }
 
+        // Kiểm tra mật khẩu mới và xác nhận mật khẩu
         if (!newPassword.equals(confirmPassword)) {
-            model.addAttribute("result", new Result(false, "Mật khẩu mới và xác nhận mật khẩu không khớp!"));
+            model.addAttribute("rs", new Result(false, "Mật khẩu mới và xác nhận mật khẩu không khớp!"));
             return "Customer/customer-change-password";
         }
 
+        // Kiểm tra điều kiện mật khẩu mới
+        if (!ValidationUtil.isValidPassword(newPassword)) {
+            model.addAttribute("rs", new Result(false, "Mật khẩu mới phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt!"));
+            return "Customer/customer-change-password";
+        }
+
+        // Gọi service để thay đổi mật khẩu
         Result result = accountService.changePassword(email, oldPassword, newPassword);
+
+        // Trả kết quả về giao diện
         model.addAttribute("rs", result);
         return "Customer/customer-change-password";
     }
+
 
     @RequestMapping("/order-detail")
     public String OrderDetails(
