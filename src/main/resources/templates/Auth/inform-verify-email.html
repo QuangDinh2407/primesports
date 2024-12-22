@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign up | primesports</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA==" crossorigin="anonymous" />
+    <link rel="stylesheet" th:href="@{/Assets/Toast_Message/toastmesscss.css}">
+    <link rel="stylesheet" th:href="@{/Assets/Form_Validator/validatorcss.css}" />
+
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="76x76" th:href="@{/Assets/Customer_Shop/Assets/favicon/logo.png}" />
+    <link rel="icon" type="image/png" sizes="32x32" th:href="@{/Assets/Customer_Shop/Assets/favicon/logo.png}" />
+    <link rel="icon" type="image/png" sizes="16x16" th:href="@{/Assets/Customer_Shop/Assets/favicon/logo.png}" />
+    <link rel="manifest" th:href="@{/Assets/Customer_Shop/Assets/favicon/logo.png}" />
+    <meta name="msapplication-TileColor" content="#da532c" />
+    <meta name="theme-color" content="#ffffff" />
+
+    <!-- Fonts -->
+    <link rel="stylesheet" th:href="@{/Assets/Customer_Shop/Assets/fonts/stylesheet.css}" />
+
+    <!-- Styles -->
+    <link rel="stylesheet" th:href="@{/Assets/Customer_Shop/Assets/css/main.css}" />
+
+    <!-- Scripts -->
+    <script th:src="@{/Assets/Customer_Shop/Assets/js/scripts.js}" ></script>
+    <script th:src="@{/Assets/Toast_Message/toastmessjs.js}"></script>
+
+</head>
+<body>
+<div id="toast"></div>
+<main class="auth">
+
+    <!-- Auth intro -->
+    <div class="auth__intro">
+        <a href="./" class="logo auth__intro-logo d-none d-md-flex">
+            <img th:src="@{/Assets/Customer_Shop/Assets/icons/logo.png}" alt="primesports" class="logo__img top-bar__logo-img"/>
+            <h1 class="logo__title">primesports</h1>
+        </a>
+        <img th:src="@{/Assets/Customer_Shop/Assets/img/auth/hightlight.png}" alt="" class="auth__intro-img" />
+        <button class="auth__intro-next d-none d-md-flex js-toggle" toggle-target="#auth-content">
+            <img th:src="@{/Assets/Customer_Shop/Assets/img/auth/intro-arrow.svg}" alt="" />
+        </button>
+    </div>
+
+    <!-- Auth content -->
+    <div id="auth-content" class="auth__content hide">
+        <div class="auth__content-inner">
+            <a href="./" class="logo">
+                <img th:src="@{/Assets/Customer_Shop/Assets/icons/logo.png}" alt="primesports" class="logo__img top-bar__logo-img"/>
+                <h1 class="logo__title" style= "margin-left: -14px;">primesports</h1>
+            </a>
+            <div style="margin-top: 155px;">
+            <h1 class="auth__heading" style="
+    font-weight: 600;
+">Thông báo</h1>
+            <p class="auth__desc" style="
+    line-height: 289.667%;
+" >Chúng tôi đã gửi email xác nhận đến địa chỉ email của bạn. Vui lòng kiểm tra hộp thư đến (hoặc mục Spam nếu không tìm thấy) để hoàn tất việc xác nhận tài khoản.</p>
+
+            <p class="auth__text">
+                Bạn đã xác nhận tài khoản?
+                <a href="./sign-in" class="auth__link auth__text-link">Đăng nhập</a>
+            </p>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+    window.dispatchEvent(new Event("template-loaded"));
+</script>
+
+<script th:src="@{/Assets/Form_Validator/validatorjs.js}"></script>
+<script>
+    Validator('#form-signup');
+</script>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    const rs = /*[[${rs}]]*/ 'default';
+    /*]]>*/
+    if (rs.message)
+    {
+        console.log(rs.message);
+        if (rs.success)
+        {
+            showSuccessToast(rs.message);
+        }
+        else
+        {
+            showErrorToast(rs.message);
+        }
+    }
+</script>
+</body>
+</html>

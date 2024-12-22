@@ -56,7 +56,6 @@ public class ProductServiceIml implements ProductService {
     @Autowired
     private SizeRepository sizeRepository;
 
-    @Transactional
     @Override
     public Result addProduct(ProductDTO productDTO, List<MultipartFile> files, List <String> sizes, List<String> quantities) {
         try {
@@ -115,7 +114,7 @@ public class ProductServiceIml implements ProductService {
                     if (!file.isEmpty()) {
                         ProductImageEntity image = new ProductImageEntity();
                         try {
-                            String imagePath = cloudinaryService.uploadFileToFolder(file, "customer");
+                            String imagePath = cloudinaryService.uploadFileToFolder(file, "product");
                             image.setImage_path(imagePath);
                             image.setProduct(product);
                             productImageRepository.save(image);
@@ -254,7 +253,7 @@ public class ProductServiceIml implements ProductService {
                     if (!file.isEmpty()) {
                         ProductImageEntity image = new ProductImageEntity();
                         try {
-                            String imagePath = cloudinaryService.uploadFileToFolder(file, "customer");
+                            String imagePath = cloudinaryService.uploadFileToFolder(file, "product");
                             image.setImage_path(imagePath);
                             image.setProduct(product);
                             productImageRepository.save(image);
