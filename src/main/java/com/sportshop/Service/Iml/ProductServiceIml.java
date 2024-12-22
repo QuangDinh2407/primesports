@@ -6,10 +6,12 @@ import com.sportshop.Modal.Result;
 import com.sportshop.Modal.SearchProduct;
 import com.sportshop.ModalDTO.ProductDTO;
 import com.sportshop.Entity.*;
+import com.sportshop.ModalDTO.ProductTypeDTO;
 import com.sportshop.Repository.*;
 import com.sportshop.Service.CloudinaryService;
 import com.sportshop.Service.ProductService;
 
+import com.sportshop.Service.ProductTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,10 +25,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -55,6 +54,9 @@ public class ProductServiceIml implements ProductService {
 
     @Autowired
     private SizeRepository sizeRepository;
+
+    @Autowired
+    ProductTypeService productTypeService;
 
     @Transactional
     @Override
@@ -116,7 +118,7 @@ public class ProductServiceIml implements ProductService {
                     if (!file.isEmpty()) {
                         ProductImageEntity image = new ProductImageEntity();
                         try {
-                            String imagePath = cloudinaryService.uploadFileToFolder(file, "customer");
+                            String imagePath = cloudinaryService.uploadFileToFolder(file, "product");
                             image.setImage_path(imagePath);
                             image.setProduct(product);
                             productImageRepository.save(image);
@@ -165,7 +167,29 @@ public class ProductServiceIml implements ProductService {
 
     @Override
     public Page <ProductDTO> getAll(SearchProduct searchProduct, Pageable pageable) {
-        List<String> types = (searchProduct.getTypes() != null && searchProduct.getTypes().isEmpty()) ? null : searchProduct.getTypes();
+
+        List<String> types = (searchProduct.getTypes() == null || searchProduct.getTypes().isEmpty())
+                ? new ArrayList<>()
+                : new ArrayList<>(searchProduct.getTypes());
+
+        List<ProductTypeDTO> productTypeDTOList = productTypeService.getListHierarchyType();
+
+        Set<String> parentTypesToRemove = new HashSet<>();
+
+        // Duyệt qua danh sách ProductTypeDTO
+        for (ProductTypeDTO item : productTypeDTOList) {
+            for (String child : item.getName_child()) {
+                if (types.contains(child)) {
+                    parentTypesToRemove.add(item.getName());
+                }
+            }
+        }
+
+        // Loại bỏ các loại cha nếu đã chọn con
+        types.removeAll(parentTypesToRemove);
+
+        System.out.println("After filter: " + types);
+
         Page<ProductEntity> productPage = productRepository.searchProducts(
                 searchProduct.getName(),
                 searchProduct.getMinPrice(),
@@ -255,7 +279,7 @@ public class ProductServiceIml implements ProductService {
                     if (!file.isEmpty()) {
                         ProductImageEntity image = new ProductImageEntity();
                         try {
-                            String imagePath = cloudinaryService.uploadFileToFolder(file, "customer");
+                            String imagePath = cloudinaryService.uploadFileToFolder(file, "product");
                             image.setImage_path(imagePath);
                             image.setProduct(product);
                             productImageRepository.save(image);

@@ -332,18 +332,36 @@
         const parentCheckboxes = document.querySelectorAll('.parent-category');
 
         parentCheckboxes.forEach(function(parentCheckbox) {
-            parentCheckbox.addEventListener('change', function() {
-                const subcategory = parentCheckbox.closest('.category-type').querySelector('.subcategory');
-                const childCheckboxes = subcategory.querySelectorAll('.child-category');
+            const subcategories = parentCheckbox.closest('.category-type').querySelectorAll('.subcategory');
+            subcategories.forEach(function(subcategory) {
                 if (parentCheckbox.checked) {
                     subcategory.style.display = 'block';
                 } else {
                     subcategory.style.display = 'none';
                 }
+
+                const childCheckboxes = subcategory.querySelectorAll('.child-category');
                 childCheckboxes.forEach(function(childCheckbox) {
-                    if(!parentCheckbox.checked){
+                    if (!parentCheckbox.checked) {
                         childCheckbox.checked = false;
                     }
+                });
+            });
+            parentCheckbox.addEventListener('change', function() {
+                const subcategories = parentCheckbox.closest('.category-type').querySelectorAll('.subcategory');
+                subcategories.forEach(function(subcategory) {
+                    if (parentCheckbox.checked) {
+                        subcategory.style.display = 'block';
+                    } else {
+                        subcategory.style.display = 'none';
+                    }
+
+                    const childCheckboxes = subcategory.querySelectorAll('.child-category');
+                    childCheckboxes.forEach(function(childCheckbox) {
+                        if (!parentCheckbox.checked) {
+                            childCheckbox.checked = false;
+                        }
+                    });
                 });
             });
         });
@@ -371,7 +389,7 @@
     /*<![CDATA[*/
     const typeList = /*[[${searchProduct.types}]]*/ 'default';
     /*]]>*/
-
+    console.log(typeList);
     const parentCheckboxes = document.querySelectorAll('.parent-category');
     parentCheckboxes.forEach(function(parentCheckbox) {
         const subcategory = parentCheckbox.closest('.category-type').querySelector('.subcategory');

@@ -154,7 +154,7 @@ public class ShopController {
         if (bindingResult.hasErrors()) {
             model.addAttribute("bindingResult", bindingResult);
         }
-        //System.out.println(listPro.getContent());
+        System.out.println(productTypeServiceIml.getListHierarchyType());;
         return "all-product";
     }
 
@@ -197,8 +197,6 @@ public class ShopController {
         userOrderDTOSession.setShipping_name(userOrderDTOForm.getShipping_name());
         userOrderDTOSession.setShipping_phone(userOrderDTOForm.getShipping_phone());
 
-        System.out.println("form: "+ userOrderDTOForm);
-        System.out.println("Session: "+ userOrderDTOSession);
         if (bindingResult.hasErrors()) {
             userOrderDTOForm.setUserEmail(userOrderDTOSession.getUserEmail());
             userOrderDTOForm.setTotal_price(userOrderDTOSession.getTotal_price());

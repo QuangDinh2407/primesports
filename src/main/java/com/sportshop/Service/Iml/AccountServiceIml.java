@@ -30,6 +30,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Date;
@@ -205,12 +206,16 @@ public class AccountServiceIml implements AccountService {
             }
             if (!file.isEmpty())
             {
-                Path path = Paths.get(StringContant.CUSTOMERIMAGE_URL + File.separator + file.getOriginalFilename());
-                file.transferTo(new File(String.valueOf(path)));
-                System.out.println(path);
-                userInfoEntity.setImage_path(file.getOriginalFilename());
-                Thread.sleep(5000);
+                try {
+                    String imagePath = cloudinaryService.uploadFileToFolder(file, "customer");
+                    userInfoEntity.setImage_path(imagePath);
+                    accountDTO.getUserInfo().setImagePath(imagePath);
+                } catch (IOException e) {
+
+                    throw new RuntimeException("Upload ảnh thất bại: " + e.getMessage());
+                }
             }
+            accountEntity.setIs_disable(accountDTO.getIs_disable());
             accountRepository.save(accountEntity);
             userInfoRepository.save(userInfoEntity);
             return new Result(true,"Thay đổi thông tin khách hàng thành công");
@@ -230,14 +235,14 @@ public class AccountServiceIml implements AccountService {
             }
             // Tạo AccountEntity và thiết lập các giá trị bằng setter
             AccountEntity accountEntity = accountConverter.toEntity(accountDTO);
-//            if (!file.isEmpty())
-//            {
-//                Path path = Paths.get(StringContant.CUSTOMERIMAGE_URL + File.separator + file.getOriginalFilename());
-//                file.transferTo(new File(String.valueOf(path)));
-//                accountEntity.getUser().setImage_path(file.getOriginalFilename());
-//                Thread.sleep(5000);
-//            }
-//            System.out.println(accountEntity);
+            try {
+                String imagePath = cloudinaryService.uploadFileToFolder(file, "customer");
+                accountEntity.getUser().setImage_path(imagePath);
+                accountDTO.getUserInfo().setImagePath(imagePath);
+            } catch (IOException e) {
+
+                throw new RuntimeException("Upload ảnh thất bại: " + e.getMessage());
+            }
             accountRepository.save(accountEntity);
             return new Result(true,"Thêm khách hàng thành công");
         }

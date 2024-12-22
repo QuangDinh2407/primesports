@@ -65,14 +65,14 @@
                   </div>
                 </div>
                 <div class="form__group">
-                  <label for="phone" class="form__label form__label--small">Phone</label>
+                  <label for="phone" class="form__label form__label--small">Số điện thoại</label>
                   <div class="form__text-input form__text-input--small">
                     <p th:text="${userOrderDTO.shipping_phone}"> </p>
                   </div>
                 </div>
               </div>
               <div class="form__group">
-                <label for="address" class="form__label form__label--small">Address</label>
+                <label for="address" class="form__label form__label--small">Địa chỉ</label>
                 <div class="form__text-area">
                   <p th:text="${userOrderDTO.shipping_address}"> </p>
                 </div>
@@ -110,7 +110,7 @@
                   </div>
                   <div class="cart-item__content-right">
                     <div class="cart-item__content-right">
-                      <span th:if="${productItem.shopVoucher != null}"><span><del th:text="${productItem.price}">This is deleted text.</del></span></span>
+                      <span th:if="${productItem.shopVoucher != null}"><span><del th:text="${productItem.price}"></del></span></span>
                       <p class="cart-item__total-price" th:if="${productItem.shopVoucher != null}" th:text="${productItem.product.price * (1 - productItem.shopVoucher.discountAmount/100)}"></p>
                       <p class="cart-item__total-price" th:if="${productItem.shopVoucher == null}" th:text="${productItem.product.price}"></p>
                     </div>

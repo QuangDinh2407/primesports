@@ -8,10 +8,7 @@ import com.sportshop.Entity.ProductEntity;
 import com.sportshop.Entity.ProductImageEntity;
 import com.sportshop.Modal.Mail;
 import com.sportshop.Modal.ProductSize;
-import com.sportshop.ModalDTO.AccountDTO;
-import com.sportshop.ModalDTO.ProductDTO;
-import com.sportshop.ModalDTO.ProductTypeDTO;
-import com.sportshop.ModalDTO.UserDTO;
+import com.sportshop.ModalDTO.*;
 import com.sportshop.Repository.*;
 import com.sportshop.Service.*;
 import com.sportshop.Service.Iml.ProductServiceIml;
@@ -47,8 +44,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-//@RestController
-@Controller
+@RestController
+//@Controller
 public class testController {
 
     @Autowired
@@ -419,6 +416,7 @@ public class testController {
         System.out.println(results.getFirst()[0]);
         return "cuu";
     }
+    
 
 
 }

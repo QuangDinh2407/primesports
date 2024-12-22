@@ -2,19 +2,24 @@ package com.sportshop.Service.Iml;
 
 import com.sportshop.Converter.CartConverter;
 import com.sportshop.Converter.CartDetailConverter;
+import com.sportshop.Converter.UserInfoConverter;
 import com.sportshop.Entity.CartDetailEntity;
 import com.sportshop.Entity.CartEntity;
 import com.sportshop.ModalDTO.CartDTO;
 import com.sportshop.ModalDTO.CartDetailDTO;
 import com.sportshop.ModalDTO.ProductDTO;
+import com.sportshop.ModalDTO.UserDTO;
 import com.sportshop.Repository.CartRepository;
+import com.sportshop.Repository.UserInfoRepository;
 import com.sportshop.Service.CartService;
 import com.sportshop.Service.ProductService;
+import com.sportshop.Service.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -29,6 +34,12 @@ public class CartServicesIml implements CartService {
 
     @Autowired
     private CartRepository cartRepository;
+    @Autowired
+    private UserInfoRepository userInfoRepository;
+    @Autowired
+    private UserInfoConverter userInfoConverter;
+    @Autowired
+    UserService userService;
 
     @Override
     public CartDTO addProductToCart(HttpSession session, String productId, Integer quantity, String size) {
@@ -82,6 +93,12 @@ public class CartServicesIml implements CartService {
             saveOrUpdateCart(cartDTO);
         }
         return cartDTO;
+    }
+
+    @Override
+    public CartDTO getAllItem(String email) {
+        UserDTO userDTO = userService.findbyEmail(email);
+        return userDTO.getCart();
     }
 
     @Override
