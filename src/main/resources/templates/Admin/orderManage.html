@@ -130,7 +130,7 @@
                         <div class="card-body">
                             <div style="display: flex; justify-content: space-between; align-items: center;">
                                 <div>
-                                <h4 class="card-title">Quản lý đơn hàng</h4>
+                                    <h4 class="card-title">Quản lý đơn hàng</h4>
                                     <p class="card-description">
                                         Đơn hàng<code>.primesports</code>
                                     </p>
@@ -176,7 +176,7 @@
                                         <label for="status">Trạng thái</label>
                                         <select id="status" name="status" class="form-control">
                                             <option value="">Chọn tình trạng</option>
-                                            <option value="Đã giao">Đã giao</option>
+                                            <option value="Đã giao">Đã giao</option>
                                             <option value="Đang giao">Đang giao</option>
                                             <option value="Đã hủy">Đã hủy</option>
                                             <option value="Đang chuẩn bị">Đang chuẩn bị</option>
@@ -243,8 +243,8 @@
                                         <td>
                                             <form th:action="@{/admin/order/status_update}" method="post">
                                                 <input type="hidden" name="userOrderId" th:value="${order.userOrder_id}" />
-                                                <select class="form-control custom-select status-select" name="status" onchange="this.form.submit()" th:disabled="${order.status == 'Đã giao' or order.status == 'Đã hủy'}">
-                                                    <option th:value="'Đã giao'" th:text="'Đã giao'" th:selected="${order.status == 'Đã giao'}" class="status-delivered"></option>
+                                                <select class="form-control custom-select status-select" name="status" onchange="this.form.submit()" th:disabled="${order.status == 'Đã giao' or order.status == 'Đã hủy'}">
+                                                    <option th:value="'Đã giao'" th:text="'Đã giao'" th:selected="${order.status == 'Đã giao'}" class="status-delivered"></option>
                                                     <option th:value="'Đang giao'" th:text="'Đang giao'" th:selected="${order.status == 'Đang giao'}" class="status-shipping"></option>
                                                     <option th:value="'Đang chuẩn bị'" th:text="'Đang chuẩn bị'" th:selected="${order.status == 'Đang chuẩn bị'}" class="status-preparing"></option>
                                                     <option th:value="'Đã hủy'" th:text="'Đã hủy'" th:selected="${order.status == 'Đã hủy'}" class="status-canceled"></option>
@@ -283,9 +283,9 @@
                                 </ul>
                             </div>
 
-<!--                            <div class="pagination">-->
-<!--                                <ul id="pagination"></ul>-->
-<!--                            </div>-->
+                            <!--                            <div class="pagination">-->
+                            <!--                                <ul id="pagination"></ul>-->
+                            <!--                            </div>-->
 
 
                         </div>
@@ -389,7 +389,7 @@
             let color;
 
             switch (selectedValue) {
-                case 'Đã giao':
+                case 'Đã giao':
                     color = '#28a745'; // Xanh lá
                     break;
                 case 'Đang giao':

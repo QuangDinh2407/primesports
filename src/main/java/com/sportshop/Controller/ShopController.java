@@ -29,6 +29,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class ShopController {
@@ -218,6 +219,9 @@ public class ShopController {
     @GetMapping("/product-detail/{id}")
     public String renderDetailProduct(@PathVariable("id") String id, Model model,HttpSession session) {
         ProductDTO proDTO= productServiceIml.findProductById(id);
+        Map<String, Integer> sizeQuantitiesFilter = proDTO.getSizeQuantities();
+        sizeQuantitiesFilter.entrySet().removeIf(entry -> entry.getValue() == 0);
+        proDTO.setSizeQuantities(sizeQuantitiesFilter);
 
         //lấy 5 sản phẩm được rating cao
         List<ProductDTO> relatedProducts=productServiceIml.findTop5Rating(0);

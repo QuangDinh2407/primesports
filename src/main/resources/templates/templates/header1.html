@@ -110,7 +110,7 @@
                                 <div class="col" th:each="cartDetail : ${cartDTO.cartDetailItems}">
                                     <article class="cart-preview-item">
                                         <div class="cart-preview-item__img-wrap">
-                                            <img th:src="@{/Assets/Customer_Shop/Assets/img/product/item-1.png}"
+                                            <img th:src="@{${cartDetail.getProduct().getImagePaths[0]}}"
                                                  alt=""
                                                  class="cart-preview-item__thumb"/>
                                         </div>
@@ -159,7 +159,7 @@
                                 <div class="col" th:each="cartDetail : ${cartDTO.cartDetailItems}">
                                     <article class="cart-preview-item">
                                         <div class="cart-preview-item__img-wrap">
-                                            <img th:src="@{/Assets/Customer_Shop/Assets/img/product/item-1.png}"
+                                            <img th:src="@{${cartDetail.getProduct().getImagePaths[0]}}"
                                                  alt=""
                                                  class="cart-preview-item__thumb"/>
                                         </div>
