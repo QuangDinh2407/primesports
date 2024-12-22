@@ -21,6 +21,6 @@ public interface UserOrderService {
 
     public Page<UserOrderDTO> getAllUserOrdersPagination(int page, int pageSize);
     public Result updateUserOrderStatus(String status, String userOrderId);
-    UserOrderDTO checkoutProduct(List<String>productIds);
+//    UserOrderDTO checkoutProduct(List<String>productIds);
     public List<UserOrderDTO> filterOrders(String beginPrice,String endPrice,String beginDate,String endDate,String status);
 }

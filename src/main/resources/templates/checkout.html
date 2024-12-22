@@ -58,7 +58,7 @@
               <!-- Cart item 1 -->
               <article class="cart-item" th:each="productItem : ${userOrderDTO.userOrderDetails}">
                 <a th:href="@{/product-detail/{id}(id=${productItem.product.product_id})}"></a>
-                  <img src="./assets/img/product/item-1.png" alt="" class="cart-item__thumb"/>
+                  <img th:src="@{${productItem.product.getImagePaths[0]}}" alt="" class="cart-item__thumb"/>
                 </a>
                 <div class="cart-item__content">
                   <div class="cart-item__content-left">
