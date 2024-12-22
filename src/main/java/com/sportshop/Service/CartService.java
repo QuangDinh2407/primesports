@@ -14,4 +14,6 @@ public interface CartService {
     CartDTO addProductToCart(HttpSession session, String productId, Integer quantity, String size);
 
     CartDTO getAllItem (String email);
+
+    CartDTO findCart(String cart_id);
 }

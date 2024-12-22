@@ -98,12 +98,13 @@ public class ShopVoucherServiceIml implements ShopVoucherService {
     }
 
     @Override
+    //đổi thành không hoạt động.
     public String deleteInfoVoucher(ShopVoucherDTO svDTO) {
         System.out.println(svDTO.getShopVoucher_id());
+        ShopVoucherEntity shopVoucherEntity = shopVoucherRepo.findShopVoucherByID(svDTO.getShopVoucher_id());
         try{
-            shopVoucherDetailRepo.deleteProductInVoucher(svDTO.getShopVoucher_id());
-            ShopVoucherEntity shopVoucherEntity = shopVoucherRepo.findByCode(svDTO.getCode());
-            shopVoucherRepo.delete(shopVoucherEntity);
+            shopVoucherEntity.setEnded_at(new Date());
+            shopVoucherRepo.save(shopVoucherEntity);
             return "Thay đổi thông tin thành công!";
         }catch(Exception e){
             e.printStackTrace();
@@ -160,5 +161,11 @@ public class ShopVoucherServiceIml implements ShopVoucherService {
             e.printStackTrace();
             return new Result(false, "Mã giảm giá không hợp lệ!");
         }
+   
+    }
+
+    public ShopVoucherDTO findByIdVoucher(String shopVoucher_id) {
+        ShopVoucherEntity a= shopVoucherRepo.findByShopVoucher_id(shopVoucher_id);
+        return shopVoucherConverter.toDTO(a);
     }
 }

@@ -131,9 +131,10 @@
                                 </div>
                             </div>
                             <div class="act-dropdown__checkout">
-                                <a href="./checkout.html" class="btn btn--primary btn--rounded act-dropdown__checkout-btn">
+                                <a th:href="@{./checkout.html}" class="btn btn--primary btn--rounded act-dropdown__checkout-btn">
                                     Check Out All
                                 </a>
+
                             </div>
                         </div>
                     </div>
@@ -152,7 +153,7 @@
                             <img th:src="@{/Assets/Customer_Shop/Assets/icons/arrow-up.png}" alt="" class="act-dropdown__arrow" />
                             <div class="act-dropdown__top">
                                 <h2 class="act-dropdown__title" th:text="'Hiện có '+${cartDTO.quantityProduct != null ? cartDTO.quantityProduct : 0}+' sản phẩm'"></h2>
-
+                                <a th:href="@{/cart_detail/{cart_id}(cart_id=${cartDTO.cart_id})}">Xem thêm</a>
                             </div>
                             <div class="row row-cols-3 gx-2 act-dropdown__list">
                                 <!-- Cart preview item -->
@@ -189,52 +190,52 @@
                     </div>
                 </div>
             </div>
-<!--            edit here-->
-                        <div class="top-act__user" th:if="${session.userInfo} != null ">
-<!--                            edit path avatar here-->
-                            <img
-                                    th:src="${session.userInfo.imagePath}"
-                                    class="avatar-image"/>
+            <!--            edit here-->
+            <div class="top-act__user" th:if="${session.userInfo} != null ">
+                <!--                            edit path avatar here-->
+                <img
+                        th:src="${session.userInfo.imagePath}"
+                        class="avatar-image"/>
 
-                            <!-- Dropdown -->
-                            <div class="act-dropdown top-act__dropdown">
-                                <div class="act-dropdown__inner user-menu">
-                                    <img
-                                            src="./assets/icons/arrow-up.png"
-                                            alt=""
-                                            class="act-dropdown__arrow top-act__dropdown-arrow"
-                                    />
+                <!-- Dropdown -->
+                <div class="act-dropdown top-act__dropdown">
+                    <div class="act-dropdown__inner user-menu">
+                        <img
+                                src="./assets/icons/arrow-up.png"
+                                alt=""
+                                class="act-dropdown__arrow top-act__dropdown-arrow"
+                        />
 
-                                    <div class="user-menu__top">
-                                        <img th:src="${session.userInfo.imagePath}" alt="" class="user-menu__avatar" />
-                                        <div>
-                                            <p class="user-menu__name" th:text="${session.userInfo.name}">John Smith</p>
-                                            <p></p>
-                                        </div>
-                                    </div>
-                                    <ul class="user-menu__list">
-                                        <li>
-                                            <a href="/customer" class="user-menu__link">Thông tin cá nhân</a>
-                                        </li>
-                                        <li>
-                                            <a href="#" class="user-menu__link">Thông tin đơn hàng</a>
-                                        </li>
-                                        <li class="user-menu__separate">
-                                            <a href="#!" class="user-menu__link" id="switch-theme-btn">
-                                                <span>Dark mode</span>
-                                                <img src="./assets/icons/sun.svg" alt="" class="icon user-menu__icon" />
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#!" class="user-menu__link">Settings</a>
-                                        </li>
-                                        <li class="user-menu__separate">
-                                            <a th:href="@{/auth/sign-out}" class="user-menu__link">Logout</a>
-                                        </li>
-                                    </ul>
-                                </div>
+                        <div class="user-menu__top">
+                            <img th:src="${session.userInfo.imagePath}" alt="" class="user-menu__avatar" />
+                            <div>
+                                <p class="user-menu__name" th:text="${session.userInfo.name}">John Smith</p>
+                                <p></p>
                             </div>
                         </div>
+                        <ul class="user-menu__list">
+                            <li>
+                                <a href="/customer" class="user-menu__link">Thông tin cá nhân</a>
+                            </li>
+                            <li>
+                                <a href="#" class="user-menu__link">Thông tin đơn hàng</a>
+                            </li>
+                            <li class="user-menu__separate">
+                                <a href="#!" class="user-menu__link" id="switch-theme-btn">
+                                    <span>Dark mode</span>
+                                    <img src="./assets/icons/sun.svg" alt="" class="icon user-menu__icon" />
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#!" class="user-menu__link">Settings</a>
+                            </li>
+                            <li class="user-menu__separate">
+                                <a th:href="@{/auth/sign-out}" class="user-menu__link">Logout</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
             <div>
 
             </div>

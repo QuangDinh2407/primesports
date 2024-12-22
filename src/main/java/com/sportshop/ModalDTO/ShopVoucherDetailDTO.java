@@ -23,7 +23,7 @@ public class ShopVoucherDetailDTO {
     @DateTimeFormat(pattern = FormatDate.FM_DATE)
     private Date updated_at;
 
-    private String productName;
+    private String productName; // Tên sản phẩm từ ProductEntity
 
-    private String shopVoucherName;
+    private String shopVoucherName; // Tên voucher từ ShopVoucherEntity
 }

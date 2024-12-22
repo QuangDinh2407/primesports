@@ -63,7 +63,7 @@
     }
 
     .amount-input input{
-       width: 25px;
+        width: 25px;
     }
 </style>
 
@@ -147,35 +147,35 @@
                     </div>
                 </div>
                 <div class="col-7 col-xl-6 col-lg-12">
-                        <section class="prod-info" style="width:115%">
-                            <h1 class="prod-info__heading" th:text="${productDTO.name}" name="name">
-                            </h1>
-                            <div class="row">
-                                <div class="col-5 col-xxl-6 col-xl-12">
-                                    <div class="prod-prop">
-                                        <p class="prod-prop__title">Rating</p>
-                                        <img th:src="@{/Assets/Customer_Shop/Assets/icons/star.svg}" alt="" class="prod-prop__icon" />
-                                        <h4 class="prod-prop__title" th:text="${productDTO.rating}"></h4>
-                                    </div>
-                                    <label for="" class="form__label prod-info__label" style="margin-top:35%">Còn lại</label>
-                                    <div class="filter__form-group">
-                                        <div class="form__select-wrap">
-                                            <div class="form__select" style="--width: 146px">
-                                                <span class="quantity-size"></span>
-                                                <img th:src="@{/Assets/Customer_Shop/Assets/icons/select-arrow.svg}" alt="" class="form__select-arrow icon"/>
-                                            </div>
-                                            <div class="form__select">
-                                                cái
-                                            </div>
+                    <section class="prod-info" style="width:115%">
+                        <h1 class="prod-info__heading" th:text="${productDTO.name}" name="name">
+                        </h1>
+                        <div class="row">
+                            <div class="col-5 col-xxl-6 col-xl-12">
+                                <div class="prod-prop">
+                                    <p class="prod-prop__title">Rating</p>
+                                    <img th:src="@{/Assets/Customer_Shop/Assets/icons/star.svg}" alt="" class="prod-prop__icon" />
+                                    <h4 class="prod-prop__title" th:text="${productDTO.rating}"></h4>
+                                </div>
+                                <label for="" class="form__label prod-info__label" style="margin-top:35%">Còn lại</label>
+                                <div class="filter__form-group">
+                                    <div class="form__select-wrap">
+                                        <div class="form__select" style="--width: 146px">
+                                            <span class="quantity-size"></span>
+                                            <img th:src="@{/Assets/Customer_Shop/Assets/icons/select-arrow.svg}" alt="" class="form__select-arrow icon"/>
+                                        </div>
+                                        <div class="form__select">
+                                            cái
                                         </div>
                                     </div>
-                                    <div class="filter__form-group">
-                                        <div class="form__tags">
-                                            <p class="form__tag prod-info__tag" style="color: black" th:each="size : ${productDTO.sizeQuantities}" th:text="${size.key}"></p>
-                                        </div>
+                                </div>
+                                <div class="filter__form-group">
+                                    <div class="form__tags">
+                                        <p class="form__tag prod-info__tag" style="color: black" th:each="size : ${productDTO.sizeQuantities}" th:text="${size.key}"></p>
                                     </div>
+                                </div>
 
-                                    <div class="filter__form-group">
+                                <div class="filter__form-group">
                                         <span class="amount-input">Số lượng:
                                              <p class="cart-item__input-btn decrement">
                                                 <img class="icon" th:src="@{/Assets/Customer_Shop/Assets/icons/minus.svg}" alt="" />
@@ -186,49 +186,49 @@
                                              </p>
                                         </span>
 
-                                    </div>
-
                                 </div>
-                                <div class="col-7 col-xxl-6 col-xl-12">
-                                    <div class="prod-props">
-                                        <div class="prod-prop">
-                                            <img
-                                                    th:src="@{/Assets/Customer_Shop/Assets/icons/document.svg}"
-                                                    alt=""
-                                                    class="prod-prop__icon icon"
-                                            />
-                                            <h4 class="prod-prop__title">So sánh</h4>
+
+                            </div>
+                            <div class="col-7 col-xxl-6 col-xl-12">
+                                <div class="prod-props">
+                                    <div class="prod-prop">
+                                        <img
+                                                th:src="@{/Assets/Customer_Shop/Assets/icons/document.svg}"
+                                                alt=""
+                                                class="prod-prop__icon icon"
+                                        />
+                                        <h4 class="prod-prop__title">So sánh</h4>
+                                    </div>
+                                    <div class="prod-prop">
+                                        <img
+                                                th:src="@{/Assets/Customer_Shop/Assets/icons/buy.svg}"
+                                                alt=""
+                                                class="prod-prop__icon icon"
+                                        />
+                                        <div>
+                                            <h4 class="prod-prop__title">Vận chuyển</h4>
+                                            <p class="prod-prop__desc">Khoảng 30.000VND cho 3-4 ngày</p>
                                         </div>
-                                        <div class="prod-prop">
-                                            <img
-                                                    th:src="@{/Assets/Customer_Shop/Assets/icons/buy.svg}"
-                                                    alt=""
-                                                    class="prod-prop__icon icon"
-                                            />
-                                            <div>
-                                                <h4 class="prod-prop__title">Vận chuyển</h4>
-                                                <p class="prod-prop__desc">Khoảng 30.000VND cho 3-4 ngày</p>
-                                            </div>
+                                    </div>
+                                    <div class="prod-info__card" style="width:111%">
+                                        <div class="prod-info__row">
+                                            <span class="prod-info__price" th:text="${productDTO.price}+'VND'" name="price"></span>
+                                            <span class="prod-info__tax">(Voucher)</span>
                                         </div>
-                                        <div class="prod-info__card" style="width:111%">
-                                            <div class="prod-info__row">
-                                                <span class="prod-info__price" th:text="${productDTO.price}+'VND'" name="price"></span>
-                                                <span class="prod-info__tax">(Voucher)</span>
-                                            </div>
-                                            <p class="prod-info__total-price">(giá - voucher)</p>
-                                            <div class="prod-info__row">
-                                                <a class="btn btn--primary prod-info__add-to-cart add-to-cart" th:href="@{/add-pro-to-cart(product_id=${productDTO.product_id})}">
-                                                    Thêm giỏ hàng
-                                                </a>
-                                                <a class="btn btn--primary prod-info__add-to-cart buy-now"  th:href="@{/checkout(product_id=${productDTO.product_id})}">
-                                                    Mua ngay
-                                                </a>
-                                            </div>
+                                        <p class="prod-info__total-price">(giá - voucher)</p>
+                                        <div class="prod-info__row">
+                                            <a class="btn btn--primary prod-info__add-to-cart add-to-cart" th:href="@{/add-pro-to-cart(product_id=${productDTO.product_id})}">
+                                                Thêm giỏ hàng
+                                            </a>
+                                            <a class="btn btn--primary prod-info__add-to-cart buy-now"  th:href="@{/checkout(product_id=${productDTO.product_id})}">
+                                                Mua ngay
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </section>
+                        </div>
+                    </section>
                 </div>
             </div>
         </div>
@@ -238,7 +238,7 @@
             <div class="prod-tab js-tabs">
                 <ul class="prod-tab__list">
                     <li class="prod-tab__item prod-tab__item--current">Miêu tả</li>
-<!--                    <li class="prod-tab__item">Review (1100)</li>-->
+                    <!--                    <li class="prod-tab__item">Review (1100)</li>-->
                     <li class="prod-tab__item">Liên quan</li>
                 </ul>
                 <div class="prod-tab__contents">
@@ -350,6 +350,7 @@
         const amountInput = document.querySelector(".amountItem");
         const incrementBtn = document.querySelector(".increment");
         const decrementBtn = document.querySelector(".decrement");
+        console.log(addToCartBtn);
 
         let currentSizeKey = null; // Biến lưu giữ key của size hiện tại
         let amount = parseInt(amountInput.value, 10) || 1; // Giá trị mặc định là 1 nếu không có giá trị

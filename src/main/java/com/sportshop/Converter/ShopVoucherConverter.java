@@ -19,6 +19,7 @@ public class ShopVoucherConverter {
 
     @Autowired
     ShopVoucherDetailRepository shopVoucherDetailRepository;
+
     @Autowired
     private ShopVoucherRepository shopVoucherRepository;
 
@@ -35,7 +36,7 @@ public class ShopVoucherConverter {
     }
 
     public ShopVoucherDTO toDTO(ShopVoucherEntity shopVoucherEntity){
-
+        
         return ShopVoucherDTO.builder()
                 .shopVoucher_id(shopVoucherEntity.getShopVoucher_id())
                 .name(shopVoucherEntity.getName())
@@ -56,5 +57,19 @@ public class ShopVoucherConverter {
                 .build();
     }
 
-
+    public ShopVoucherEntity toEntity(ShopVoucherDTO shopVoucherDTO){
+        if(shopVoucherDTO==null){
+            return null;
+        }
+        ShopVoucherEntity shopVoucherEntity = new ShopVoucherEntity();
+        shopVoucherEntity.setShopVoucher_id(shopVoucherDTO.getShopVoucher_id());
+        shopVoucherEntity.setName(shopVoucherDTO.getName());
+        shopVoucherEntity.setCode(shopVoucherDTO.getCode());
+        shopVoucherEntity.setStatus(shopVoucherDTO.getStatus());
+        shopVoucherEntity.setEnded_at(shopVoucherDTO.getEnded_at());
+        shopVoucherEntity.setStarted_at(shopVoucherDTO.getStarted_at());
+        shopVoucherEntity.setDiscountAmount(shopVoucherDTO.getDiscountAmount());
+        shopVoucherEntity.setCreated_at(shopVoucherDTO.getCreated_at());
+        return shopVoucherEntity;
+    }
 }
