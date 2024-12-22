@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mua hàng</title>
+    <style>
+        /* Bố cục của trang thanh toán */
+        .checkout-page {
+            display: block;
+            padding: 20px;
+            text-align: center;
+        }
+
+        /* Cấu trúc tổng thể của phần checkout */
+        .checkout-container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Bố cục cho các phần tử bên trong row */
+        .row {
+            margin: 0;
+            display: block;
+        }
+
+        /* Cấu trúc cho các cột */
+        .col-8, .col-4 {
+            width: 100%;
+            padding: 10px;
+        }
+
+        /* Các phần tử thông tin giỏ hàng */
+        .cart-info {
+            padding: 20px 0;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        /* Cấu trúc các thông tin giỏ hàng */
+        .cart-info__content {
+            text-align: right;
+            float: right;
+            width: 40%;
+        }
+
+        /* Các hàng thông tin giỏ hàng */
+        .cart-info__row {
+            margin-bottom: 10px;
+            width: 100%;
+        }
+
+        /* Bố cục các thông tin sản phẩm */
+        .cart-item {
+            display: block;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            overflow: hidden; /* Để tránh phần tử tràn ra ngoài */
+        }
+
+        /* Cột bên trái của sản phẩm (hình ảnh và thông tin) */
+        .cart-item__content-left {
+            width: 50%; /* Chiếm 70% chiều rộng */
+            float: left;
+            padding-right: 20px;
+            display: inline-block;
+        }
+
+        /* Cột bên phải của sản phẩm (giá trị) */
+        .cart-item__content-right {
+            width: 35%; /* Chiếm 30% chiều rộng */
+            float: right;
+            text-align: center;
+            vertical-align: middle;
+            display: inline-block;
+            margin-top: 40px;
+        }
+
+        /* Căn giữa giá trị sản phẩm */
+        .cart-item__total-price {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        /* Đảm bảo các sản phẩm hiển thị rõ ràng */
+        .cart-item__thumb {
+            width: 80px;
+            height: auto;
+            margin-right: 20px;
+        }
+
+        /* Thông tin tiêu đề của sản phẩm */
+        .cart-item__title p {
+            margin: 0;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        /* Các phần tử input trong giỏ hàng */
+        .cart-item__input {
+            font-size: 16px;
+            margin-top: 5px;
+        }
+
+        /* Căn chỉnh phần tổng tiền */
+        .cart-info__content {
+            text-align: right; /* Căn phải thông tin tổng tiền */
+        }
+
+        /* Các phần tử tổng số lượng và giá trị */
+        .cart-info__row span {
+            font-size: 16px;
+            display: inline-block;
+            width: 50%;
+        }
+
+        .cart-info__row span:last-child {
+            text-align: right;
+        }
+        .form__group span{
+            font-size: 16px;
+        }
+
+    </style>
+</head>
+
+
+<body>
+<main class="checkout-page">
+    <div class="checkout-container">
+        <div class="row">
+            <div class="col-8 col-xl-12">
+                <!-- Thông tin vận chuyển -->
+                <div class="cart-info">
+                    <h2 class="modal__heading">Thông tin vận chuyển</h2>
+                    <div class="modal__body">
+                        <div class="form__row">
+                            <div class="form__group">
+                                <span class="form__label form__label--small">Tên: </span>
+                                <span th:text="${userOrderDTO.shipping_name}"> </span>
+                            </div>
+                            <div class="form__group">
+                                <span class="form__label form__label--small">Số điện thoại: </span>
+                                <span th:text="${userOrderDTO.shipping_phone}"> </span>
+                            </div>
+                        </div>
+                        <div class="form__group">
+                            <span class="form__label form__label--small">Địa chỉ: </span>
+                            <span th:text="${userOrderDTO.shipping_address}"> </span>
+                        </div>
+                        <div class="form__group">
+                            <span class="form__label form__label--small">Phương thức thanh toán: </span>
+                            <span th:text="${userOrderDTO.paymentType.name}"></span>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+
+                <!-- Thông tin sản phẩm trong giỏ hàng -->
+                <div class="cart-info">
+                    <div class="cart-info__list">
+                        <!-- Sản phẩm trong giỏ hàng -->
+                        <article class="cart-item" th:each="productItem : ${userOrderDTO.userOrderDetails}">
+                            <div class="cart-item__content">
+                                <div class="cart-item__content-left">
+                                    <div th:if="${not #lists.isEmpty(productItem.getProduct().getImagePaths())}">
+                                        <img th:src="${productItem.getProduct().getImagePaths().getFirst()}" alt="" class="cart-item__thumb"/>
+                                    </div>
+                                    <div class="pro-content">
+                                        <h2 class="cart-item__title">
+                                            <p th:text="${productItem.product.name}"></p>
+                                        </h2>
+                                        <div class="cart-item__ctrl cart-item__ctrl--md-block">
+                                            <div class="cart-item__input">
+                                                <span>Số lượng: <span th:text="${productItem.amount}"></span></span>
+                                            </div>
+                                            <div class="cart-item__input">
+                                                <span>Size: <span th:text="${productItem.size}"></span></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="cart-item__content-right" style="text-align: right;">
+                                    <span th:if="${productItem.shopVoucher != null}">
+                                        <span><del th:text="${productItem.price}"></del></span>
+                                    </span>
+                                    <p class="cart-item__total-price" th:if="${productItem.shopVoucher != null}" th:text="${productItem.product.price * (1 - productItem.shopVoucher.discountAmount/100)}"></p>
+                                    <p class="cart-item__total-price" th:if="${productItem.shopVoucher == null}" th:text="${productItem.price}"></p>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+                <hr>
+
+                <!-- Thông tin tổng tiền -->
+                <div class="cart-info" style="display: block; text-align: right;">
+                    <div class="cart-info__content">
+                        <div class="cart-info__row">
+                            <span style="float: left;text-align: left;">Tổng số lượng sản phẩm:  </span>
+                            <span style="float: right" th:text="${userOrderDTO.total_product}"></span>
+                        </div>
+                        <div class="cart-info__row">
+                            <span style="float: left;text-align: left;">Tổng tiền sản phẩm:</span>
+                            <span style="float: right" th:text="${userOrderDTO.total_price}"></span>
+                        </div>
+                        <div class="cart-info__row">
+                            <span style="float: left;text-align: left;">Vận chuyển: </span>
+                            <span style="float: right">30000</span>
+                        </div>
+                        <hr>
+                        <div class="cart-info__row">
+                            <span style="float: left;text-align: left;">Tổng tiền: </span>
+                            <span style="float: right" th:text="${userOrderDTO.total_price + 30000}"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>

@@ -4,7 +4,9 @@ import com.sportshop.Modal.ProductSize;
 import com.sportshop.Modal.Result;
 import com.sportshop.ModalDTO.UserOrderDTO;
 import org.springframework.data.domain.Page;
+import jakarta.mail.MessagingException;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 public interface UserOrderService {
@@ -15,7 +17,8 @@ public interface UserOrderService {
     public List<UserOrderDTO> findAllOrdersByUserId(String userInfoId);
 
     UserOrderDTO checkoutProduct(List<String>productIds,List<String> sizes, List<Integer> amounts);
-    List<ProductSize> createOrder(UserOrderDTO userOrderDTO);
+
+    List<ProductSize> createOrder(UserOrderDTO userOrderDTO,String email) throws MessagingException, UnsupportedEncodingException;
 
     Result cancelOrder(String orderId);
 

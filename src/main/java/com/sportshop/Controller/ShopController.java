@@ -2,17 +2,17 @@ package com.sportshop.Controller;
 
 
 import com.sportshop.Converter.CartConverter;
+import com.sportshop.Modal.ActionCart;
 import com.sportshop.Modal.ProductSize;
 import com.sportshop.Modal.Result;
 import com.sportshop.Modal.SearchProduct;
 import com.sportshop.ModalDTO.*;
 import com.sportshop.Repository.CartRepository;
 import com.sportshop.Service.*;
-import com.sportshop.Service.Iml.ProductServiceIml;
-import com.sportshop.Service.Iml.ProductTypeServiceIml;
-import com.sportshop.Service.Iml.CartServicesIml;
-import com.sportshop.Service.Iml.UserServiceIml;
+import com.sportshop.Service.Iml.*;
 import com.sportshop.Service.ProductService;
+import jakarta.mail.MessagingException;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
 
@@ -60,6 +61,8 @@ public class ShopController {
 
     @Autowired
     CartServicesIml cartServicesIml;
+    @Autowired
+    private ShopVoucherService shopVoucherService;
     @Autowired
     private CartConverter cartConverter;
     @Autowired
@@ -121,19 +124,29 @@ public class ShopController {
         }
         else{
             CartDTO newCart= (CartDTO) session.getAttribute("cartDTO");
+
             UserDTO userDTO= (UserDTO) session.getAttribute("userInfo");
             if (userDTO == null){
                 userDTO = userServiceIml.findbyEmail(email);
+
             }
             if (newCart == null){
                 userDTO.getCart().setIsMerge(true);
             }
             else{
+
                 if(!newCart.getIsMerge()){
                     userDTO.setCart(cartServicesIml.moveCart(userDTO.getCart(),newCart));
                 }
             }
-            session.setAttribute("cartDTO", userDTO.getCart());
+            CartDTO cartUpdate= (CartDTO) session.getAttribute("cartDTOUpdate");
+            if (cartUpdate != null)
+            {
+                session.setAttribute("cartDTO", cartUpdate);
+            }
+            else {
+                session.setAttribute("cartDTO", userDTO.getCart());
+            }
             session.setAttribute("userInfo",userDTO);
         }
     }
@@ -143,6 +156,14 @@ public class ShopController {
         if (!model.containsAttribute("searchProduct")) {
             SearchProduct searchProduct = new SearchProduct();
             model.addAttribute("searchProduct", searchProduct);
+        }
+    }
+
+    @ModelAttribute
+    public void getActionCartModal(Model model) {
+        if (!model.containsAttribute("actionCart")) {
+            ActionCart actionCart = new ActionCart();
+            model.addAttribute("actionCart", actionCart);
         }
     }
 
@@ -188,17 +209,14 @@ public class ShopController {
         Pageable pageable = page > 0 ? PageRequest.of(page-1, size) : PageRequest.of(page, size) ;
 
         Page <ProductDTO> listPro = productService.getAll(searchProduct, pageable);
-
         model.addAttribute("listPro", listPro);
         model.addAttribute("size", size);
-        model.addAttribute("listPro", listPro);
         model.addAttribute("listType",productTypeServiceIml.getListHierarchyType());
         model.addAttribute("searchProduct", searchProduct);
         model.addAttribute("rs",rs);
         if (bindingResult.hasErrors()) {
             model.addAttribute("bindingResult", bindingResult);
         }
-        //System.out.println(listPro.getContent());
         return "all-product";
     }
 
@@ -217,7 +235,7 @@ public class ShopController {
 //    }
 
     @GetMapping("/product-detail/{id}")
-    public String renderDetailProduct(@PathVariable("id") String id, Model model,HttpSession session) {
+    public String renderDetailProduct(@PathVariable("id") String id, Model model,HttpSession session, HttpServletRequest request) {
         ProductDTO proDTO= productServiceIml.findProductById(id);
         Map<String, Integer> sizeQuantitiesFilter = proDTO.getSizeQuantities();
         sizeQuantitiesFilter.entrySet().removeIf(entry -> entry.getValue() == 0);
@@ -230,6 +248,9 @@ public class ShopController {
         model.addAttribute("cartDTO",(CartDTO) session.getAttribute("cartDTO"));
         model.addAttribute("productDTO", proDTO);
         model.addAttribute("relatedProducts", relatedProducts);
+        String currentURL = request.getRequestURL().toString();
+        session.setAttribute("currentURL", currentURL);
+
         return "product-detail";
     }
 
@@ -246,17 +267,9 @@ public class ShopController {
         return "checkout";
     }
 
-    @GetMapping("/shipping-info")
-    public String headerCheckout(HttpSession session,Model model) {
-        UserOrderDTO userOrderDTO = (UserOrderDTO) session.getAttribute("userOrderDTO");
-        List <PaymentTypeDTO> listPayment = paymentTypeService.listPayment();
-        model.addAttribute("userOrderDTO",userOrderDTO);
-        model.addAttribute("listPayment",listPayment);
-        return "shipping-info";
-    }
+    @PostMapping("/checkoutAll")
+    public String checkOutAll(@Valid UserOrderDTO userOrderDTOForm, BindingResult bindingResult, HttpSession session, Model model) {
 
-    @PostMapping("/order-product")
-    public String orderProduct(@Valid UserOrderDTO userOrderDTOForm, BindingResult bindingResult, HttpSession session, Model model, RedirectAttributes redirectAttributes) throws Exception {
         UserOrderDTO userOrderDTOSession = (UserOrderDTO) session.getAttribute("userOrderDTO");
         userOrderDTOSession.setPaymentType(userOrderDTOForm.getPaymentType());
         userOrderDTOSession.setShipping_address(userOrderDTOForm.getShipping_address());
@@ -273,8 +286,30 @@ public class ShopController {
             // Trả về giao diện chứa form
             return "shipping-info";
         }
+        model.addAttribute("userOrderDTO",userOrderDTOSession);
+        return "checkoutAll";
+    }
 
+    @GetMapping("/shipping-info")
+    public String headerCheckout(HttpSession session,Model model) {
+        UserOrderDTO userOrderDTO = (UserOrderDTO) session.getAttribute("userOrderDTO");
+        List <PaymentTypeDTO> listPayment = paymentTypeService.listPayment();
+        model.addAttribute("userOrderDTO",userOrderDTO);
+        model.addAttribute("listPayment",listPayment);
+        return "shipping-info";
+    }
 
+    @PostMapping("/add-voucher")
+    public String addVoucher(HttpSession session,Model model, @RequestParam("code") String code, RedirectAttributes redirectAttributes) {
+        UserOrderDTO userOrderDTO = (UserOrderDTO) session.getAttribute("userOrderDTO");
+        Result rsVoucher = shopVoucherService.findByCodeAndProductId(code,userOrderDTO);
+        redirectAttributes.addFlashAttribute("rsVoucher",rsVoucher);
+        return "redirect:/shipping-info";
+    }
+
+    @PostMapping("/order-product")
+    public String orderProduct(HttpSession session, Model model, RedirectAttributes redirectAttributes) throws Exception {
+        UserOrderDTO userOrderDTOSession = (UserOrderDTO) session.getAttribute("userOrderDTO");
         if(userOrderDTOSession.getPaymentType().getName().equals("Chuyển khoản ngân hàng"))
         {
             String paymentUrl = vnPayService.createPaymentUrl(userOrderDTOSession.getTotal_price() + 30000);
@@ -286,7 +321,7 @@ public class ShopController {
             rs.setMessage("Đặt hàng thành công!");
             String email = (String) session.getAttribute("email");
             userOrderDTOSession.setUserEmail(email);
-            List <ProductSize> productSizeList = userOrderService.createOrder(userOrderDTOSession);
+            List <ProductSize> productSizeList = userOrderService.createOrder(userOrderDTOSession,email);
             redirectAttributes.addFlashAttribute("productSizeList", productSizeList);
             redirectAttributes.addFlashAttribute("rs", rs);
             return "redirect:/update-quantity";
@@ -294,7 +329,7 @@ public class ShopController {
     }
 
     @GetMapping("/update-quantity")
-    public String orderSummary(Model model,RedirectAttributes redirectAttributes) {
+    public String orderSummary(Model model,RedirectAttributes redirectAttributes,HttpSession session) {
         // Nhận dữ liệu từ redirectAttributes
         Result rs = (Result) model.asMap().get("rs");
         List<ProductSize> productSizeList = (List<ProductSize>) model.asMap().get("productSizeList");
@@ -304,11 +339,31 @@ public class ShopController {
         });
         redirectAttributes.addFlashAttribute("productSizeList", productSizeList);
         redirectAttributes.addFlashAttribute("rs", rs);
+        return "redirect:/update-cart";
+    }
+
+    @GetMapping("/update-cart")
+    public String updateteCart(Model model,HttpSession session,RedirectAttributes redirectAttributes) {
+        Result rs = (Result) model.asMap().get("rs");
+        List<ProductSize> productSizeList = (List<ProductSize>) model.asMap().get("productSizeList");
+        List<String> productIds = (List<String>) session.getAttribute("productIds");
+        CartDTO cart=(CartDTO) session.getAttribute("cartDTO");
+        if(productIds != null)
+        {
+            cartServicesIml.deleteItems(cart,productIds,session);
+            session.removeAttribute("productIds");
+        }
+        CartDTO cartDTOnew = cartServicesIml.findCart(cart.getCart_id());
+        cartDTOnew.setIsMerge(true);
+        session.setAttribute("cartDTOUpdate", cartDTOnew);
+        redirectAttributes.addFlashAttribute("productSizeList", productSizeList);
+        redirectAttributes.addFlashAttribute("rs", rs);
         return "redirect:/all-product";
     }
 
+
     @GetMapping("/api/vnpay/return")
-    public String handleReturn(@RequestParam("vnp_ResponseCode") String vnp_ResponseCode ,Model model,HttpSession session,RedirectAttributes redirectAttributes) {
+    public String handleReturn(@RequestParam("vnp_ResponseCode") String vnp_ResponseCode ,Model model,HttpSession session,RedirectAttributes redirectAttributes) throws MessagingException, UnsupportedEncodingException {
         Result rs = new Result();
         UserOrderDTO userOrderDTOSession = (UserOrderDTO) session.getAttribute("userOrderDTO");
         if (vnp_ResponseCode.equals("00"))
@@ -317,7 +372,7 @@ public class ShopController {
             rs.setMessage("Đặt hàng thành công!");
             String email = (String) session.getAttribute("email");
             userOrderDTOSession.setUserEmail(email);
-            List <ProductSize> productSizeList = userOrderService.createOrder(userOrderDTOSession);
+            List <ProductSize> productSizeList = userOrderService.createOrder(userOrderDTOSession,email);
             redirectAttributes.addFlashAttribute("productSizeList", productSizeList);
             redirectAttributes.addFlashAttribute("rs", rs);
             return "redirect:/update-quantity";
@@ -334,14 +389,37 @@ public class ShopController {
 
     }
 
-    @GetMapping("/cart_detail/{cart_id}")
-    public String renderDetailCart(@PathVariable("cart_id") String cart_id, Model model) {
-        System.out.println("cart: "+cart_id); // In ra để kiểm tra
-
+    @GetMapping("/cart-detail/{cart_id}")
+    public String renderDetailCart(@PathVariable("cart_id") String cart_id, Model model,HttpSession session) {
         CartDTO cartDTO=cartServicesIml.findCart(cart_id);
-        System.out.println("yeah"+cartDTO.getCart_id());
         model.addAttribute("cartDTO",cartDTO);
+        CartDTO cartDTOnew = cartServicesIml.findCart(cart_id);
+        cartDTOnew.setIsMerge(true);
+        session.setAttribute("cartDTOUpdate", cartDTOnew);
         return "cart-detail";
+    }
+
+
+    @PostMapping("/action-cart")
+    public String handlerAction(ActionCart actionCart, RedirectAttributes redirectAttributes,HttpSession session) {
+        CartDTO cartDTO=cartServicesIml.findCart(actionCart.getCartId());
+        if (actionCart.getAction().equals("delete"))
+        {
+            if (!actionCart.getProductId().isEmpty())
+            {
+                cartServicesIml.deleteItems(cartDTO,actionCart.getProductId(),session);
+
+            }
+            return "redirect:/cart-detail/"+ actionCart.getCartId();
+        }
+        else {
+            redirectAttributes.addAttribute("product_id",actionCart.getProductId());
+            redirectAttributes.addAttribute("size", actionCart.getSize());
+            redirectAttributes.addAttribute("amount",actionCart.getAmount());
+            session.setAttribute("productIds",actionCart.getProductId());
+            return "redirect:/checkout";
+        }
+
     }
 
 }

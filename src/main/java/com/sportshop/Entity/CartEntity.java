@@ -13,7 +13,6 @@ import jakarta.persistence.*;
 @Entity
 @Table (name = "Cart")
 public class CartEntity {
-	
 	@Id
 	@GeneratedValue (strategy = GenerationType.UUID)
 	private String cart_id;

@@ -3,13 +3,12 @@ package com.sportshop.Controller;
 import com.sportshop.Converter.ProductReviewConverter;
 import com.sportshop.Entity.ProductReviewEntity;
 import com.sportshop.Modal.Result;
+import com.sportshop.ModalDTO.CartDTO;
 import com.sportshop.ModalDTO.UserDTO;
 import com.sportshop.ModalDTO.UserOrderDTO;
 import com.sportshop.ModalDTO.UserOrderDetailDTO;
-import com.sportshop.Service.AccountService;
-import com.sportshop.Service.ProductReviewService;
-import com.sportshop.Service.UserOrderService;
-import com.sportshop.Service.UserService;
+import com.sportshop.Service.*;
+import com.sportshop.Service.Iml.CartServicesIml;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +44,8 @@ public class customerController {
     private ProductReviewConverter productReviewConverter;
 
     public String userInfo_id;
+    @Autowired
+    private CartService cartService;
 
     @ModelAttribute
     public void getUser(HttpSession session, Model model) {
@@ -179,6 +180,7 @@ public class customerController {
         redirectAttributes.addFlashAttribute("rs",rs);
         return "redirect:/customer/order-history" ;
     }
+
 
 
 }

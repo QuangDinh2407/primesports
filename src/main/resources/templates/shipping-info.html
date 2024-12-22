@@ -36,6 +36,20 @@
         margin-top: 5px;
         margin-left: 10px;
     }
+    .voucher-container{
+        margin-bottom: 20px;
+        border-radius: 20px;
+        background: #FFFFFF;
+        width: 32%;
+        padding: 30px;
+        position: absolute;
+        right: 0;
+        top: 0;
+    }
+    .voucher-container label{
+        font-size: 1.8rem;
+        font-weight: 500;
+    }
 </style>
 <body>
 <!-- Header -->
@@ -66,8 +80,18 @@
 
 
         <!-- Checkout content -->
-        <form th:action="@{/order-product}" method="post" class="form" th:object="${userOrderDTO}">
-            <div class="checkout-container">
+            <div class="checkout-container" style="position: relative;">
+                <form th:action="@{/add-voucher}" method="post" class="form">
+                    <div class="voucher-container" >
+                        <label>Nhập mã giảm giá</label>
+                        <div class="form__text-input form__text-input--small" style="margin: 10px 0">
+                            <input type="text" placeholder="Mã giảm giá" name="code" class="form__input">
+                        </div>
+                        <p id="error-voucher" class="error-message"></p>
+                        <button type="submit" class="cart-info__next-btn btn btn--primary btn--rounded" style="width: 100%;">Nhập mã</button>
+                    </div>
+                </form>
+                <form th:action="@{/checkoutAll}" method="post" class="form" th:object="${userOrderDTO}">
                 <div class="row gy-xl-3">
                     <div class="col-8 col-xl-12">
                             <div class="cart-info">
@@ -82,7 +106,7 @@
                                                 <p class="error-message" th:if="${#fields.hasErrors('shipping_name')}" th:errors="*{shipping_name}"></p>
                                         </div>
                                         <div class="form__group">
-                                            <label for="phone" class="form__label form__label--small">Phone</label>
+                                            <label for="phone" class="form__label form__label--small">Số điện thoại</label>
                                             <div class="form__text-input form__text-input--small">
                                                 <input type="tel" id="phone" placeholder="Số điện thoại" th:field="*{shipping_phone}"/>
                                             </div>
@@ -90,7 +114,7 @@
                                         </div>
                                     </div>
                                     <div class="form__group">
-                                        <label for="address" class="form__label form__label--small">Address</label>
+                                        <label for="address" class="form__label form__label--small">Địa chỉ</label>
                                         <div class="form__text-area">
                                             <textarea id="address" placeholder="Địa chỉ" class="form__text-area-input" th:field="*{shipping_address}"></textarea>
                                         </div>
@@ -115,6 +139,8 @@
                                 <article class="cart-item" th:each="productItem : ${userOrderDTO.userOrderDetails}">
                                     <a th:href="@{/product-detail/{id}(id=${productItem.product.product_id})}"></a>
                                     <img th:src="@{${productItem.product.getImagePaths[0]}}" alt="" class="cart-item__thumb"/>
+                                    <a th:href="@{/product-detail/{id}(id=${productItem.product.product_id})}">
+                                    <img src="./assets/img/product/item-1.png" alt="" class="cart-item__thumb"/>
                                     </a>
                                     <div class="cart-item__content">
                                         <div class="cart-item__content-left">
@@ -132,7 +158,9 @@
                                             </div>
                                         </div>
                                         <div class="cart-item__content-right">
-                                            <p class="cart-item__total-price" th:text="${productItem.product.price}"></p>
+                                            <span th:if="${productItem.shopVoucher != null}"><span><del th:text="${productItem.price}"></del></span></span>
+                                            <p class="cart-item__total-price" th:if="${productItem.shopVoucher != null}" th:text="${productItem.product.price * (1 - productItem.shopVoucher.discountAmount/100)}"></p>
+                                            <p class="cart-item__total-price" th:if="${productItem.shopVoucher == null}" th:text="${productItem.product.price}"></p>
                                         </div>
                                     </div>
                                 </article>
@@ -151,40 +179,60 @@
                         </div>
                     </div>
                     <div class="col-4 col-xl-12">
-                        <div class="cart-info">
-                            <div class="cart-info__row">
-                                <span>Tổng số lượng sản phẩm <span class="cart-info__sub-label"></span></span>
-                                <span th:text="${userOrderDTO.userOrderDetails.size()}"></span>
+                        <div>
+                            <div class="cart-info" style="height: 206px" >
+
                             </div>
-                            <div class="cart-info__row">
-                                <span>Tổng tiền sản phẩm<span class="cart-info__sub-label"></span></span>
-                                <span th:text="${userOrderDTO.total_price}">$191.65</span>
+                            <div class="cart-info">
+                                <div class="cart-info__row">
+                                    <span>Tổng số lượng sản phẩm <span class="cart-info__sub-label"></span></span>
+                                    <span th:text="${userOrderDTO.total_product}"></span>
+                                </div>
+                                <div class="cart-info__row">
+                                    <span>Tổng tiền sản phẩm <span class="cart-info__sub-label"></span></span>
+                                    <span th:text="${userOrderDTO.total_price}"></span>
+                                </div>
+                                <div class="cart-info__row">
+                                    <span>Vận chuyển</span>
+                                    <span>30000</span>
+                                </div>
+                                <div class="cart-info__separate"></div>
+                                <div class="cart-info__row">
+                                    <span>Tổng tiền</span>
+                                    <span th:text="${userOrderDTO.total_price + 30000}"></span>
+                                </div>
+                                <button type="submit" class="cart-info__next-btn btn btn--primary btn--rounded" style="width: 100%;">
+                                    Đặt hàng
+                                </button>
                             </div>
-                            <div class="cart-info__row">
-                                <span>Vận chuyển</span>
-                                <span>30000</span>
-                            </div>
-                            <div class="cart-info__separate"></div>
-                            <div class="cart-info__row">
-                                <span>Tổng tiền</span>
-                                <span th:text="${userOrderDTO.total_price + 30000}"></span>
-                            </div>
-                            <button type="submit" class="cart-info__next-btn btn btn--primary btn--rounded" style="width: 100%;">
-                                Đặt hàng
-                            </button>
                         </div>
                     </div>
                 </div>
+                </form>
             </div>
-        </form>
     </div>
-
 </main>
 
 <!-- Footer -->
 <footer id="footer" class="footer"></footer>
 <script>
     load("#footer", "/footer");
+</script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    const rsVoucher = /*[[${rsVoucher}]]*/ 'default';
+    /*]]>*/
+    if (rsVoucher.message)
+    {
+        if (!rsVoucher.success)
+        {
+           const errorVoucher = document.getElementById("error-voucher");
+           errorVoucher.innerHTML = rsVoucher.message;
+        }
+        else{
+            showSuccessToast(rsVoucher.message);
+        }
+    }
 </script>
 <script th:inline="javascript">
     /*<![CDATA[*/

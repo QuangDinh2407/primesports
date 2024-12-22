@@ -49,8 +49,8 @@ public class ShopVoucherConverter {
                 .updated_at(shopVoucherEntity.getUpdated_at())
                 .deleted_at(shopVoucherEntity.getDeleted_at())
                 .status(shopVoucherEntity.getStatus())
-                .shopVoucherDetailItems(shopVoucherEntity.getShopVoucherDetailItems()) // Nếu cần ánh xạ sâu hơn, thêm logic tại đây
-                .shopCustomerVoucherItems(shopVoucherEntity.getShopCustomerVoucherItems())
+//                .shopVoucherDetailItems(shopVoucherEntity.getShopVoucherDetailItems()) // Nếu cần ánh xạ sâu hơn, thêm logic tại đây
+//                .shopCustomerVoucherItems(shopVoucherEntity.getShopCustomerVoucherItems())
                 .productTypeName(findProductTypeNamesByVoucherId(shopVoucherEntity.getShopVoucher_id()))
 //                .findSVDByShopVoucher_id(findDetailByshopVoucherName(shopVoucherEntity.getShopVoucher_id()))
                 // Nếu cần ánh xạ sâu hơn, thêm logic tại đây

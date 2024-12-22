@@ -51,14 +51,47 @@
 
     <!-- Checkout content -->
     <div class="checkout-container">
+      <form  th:action="@{/order-product}" method="post" class="form" th:obect="${userOrderDTO}">
       <div class="row gy-xl-3">
         <div class="col-8 col-xl-12">
+          <div class="cart-info">
+            <h2 class="modal__heading">Thông tin vận chuyển</h2>
+            <div class="modal__body">
+              <div class="form__row">
+                <div class="form__group">
+                  <label for="name" class="form__label form__label--small">Tên</label>
+                  <div class="form__text-input form__text-input--small">
+                    <p th:text="${userOrderDTO.shipping_name}"> </p>
+                  </div>
+                </div>
+                <div class="form__group">
+                  <label for="phone" class="form__label form__label--small">Số điện thoại</label>
+                  <div class="form__text-input form__text-input--small">
+                    <p th:text="${userOrderDTO.shipping_phone}"> </p>
+                  </div>
+                </div>
+              </div>
+              <div class="form__group">
+                <label for="address" class="form__label form__label--small">Địa chỉ</label>
+                <div class="form__text-area">
+                  <p th:text="${userOrderDTO.shipping_address}"> </p>
+                </div>
+              </div>
+              <div class="form__group">
+                <label for="address" class="form__label form__label--small">Phương thức thanh toán</label>
+                <div class="form__text-input" style="margin-top: 10px" >
+                  <p th:text="${userOrderDTO.paymentType.name}"></p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <br>
           <div class="cart-info">
             <div class="cart-info__list">
               <!-- Cart item 1 -->
               <article class="cart-item" th:each="productItem : ${userOrderDTO.userOrderDetails}">
-                <a th:href="@{/product-detail/{id}(id=${productItem.product.product_id})}"></a>
-                  <img th:src="@{${productItem.product.getImagePaths[0]}}" alt="" class="cart-item__thumb"/>
+                <a th:href="@{/product-detail/{id}(id=${productItem.product.product_id})}">
+                  <img src="./assets/img/product/item-1.png" alt="" class="cart-item__thumb"/>
                 </a>
                 <div class="cart-item__content">
                   <div class="cart-item__content-left">
@@ -73,6 +106,13 @@
                       <div class="cart-item__input">
                         <span>Size: <span th:text="${productItem.size}"></span></span>
                       </div>
+                    </div>
+                  </div>
+                  <div class="cart-item__content-right">
+                    <div class="cart-item__content-right">
+                      <span th:if="${productItem.shopVoucher != null}"><span><del th:text="${productItem.price}"></del></span></span>
+                      <p class="cart-item__total-price" th:if="${productItem.shopVoucher != null}" th:text="${productItem.product.price * (1 - productItem.shopVoucher.discountAmount/100)}"></p>
+                      <p class="cart-item__total-price" th:if="${productItem.shopVoucher == null}" th:text="${productItem.product.price}"></p>
                     </div>
                   </div>
                 </div>
@@ -110,12 +150,13 @@
               <span>Tổng tiền</span>
               <span th:text="${userOrderDTO.total_price + 30000}"></span>
             </div>
-            <a th:href="@{/shipping-info(userOrderDTO=${userOrderDTO})}" class="cart-info__next-btn btn btn--primary btn--rounded">
-              Nhập thông tin vận chuyển
-            </a>
+            <button type="submit" class="cart-info__next-btn btn btn--primary btn--rounded" style="width: 100%;">
+              Xác nhận đặt hàng
+            </button>
           </div>
         </div>
       </div>
+      </form>
     </div>
   </div>
 </main>
@@ -127,19 +168,5 @@
 </script>
 
 <!-- Modal: confirm remove shopping cart item -->
-<div id="delete-confirm" class="modal modal--small hide">
-  <div class="modal__content">
-    <p class="modal__text">Do you want to remove this item from shopping cart?</p>
-    <div class="modal__bottom">
-      <button class="btn btn--small btn--outline modal__btn js-toggle" toggle-target="#delete-confirm">
-        Cancel
-      </button>
-      <button class="btn btn--small btn--danger btn--primary modal__btn btn--no-margin js-toggle" toggle-target="#delete-confirm">
-        Delete
-      </button>
-    </div>
-  </div>
-  <div class="modal__overlay js-toggle" toggle-target="#delete-confirm"></div>
-</div>
 </body>
 </html>
