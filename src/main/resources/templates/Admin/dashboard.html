@@ -28,7 +28,23 @@
                 <div class="btn-wrapper">
                     <a href="#" class="btn btn-otline-dark align-items-center"><i class="icon-share"></i> Share</a>
                     <a href="#" class="btn btn-otline-dark"><i class="icon-printer"></i> Print</a>
-                    <a href="#" class="btn btn-primary text-white me-0"><i class="icon-download"></i> Export</a>
+
+                    <form th:action="@{/admin/export}" method="POST" style="display: inline;">
+                        <!-- Các input ẩn gửi giá trị về Controller -->
+                        <input type="hidden" name="revenueToday" th:value="${revenueToday}" />
+                        <input type="hidden" name="revenueTotal" th:value="${revenueTotal}" />
+                        <input type="hidden" name="totalImportPrice" th:value="${totalImportPrice}" />
+                        <input type="hidden" name="profit" th:value="${profit}" />
+                        <input type="hidden" id="chartDataInput" name="chartData" th:value="${chartData}"/>
+                        <input type="hidden" id="orderStatusCountsInput" name="orderStatusCounts" th:value="${orderStatusCounts}"/>
+                        <input type="hidden" id="topSellingProductsInput" name="topSellingProducts" th:value="${topSellingProducts}"/>
+
+                        <button type="submit" class="btn btn-primary text-white me-0">
+                            <i class="icon-download"></i> Export
+                        </button>
+                    </form>
+
+
                 </div>
             </div>
         </div>
@@ -182,6 +198,33 @@
             }
         });
     </script>
+
+    <script th:inline="javascript">
+        // Chuyển đổi dữ liệu Map sang JSON và gán vào input ẩn
+        document.addEventListener("DOMContentLoaded", function () {
+
+            /*<![CDATA[*/
+            const chartData = /*[[${chartData}]]*/ 'default';
+            /*]]>*/
+
+            /*<![CDATA[*/
+            const orderStatusCounts = /*[[${orderStatusCounts}]]*/ 'default';
+            /*]]>*/
+
+            /*<![CDATA[*/
+            const topSellingProducts = /*[[${topSellingProducts}]]*/ 'default';
+            /*]]>*/
+
+            console.log(chartData);
+            console.log(orderStatusCounts);
+            console.log(topSellingProducts);
+
+            document.getElementById("chartDataInput").value = JSON.stringify(chartData);
+            document.getElementById("orderStatusCountsInput").value = JSON.stringify(orderStatusCounts);
+            document.getElementById("topSellingProductsInput").value = JSON.stringify(topSellingProducts);
+        });
+    </script>
+
 
 </div>
 </body>
