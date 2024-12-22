@@ -1,16 +1,23 @@
 package com.sportshop.Service.Iml;
 
 import com.sportshop.Converter.ShopVoucherConverter;
+import com.sportshop.Converter.ShopVoucherDetailConverter;
+import com.sportshop.Entity.ShopVoucherDetailEntity;
 import com.sportshop.Entity.ShopVoucherEntity;
+import com.sportshop.Modal.Result;
 import com.sportshop.ModalDTO.ShopVoucherDTO;
+import com.sportshop.ModalDTO.ShopVoucherDetailDTO;
+import com.sportshop.ModalDTO.UserOrderDTO;
 import com.sportshop.Repository.ShopVoucherDetailRepository;
 import com.sportshop.Repository.ShopVoucherRepository;
 import com.sportshop.Service.ShopVoucherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Date;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,6 +31,8 @@ public class ShopVoucherServiceIml implements ShopVoucherService {
 
     @Autowired
     ShopVoucherDetailRepository shopVoucherDetailRepo;
+    @Autowired
+    private ShopVoucherDetailConverter shopVoucherDetailConverter;
 
     @Override
     public List<ShopVoucherDTO> findAll() {
@@ -102,4 +111,54 @@ public class ShopVoucherServiceIml implements ShopVoucherService {
         }
     }
 
+    @Override
+    public Result findByCodeAndProductId(String code, UserOrderDTO userOrderDTO) {
+        try {
+            ShopVoucherEntity shopVoucherEntity = shopVoucherRepo.findByCode(code);
+            if (shopVoucherEntity == null)
+            {
+                return new Result(false, "Mã giảm giá không hợp lệ!");
+            }
+            ShopVoucherDTO shopVoucherDTO = shopVoucherConverter.toDTO(shopVoucherEntity);
+            boolean isVoucherApplied = userOrderDTO.getUserOrderDetails().stream()
+                    .anyMatch(item -> {
+                        ShopVoucherDetailEntity shopVoucherDetailEntity = shopVoucherDetailRepo.findShopVoucherDetailByVoucherAndProduct(
+                                shopVoucherDTO.getShopVoucher_id(),
+                                item.getProduct().getProduct_id()
+                        );
+                        if (shopVoucherDetailEntity != null) {
+                            Date now = new Date(System.currentTimeMillis());
+                            Date voucherExpiryDate = shopVoucherDTO.getEnded_at();
+                            if (now.before(voucherExpiryDate)) {
+                                item.setShopVoucher(shopVoucherDTO);
+                                return true;
+                            } else {
+                                return false;
+                            }
+                        }
+                        return false;
+                    });
+            // Trả kết quả
+            if (isVoucherApplied)
+            {
+                Float totalAmount = (float) userOrderDTO.getUserOrderDetails().stream()
+                        .mapToDouble(item -> {
+                            if (item.getShopVoucher() != null) {
+                                return (item.getProduct().getPrice() * item.getAmount()) * (1 - item.getShopVoucher().getDiscountAmount() / 100);
+                            } else {
+                                return item.getProduct().getPrice() * item.getAmount();
+                            }
+                        })
+                        .sum();
+                userOrderDTO.setTotal_price(totalAmount);
+            }
+
+            return isVoucherApplied
+                    ? new Result(true, "Thêm mã giảm giá thành công!")
+                    : new Result(false, "Mã giảm giá không hợp lệ!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false, "Mã giảm giá không hợp lệ!");
+        }
+    }
 }

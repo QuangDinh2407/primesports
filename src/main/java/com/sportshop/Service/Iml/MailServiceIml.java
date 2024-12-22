@@ -2,6 +2,7 @@ package com.sportshop.Service.Iml;
 
 import com.sportshop.Modal.Mail;
 import com.sportshop.ModalDTO.AccountDTO;
+import com.sportshop.ModalDTO.UserOrderDTO;
 import com.sportshop.Service.MailService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -105,6 +106,29 @@ public class MailServiceIml implements MailService {
         helper.setText(htmlContent, true);
 
         mailSender.send(message);
+    }
+
+    @Override
+    public void sendOrder(UserOrderDTO userOrderDTO, String email) throws MessagingException, UnsupportedEncodingException {
+        MimeMessage message = mailSender.createMimeMessage();
+
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+        helper.setFrom(from, personal);
+        helper.setTo(email);
+        helper.setSubject("Xác nhận đơn hàng");
+
+        Context context = new Context();
+        context.setVariable("userOrderDTO", userOrderDTO);
+
+        String htmlContent = templateEngine.process("send-order", context);
+        helper.setText(htmlContent, true);
+
+        message.setContent(htmlContent, "text/html; charset=UTF-8");
+
+
+        mailSender.send(message);
+
     }
 
 

@@ -48,12 +48,12 @@ public class ShopVoucherDTO {
 
     private String status;
 
-    private List<ShopVoucherDetailEntity> shopVoucherDetailItems = new ArrayList<ShopVoucherDetailEntity>();
-
-    private List <ShopCustomerVoucherEntity> shopCustomerVoucherItems = new ArrayList<ShopCustomerVoucherEntity>();
+//    private List<ShopVoucherDetailEntity> shopVoucherDetailItems = new ArrayList<ShopVoucherDetailEntity>();
+//
+//    private List <ShopCustomerVoucherEntity> shopCustomerVoucherItems = new ArrayList<ShopCustomerVoucherEntity>();
 
     private String productTypeName; // Loại sản phẩm
 
-    private List<ShopVoucherDetailEntity>findSVDByShopVoucher_id;
+//    private List<ShopVoucherDetailEntity>findSVDByShopVoucher_id;
 
 }

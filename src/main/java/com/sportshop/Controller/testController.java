@@ -47,8 +47,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@RestController
-//@Controller
+//@RestController
+@Controller
 public class testController {
 
     @Autowired
@@ -87,6 +87,7 @@ public class testController {
 
     @Autowired
     ProductConverter productConverter;
+
 
     @GetMapping("/test")
     public String test() {
@@ -418,4 +419,6 @@ public class testController {
         System.out.println(results.getFirst()[0]);
         return "cuu";
     }
+
+
 }

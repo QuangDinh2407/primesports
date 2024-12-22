@@ -2,6 +2,7 @@ package com.sportshop.Service;
 
 import com.sportshop.Modal.Mail;
 import com.sportshop.ModalDTO.AccountDTO;
+import com.sportshop.ModalDTO.UserOrderDTO;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -16,4 +17,6 @@ public interface MailService {
     void sendOTPtoResetPass(String email, String otp, HttpServletRequest request) throws MessagingException, UnsupportedEncodingException;
 
     void sendPassword(String email, String newPassword, HttpServletRequest request) throws MessagingException, UnsupportedEncodingException;
+
+    void sendOrder(UserOrderDTO userOrderDTO,String email) throws MessagingException, UnsupportedEncodingException;
 }

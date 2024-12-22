@@ -6,11 +6,9 @@ import com.sportshop.Modal.Result;
 import com.sportshop.Modal.SearchProduct;
 import com.sportshop.ModalDTO.*;
 import com.sportshop.Service.*;
-import com.sportshop.Service.Iml.ProductServiceIml;
-import com.sportshop.Service.Iml.ProductTypeServiceIml;
-import com.sportshop.Service.Iml.CartServicesIml;
-import com.sportshop.Service.Iml.UserServiceIml;
+import com.sportshop.Service.Iml.*;
 import com.sportshop.Service.ProductService;
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -27,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 @Controller
@@ -58,6 +57,8 @@ public class ShopController {
 
     @Autowired
     CartServicesIml cartServicesIml;
+    @Autowired
+    private ShopVoucherService shopVoucherService;
 
 //    @ModelAttribute
 //    public void checkLoginToCreateCart(HttpSession session,Model model){
@@ -187,24 +188,17 @@ public class ShopController {
         return "checkout";
     }
 
-    @GetMapping("/shipping-info")
-    public String headerCheckout(HttpSession session,Model model) {
-        UserOrderDTO userOrderDTO = (UserOrderDTO) session.getAttribute("userOrderDTO");
-        List <PaymentTypeDTO> listPayment = paymentTypeService.listPayment();
-        model.addAttribute("userOrderDTO",userOrderDTO);
-        model.addAttribute("listPayment",listPayment);
-        return "shipping-info";
-    }
+    @PostMapping("/checkoutAll")
+    public String checkOutAll(@Valid UserOrderDTO userOrderDTOForm, BindingResult bindingResult, HttpSession session, Model model) {
 
-    @PostMapping("/order-product")
-    public String orderProduct(@Valid UserOrderDTO userOrderDTOForm, BindingResult bindingResult, HttpSession session, Model model, RedirectAttributes redirectAttributes) throws Exception {
         UserOrderDTO userOrderDTOSession = (UserOrderDTO) session.getAttribute("userOrderDTO");
         userOrderDTOSession.setPaymentType(userOrderDTOForm.getPaymentType());
         userOrderDTOSession.setShipping_address(userOrderDTOForm.getShipping_address());
         userOrderDTOSession.setShipping_name(userOrderDTOForm.getShipping_name());
         userOrderDTOSession.setShipping_phone(userOrderDTOForm.getShipping_phone());
 
-        System.out.println(userOrderDTOForm);
+        System.out.println("form: "+ userOrderDTOForm);
+        System.out.println("Session: "+ userOrderDTOSession);
         if (bindingResult.hasErrors()) {
             userOrderDTOForm.setUserEmail(userOrderDTOSession.getUserEmail());
             userOrderDTOForm.setTotal_price(userOrderDTOSession.getTotal_price());
@@ -215,8 +209,30 @@ public class ShopController {
             // Trả về giao diện chứa form
             return "shipping-info";
         }
+        model.addAttribute("userOrderDTO",userOrderDTOSession);
+        return "checkoutAll";
+    }
 
+    @GetMapping("/shipping-info")
+    public String headerCheckout(HttpSession session,Model model) {
+        UserOrderDTO userOrderDTO = (UserOrderDTO) session.getAttribute("userOrderDTO");
+        List <PaymentTypeDTO> listPayment = paymentTypeService.listPayment();
+        model.addAttribute("userOrderDTO",userOrderDTO);
+        model.addAttribute("listPayment",listPayment);
+        return "shipping-info";
+    }
 
+    @PostMapping("/add-voucher")
+    public String addVoucher(HttpSession session,Model model, @RequestParam("code") String code, RedirectAttributes redirectAttributes) {
+        UserOrderDTO userOrderDTO = (UserOrderDTO) session.getAttribute("userOrderDTO");
+        Result rsVoucher = shopVoucherService.findByCodeAndProductId(code,userOrderDTO);
+        redirectAttributes.addFlashAttribute("rsVoucher",rsVoucher);
+        return "redirect:/shipping-info";
+    }
+
+    @PostMapping("/order-product")
+    public String orderProduct(HttpSession session, Model model, RedirectAttributes redirectAttributes) throws Exception {
+        UserOrderDTO userOrderDTOSession = (UserOrderDTO) session.getAttribute("userOrderDTO");
         if(userOrderDTOSession.getPaymentType().getName().equals("Chuyển khoản ngân hàng"))
         {
             String paymentUrl = vnPayService.createPaymentUrl(userOrderDTOSession.getTotal_price() + 30000);
@@ -228,7 +244,7 @@ public class ShopController {
             rs.setMessage("Đặt hàng thành công!");
             String email = (String) session.getAttribute("email");
             userOrderDTOSession.setUserEmail(email);
-            List <ProductSize> productSizeList = userOrderService.createOrder(userOrderDTOSession);
+            List <ProductSize> productSizeList = userOrderService.createOrder(userOrderDTOSession,email);
             redirectAttributes.addFlashAttribute("productSizeList", productSizeList);
             redirectAttributes.addFlashAttribute("rs", rs);
             return "redirect:/update-quantity";
@@ -250,7 +266,7 @@ public class ShopController {
     }
 
     @GetMapping("/api/vnpay/return")
-    public String handleReturn(@RequestParam("vnp_ResponseCode") String vnp_ResponseCode ,Model model,HttpSession session,RedirectAttributes redirectAttributes) {
+    public String handleReturn(@RequestParam("vnp_ResponseCode") String vnp_ResponseCode ,Model model,HttpSession session,RedirectAttributes redirectAttributes) throws MessagingException, UnsupportedEncodingException {
         Result rs = new Result();
         UserOrderDTO userOrderDTOSession = (UserOrderDTO) session.getAttribute("userOrderDTO");
         if (vnp_ResponseCode.equals("00"))
@@ -259,7 +275,7 @@ public class ShopController {
             rs.setMessage("Đặt hàng thành công!");
             String email = (String) session.getAttribute("email");
             userOrderDTOSession.setUserEmail(email);
-            List <ProductSize> productSizeList = userOrderService.createOrder(userOrderDTOSession);
+            List <ProductSize> productSizeList = userOrderService.createOrder(userOrderDTOSession,email);
             redirectAttributes.addFlashAttribute("productSizeList", productSizeList);
             redirectAttributes.addFlashAttribute("rs", rs);
             return "redirect:/update-quantity";

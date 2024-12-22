@@ -34,4 +34,5 @@ public class UserOrderDTO {
     private String email;
     private List<UserOrderDetailDTO> userOrderDetails; // Danh sách chi tiết đơn hàng
     private Float total_price;
+    private Integer total_product;
 }

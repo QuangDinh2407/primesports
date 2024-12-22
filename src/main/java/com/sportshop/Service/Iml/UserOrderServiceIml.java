@@ -12,11 +12,14 @@ import com.sportshop.ModalDTO.*;
 import com.sportshop.Repository.ProductRepository;
 import com.sportshop.Repository.SizeDetailRepository;
 import com.sportshop.Repository.UserOrderRepository;
+import com.sportshop.Service.MailService;
 import com.sportshop.Service.PaymentTypeService;
 import com.sportshop.Service.UserOrderService;
+import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -41,6 +44,9 @@ public class UserOrderServiceIml implements UserOrderService {
 
     @Autowired
     PaymentTypeService paymentTypeService;
+
+    @Autowired
+    MailService mailService;
 
     @Override
     public List<UserOrderDTO> findAllOrdersByUserId(String userInfo_id) {
@@ -108,14 +114,19 @@ public class UserOrderServiceIml implements UserOrderService {
                 .map(detail -> detail.getPrice() * detail.getAmount())
                 .reduce(0f, Float::sum);
         order.setTotal_price(totalPrice);
+        Integer totalProduct = orderDetails.stream()
+                .mapToInt(detail -> detail.getAmount())
+                .sum();
+        order.setTotal_product(totalProduct);
         order.setCreated_at(new Date());
         return order;
     }
 
     @Override
-    public List <ProductSize> createOrder(UserOrderDTO userOrderDTO) {
+    public List <ProductSize> createOrder(UserOrderDTO userOrderDTO, String email) throws MessagingException, UnsupportedEncodingException {
        UserOrderEntity userOrderEntity = new UserOrderEntity();
        userOrderEntity = userOrderConverter.toEntity(userOrderDTO);
+       userOrderEntity.setStatus("Chờ xác nhận");
        userOrderRepository.save(userOrderEntity);
        List <ProductSize> productSizeList = new ArrayList<>();
        userOrderEntity.getUserOrderDetailItems().forEach(item ->{
@@ -125,6 +136,7 @@ public class UserOrderServiceIml implements UserOrderService {
            productSize.setAmount(item.getAmount());
            productSizeList.add(productSize);
        });
+        mailService.sendOrder(userOrderDTO,email);
         return productSizeList;
     }
 
