@@ -188,7 +188,10 @@ public class ProductServiceIml implements ProductService {
         // Loại bỏ các loại cha nếu đã chọn con
         types.removeAll(parentTypesToRemove);
 
-        System.out.println("After filter: " + types);
+        if (types.isEmpty())
+        {
+            types = null;
+        }
 
         Page<ProductEntity> productPage = productRepository.searchProducts(
                 searchProduct.getName(),
