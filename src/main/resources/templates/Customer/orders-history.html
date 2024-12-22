@@ -30,8 +30,19 @@
     <script th:src="@{/Assets/Toast_Message/toastmessjs.js}"></script>
 
 </head>
+<style>
+    .profile{
+        margin-top: 115px;
+    }
+</style>
 <body>
 <div id="toast"></div>
+<!-- Header -->
+<header id="header" class="header"></header>
+<div></div>
+<script>
+    load("#header", "/header");
+</script>
 <!-- MAIN -->
 <main class="profile">
     <div class="container">
@@ -178,6 +189,11 @@
         </div>
     </div>
 </main>
+<!-- Footer -->
+<footer id="footer" class="footer"></footer>
+<script>
+    load("#footer", "/footer");
+</script>
 </body>
 <script th:inline="javascript">
     /*<![CDATA[*/

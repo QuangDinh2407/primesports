@@ -36,4 +36,11 @@ public class ValidationUtil {
             return false;
         }
     }
+
+    // Hàm kiểm tra điều kiện mật khẩu mới
+    public static boolean isValidPassword(String password) {
+        // Regex kiểm tra điều kiện mật khẩu
+        String passwordRegex = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[^A-Za-z\\d]).{8,}$";
+        return password.matches(passwordRegex);
+    }
 }
