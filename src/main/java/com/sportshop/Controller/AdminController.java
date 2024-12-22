@@ -1,13 +1,11 @@
 package com.sportshop.Controller;
 
 import com.sportshop.Modal.Result;
+import com.sportshop.Modal.SearchProduct;
 import com.sportshop.ModalDTO.*;
-import com.sportshop.Repository.ProductRepository;
-import com.sportshop.Repository.ProductTypeRepository;
-import com.sportshop.Repository.UserOrderRepository;
+import com.sportshop.Repository.*;
 import com.sportshop.Service.*;
-import com.sportshop.Service.Iml.AccountServiceIml;
-import com.sportshop.Service.Iml.ProductServiceIml;
+import com.sportshop.Service.Iml.*;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -24,8 +22,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -63,6 +59,23 @@ public class AdminController {
     ServletContext context;
     @Autowired
     private AccountServiceIml accountServiceIml;
+
+    @Autowired
+    private ShopVoucherDetailServiceIml shopVoucherDetailServiceIml;
+
+    @Autowired
+    private ShopVoucherServiceIml shopVoucherServiceIml;
+
+    @Autowired
+    private ShopVoucherService shopVoucherService;
+
+    @Autowired
+    private ProductTypeServiceIml productTypeServiceIml;
+
+    @Autowired
+    private ShopVoucherDetailRepository shopVoucherDetailRepository;
+    @Autowired
+    private ShopVoucherRepository shopVoucherRepository;
 
     @ModelAttribute
     public void getUser(HttpSession session, Model model) {
@@ -166,7 +179,6 @@ public class AdminController {
         chartData.put("labels", labels);
         chartData.put("values", values);
 
-        System.out.println(dateOrder);
         if (dateOrder != null && dateOrder.matches("\\d{2}/\\d{2}/\\d{4}")) {
             String[] parts = dateOrder.split("/");
             int day = Integer.parseInt(parts[0]);
@@ -247,7 +259,6 @@ public class AdminController {
     public String renderDeleteAccount(@PathVariable("email") String email, RedirectAttributes redirectAttribute, HttpServletRequest request) {
         Result rs = accountServiceIml.deleteByEmail(email);
         redirectAttribute.addFlashAttribute("rs", rs);
-        System.out.println(rs.getMessage());
         return "redirect:/admin/manage-customer";
     }
 
@@ -262,7 +273,6 @@ public class AdminController {
 
     @PostMapping("/admin-info")
     public String updateInfo (UserDTO userDTO,Model model, @RequestParam("avatar") MultipartFile file){
-        System.out.println(userDTO);
         Result rs = userService.updateInfoAdmin(userDTO,file);
         model.addAttribute("rs",rs);
         return "Admin/admin-info";
@@ -512,5 +522,151 @@ public class AdminController {
         List<UserOrderDTO> orders = userOrderService.getAllUserOrders();
         model.addAttribute("orders", orders);
         return "Admin/orderManage";
+    }
+
+    @GetMapping("/manage-voucher")
+    public String adminVoucher (Model model){
+        shopVoucherServiceIml.updateExpiredVouchers();
+        List<ShopVoucherDTO> listDTO= shopVoucherService.findAll();
+        listDTO.sort((v1, v2) -> v2.getEnded_at().compareTo(v1.getEnded_at()));
+        List<ProductTypeDTO> listProductTypeDTO=productTypeServiceIml.showAllProductTypes();
+        model.addAttribute("vCListDTO",listDTO);
+        model.addAttribute("listProductTypeDTO",listProductTypeDTO);
+        model.addAttribute("shopVoucherDTO",new ShopVoucherDTO());
+        model.addAttribute("shopVoucherDTOEdit",new ShopVoucherDTO());
+        return "Admin/manage-voucher";
+    }
+
+    @PostMapping("/manage-voucher/add")
+    public String renderAddVoucher(@Valid ShopVoucherDTO shopVoucherDTO,  BindingResult bindingResult, Model model,
+                                   RedirectAttributes redirectAttributes) {
+
+        if(bindingResult.hasErrors()){
+            List<ShopVoucherDTO> listDTO= shopVoucherService.findAll();
+            List<ProductTypeDTO> listProductTypeDTO=productTypeServiceIml.showAllProductTypes();
+
+            String errorExisted="";
+            if(shopVoucherRepository.findByCode(shopVoucherDTO.getCode())!=null){
+                errorExisted="Code dã tồn tại!";
+            }
+
+            model.addAttribute("errorExisted",errorExisted);
+            model.addAttribute("shopVoucherDTO",shopVoucherDTO);
+            model.addAttribute("vCListDTO",listDTO);
+            model.addAttribute("listProductTypeDTO",listProductTypeDTO);
+            return "Admin/manage-voucher";
+        }else{
+            Date now=new Date();
+            shopVoucherDTO.setCreated_at(now);
+            String rs = shopVoucherServiceIml.saveOrUpdateVoucher(shopVoucherDTO);
+        }
+        return "redirect:/admin/manage-voucher";
+    }
+
+    @GetMapping("/manage-voucher/edit")
+    public String renderEditVoucher1(ShopVoucherDTO shopVoucherDTO,
+                                    RedirectAttributes redirectAttributes, Model model,
+                                    @RequestParam(value="voucher_id", required = false) String voucher_id,
+                                    @RequestParam(value = "listTypeEdit", required = false) List<String> listSelectTypes,
+                                     @RequestParam(value = "finalListProduct", required = false) List<String> finalListProduct,
+                                     @RequestParam(defaultValue = "0") int page) {
+        SearchProduct searchProduct = new SearchProduct();
+        searchProduct.setTypes(listSelectTypes);
+        Pageable pageable = page > 0 ? PageRequest.of(page-1, 10) : PageRequest.of(page, 10) ;
+
+        Page <ProductDTO> listPro = productService.getAll(searchProduct, pageable);
+        System.out.println("final: "+finalListProduct);
+        // Thêm các dữ liệu vào model
+        model.addAttribute("productPage", listPro); // Truyền Page để Thymeleaf hiển thị phân trang
+        model.addAttribute("pageSize", 10);
+        model.addAttribute("existProductInVoucher", finalListProduct);
+        model.addAttribute("voucher_id", voucher_id);
+        model.addAttribute("listSelectTypes", listSelectTypes); // Truyền listTypeEdit để Thymeleaf giữ thông tin lọc
+        model.addAttribute("finalListProduct", finalListProduct);
+        return "Admin/manage-voucher-edit-detail";
+    }
+
+    @GetMapping("/manage-voucher/edit-page")
+    public String renderEditPageVoucher(@RequestParam("voucher_id") String voucherId, Model model) {
+        System.out.println(voucherId);
+        // Lấy thông tin voucher từ cơ sở dữ liệu dựa vào voucherId
+        ShopVoucherDTO shopVoucherDTO = shopVoucherServiceIml.findByIdVoucher(voucherId);
+        List<ProductTypeDTO> listProductTypeDTO=productTypeServiceIml.showAllProductTypes();
+
+        // Truyền thông tin vào model để hiển thị trong form chỉnh sửa
+        model.addAttribute("voucher_id",voucherId);
+        model.addAttribute("shopVoucherDTO", shopVoucherDTO);
+        model.addAttribute("listProductTypeDTO",listProductTypeDTO);
+        // Trả về trang chỉnh sửa voucher
+        return "Admin/manage-voucher-edit";
+    }
+
+
+    @PostMapping("/manage-voucher/edit")
+    public String renderEditVoucher(@Valid ShopVoucherDTO shopVoucherDTO,BindingResult bindingResult,
+                                    RedirectAttributes redirectAttributes, Model model,
+                                    @RequestParam(value="voucher_id", required = false) String voucher_id,
+                                    @RequestParam(value = "listTypeEdit[]", required = false) List<String> listSelectTypes,
+                                    @RequestParam(defaultValue = "0") int page) {
+        if(bindingResult.hasErrors()){
+            System.out.println("Binding errors: " + bindingResult.getAllErrors());
+            List<ShopVoucherDTO> listDTO= shopVoucherService.findAll();
+            List<ProductTypeDTO> listProductTypeDTO=productTypeServiceIml.showAllProductTypes();
+
+            model.addAttribute("voucher_id", voucher_id);
+            model.addAttribute("shopVoucherDTO",shopVoucherDTO);
+            model.addAttribute("vCListDTO",listDTO);
+            model.addAttribute("listProductTypeDTO",listProductTypeDTO);
+            return "Admin/manage-voucher-edit";
+        }
+        SearchProduct searchProduct = new SearchProduct();
+        searchProduct.setTypes(listSelectTypes);
+        Pageable pageable = page > 0 ? PageRequest.of(page-1, 10) : PageRequest.of(page, 10) ;
+
+        Page <ProductDTO> listPro = productService.getAll(searchProduct, pageable);
+
+        // Lấy các sản phẩm đã có trong voucher
+        List<String> existProductInVoucher = shopVoucherDetailServiceIml.getProductIdsByVoucher(voucher_id);
+
+        shopVoucherServiceIml.saveOrUpdateVoucher(shopVoucherDTO);
+//        System.out.println("exist:"+existProductInVoucher);
+        // Thêm các dữ liệu vào model
+        model.addAttribute("productPage", listPro); // Truyền Page để Thymeleaf hiển thị phân trang
+        model.addAttribute("pageSize", 10);
+        model.addAttribute("existProductInVoucher", existProductInVoucher);
+        model.addAttribute("voucher_id", voucher_id);
+        model.addAttribute("listSelectTypes", listSelectTypes); // Truyền listTypeEdit để Thymeleaf giữ thông tin lọc
+        model.addAttribute("finalListProduct", existProductInVoucher);
+        return "Admin/manage-voucher-edit-detail";
+    }
+
+
+
+    @PostMapping("/manage-voucher/delete")
+    public String renderDelVoucher(ShopVoucherDTO shopVoucherDTO,
+                                   @RequestParam("shopVoucher_id") String shopVoucher_id,
+                                   RedirectAttributes redirectAttributes) {
+        String rs=shopVoucherServiceIml.deleteInfoVoucher(shopVoucherDTO);
+        return "redirect:/admin/manage-voucher";
+    }
+
+    @PostMapping("/manage-voucher/add_product")
+    public String addProductInVoucherDetail(
+            @RequestParam("voucher_id") String voucher_id,
+            @RequestParam(value = "finalListProduct", required = false) List<String> selectedProductIds,
+            RedirectAttributes redirectAttributes) {
+
+        ShopVoucherDetailDTO shopVoucherDetailDTO =new ShopVoucherDetailDTO();
+        Date now=new Date();
+        shopVoucherDetailDTO.setCreated_at(now);
+        shopVoucherDetailDTO.setUpdated_at(now);
+        System.out.println("add: "+selectedProductIds);
+        shopVoucherDetailServiceIml.deleteProductByVoucherId(voucher_id);
+        if (selectedProductIds != null && !selectedProductIds.isEmpty()) {
+            for (String productId : selectedProductIds) {
+                shopVoucherDetailServiceIml.saveOrUpdateVoucherDetail(shopVoucherDetailDTO,selectedProductIds,voucher_id);
+            }
+        }
+        return "redirect:/admin/manage-voucher";
     }
 }

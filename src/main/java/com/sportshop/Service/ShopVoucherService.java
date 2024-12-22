@@ -11,4 +11,6 @@ public interface ShopVoucherService {
 
     String deleteInfoVoucher(ShopVoucherDTO svDTO);
 
+    public ShopVoucherDTO findByIdVoucher(String idVoucher);
+
 }

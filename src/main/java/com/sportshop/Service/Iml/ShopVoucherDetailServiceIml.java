@@ -36,8 +36,8 @@ public class ShopVoucherDetailServiceIml {
         return entities.stream()
                 .map(shopVoucherDetailConverter::toDTO)
                 .collect(Collectors.toList());
-    }
 
+    }
 
     public List<String> convertProductToString(List<ProductEntity> productEntityList) {
         List<String> result = new ArrayList<>();
@@ -47,15 +47,22 @@ public class ShopVoucherDetailServiceIml {
         return result;
     }
 
+    public List<String> getProductIdsByVoucher(String voucherId) {
+        // Lấy danh sách sản phẩm từ repository
+        List<ProductEntity> products = shopVoucherDetailRepository.findProductByShopVoucherId(voucherId);
+
+        // Chuyển đổi danh sách sản phẩm thành danh sách String ID
+        return products.stream()
+                .map(ProductEntity::getProduct_id) // Thay getId() bằng field tương ứng
+                .collect(Collectors.toList());
+    }
+
     public String saveOrUpdateVoucherDetail(ShopVoucherDetailDTO svdDTO, List<String> productId, String voucherId) {
         ShopVoucherEntity shopVoucherEntity = shopVoucherRepository.findShopVoucherByID(voucherId);
-
         for (String product : productId) {
-            //nếu chưa có thì thêm mới
             if (shopVoucherDetailRepository.findShopVoucherDetailByVoucherAndProduct(voucherId, product) == null) {
-                ProductEntity productEntity = productRepository.findProductByID(product);
-
                 ShopVoucherDetailEntity shopVoucherDetailEntity = new ShopVoucherDetailEntity();
+                ProductEntity productEntity = productRepository.findProductByID(product);
                 shopVoucherDetailEntity.setCreated_at(svdDTO.getCreated_at());
                 shopVoucherDetailEntity.setUpdated_at(svdDTO.getUpdated_at());
                 shopVoucherDetailEntity.setProduct(productEntity);
@@ -63,7 +70,6 @@ public class ShopVoucherDetailServiceIml {
                 shopVoucherDetailRepository.save(shopVoucherDetailEntity);
             }
         }
-
         return "success";
     }
 
@@ -71,7 +77,5 @@ public class ShopVoucherDetailServiceIml {
         shopVoucherDetailRepository.deleteProductInVoucher(voucherId);
         return "success";
     }
-
-
 
 }

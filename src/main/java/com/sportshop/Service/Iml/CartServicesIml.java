@@ -29,6 +29,8 @@ public class CartServicesIml implements CartService {
 
     @Autowired
     private CartRepository cartRepository;
+    @Autowired
+    private CartConverter cartConverter;
 
     @Override
     public CartDTO addProductToCart(HttpSession session, String productId, Integer quantity, String size) {
@@ -121,4 +123,11 @@ public class CartServicesIml implements CartService {
         cartRepository.save(cartEntity);
         return "Cập nhật thành công";
     }
+
+    @Override
+    public CartDTO findCart(String cart_id) {
+        CartEntity cartEntity = cartRepository.findById(cart_id);
+        return cartConverter.toDTO(cartEntity);  // Chuyển đổi cartEntity thành CartDTO
+    }
+
 }

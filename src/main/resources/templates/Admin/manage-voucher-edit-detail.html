@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/Common/Admin/LayoutMaster.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>ADMIN SHOP</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            line-height: 2!important;
+            word-wrap: break-word;
+            word-break: break-word;
+            white-space: normal!important;
+        }
+
+        td {
+            max-width: 200px;
+        }
+
+        th:nth-child(1), td:nth-child(1) {
+            width: 150px;
+        }
+        th:nth-child(2), td:nth-child(2){
+            width:100px;
+        }
+        th:nth-child(3), td:nth-child(3){
+            width: 100px;
+        }
+        th:nth-child(4), td:nth-child(4) {
+            width: 120px;
+        }
+
+        th:nth-child(5), td:nth-child(5) {
+            width: 100px;
+        }
+
+        a i {
+            margin-right: 5px;
+        }
+
+        .input-container input {
+            width: 100%;
+            padding-right: 40px; /* Để chừa khoảng trống cho icon */
+        }
+
+        /* CSS cho checkbox */
+        td input[type="checkbox"] {
+            width: 18px;  /* Giảm kích thước checkbox */
+            height: 18px;
+            cursor: pointer;
+        }
+
+        /* Tăng kích thước cho chữ "Chọn tất cả" */
+        .select-all {
+            font-size: 14px; /* Giảm kích thước chữ */
+            font-weight: bold;
+            color: #007bff;
+            cursor: pointer;
+        }
+
+        .select-all:hover {
+            color: #0056b3;
+        }
+
+    </style>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/vn.js"></script>
+</head>
+<body>
+<div class="container" layout:fragment="content">
+    <div class="content">
+        <form method="POST" th:action="@{/admin/manage-voucher/add_product}">
+            <input type="hidden" th:value="${voucher_id}" name="voucher_id">
+            <input type="hidden" id="finalListProductAdd" th:value="${finalListProduct}" name="finalListProduct">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>Tên sản phẩm</th>
+                    <th>Giá</th>
+                    <th>Số lượng</th>
+                    <th>
+                        <span class="select-all" onclick="toggleSelectAll()">Chọn tất cả</span>
+                    </th>
+                    <th>
+                        <button type="submit" class="btn btn-success">
+                            Hoàn thành
+                        </button>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- Lặp qua các voucher trong danh sách vCListDTO -->
+                <tr th:each="product : ${productPage.content}">
+                    <td th:text="${product.name}"></td> <!-- Thay getName() bằng name -->
+                    <td th:text="${product.price}"></td>
+                    <td th:text="${product.quantity}"></td>
+                    <td>
+                        <input type="checkbox"
+                               class="select-checkbox"
+                               th:name="'selectedProducts[]'"
+                               th:value="${product.product_id}"
+                               th:checked="${existProductInVoucher.contains(product.product_id)}">
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <!-- Phân trang -->
+        </form>
+
+        <!-- Phân trang -->
+        <div th:if="${!#lists.isEmpty(productPage.content)}"  class="pagination-container">
+            <ul class="pagination">
+                <!-- Nút Previous -->
+                <li th:class="${productPage.hasPrevious()} ? 'page-item' : 'page-item disabled'">
+                    <a class="page-link"
+                       th:href="@{/admin/manage-voucher/edit(voucher_id=${voucher_id},listTypeEdit=${listSelectTypes},page=${productPage.number}, pageSize=${pageSize})}">&laquo;</a>
+                </li>
+
+                <!-- Trang đầu tiên -->
+                <li th:if="${productPage.totalPages > 0}" th:class="${productPage.number == 0} ? 'page-item active' : 'page-item'">
+                    <a class="page-link"
+                       th:href="@{/admin/manage-voucher/edit(voucher_id=${voucher_id},listTypeEdit=${listSelectTypes},page=1, pageSize=${pageSize})}">1</a>
+                </li>
+
+                <!-- Dấu "..." trước các trang giữa -->
+                <li th:if="${productPage.number > 2}">
+                    <span class="page-link">...</span>
+                </li>
+
+                <!-- Các trang ở giữa -->
+                <li th:each="i : ${#numbers.sequence(productPage.number - 1, productPage.number + 1)}"
+                    th:if="${i > 0 and i < productPage.totalPages - 1}"
+                    th:class="${productPage.number == i} ? 'page-item active' : 'page-item'">
+                    <a class="page-link"
+                       th:href="@{/admin/manage-voucher/edit(voucher_id=${voucher_id},listTypeEdit=${listSelectTypes},page=${i+1}, pageSize=${pageSize})}"
+                       th:text="${i + 1}"></a>
+                </li>
+
+                <!-- Dấu "..." sau các trang giữa -->
+                <li th:if="${productPage.number < productPage.totalPages - 3}">
+                    <span class="page-link">...</span>
+                </li>
+
+                <!-- Trang cuối cùng -->
+                <li th:if="${productPage.totalPages > 1}" th:class="${productPage.number == productPage.totalPages - 1} ? 'page-item active' : 'page-item'">
+                    <a class="page-link"
+                       th:href="@{/admin/manage-voucher/edit(voucher_id=${voucher_id},listTypeEdit=${listSelectTypes},page=${productPage.totalPages}, pageSize=${pageSize})}"
+                       th:text="${productPage.totalPages}"></a>
+                </li>
+
+                <!-- Nút Next -->
+                <li th:class="${productPage.hasNext()} ? 'page-item' : 'page-item disabled'">
+                    <a class="page-link"
+                       th:href="@{/admin/manage-voucher/edit(voucher_id=${voucher_id},listTypeEdit=${listSelectTypes},page=${productPage.number + 2}, pageSize=${pageSize} )}">&raquo;</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div layout:fragment="script">
+    <!-- JavaScript để chọn/hủy chọn tất cả checkbox -->
+    <script>
+        function toggleSelectAll() {
+            var checkboxes = document.querySelectorAll('.select-checkbox');
+            var selectAllText = document.querySelector('.select-all');
+
+            var allChecked = Array.from(checkboxes).every(checkbox => checkbox.checked);
+
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = !allChecked;
+            });
+
+            if (allChecked) {
+                selectAllText.textContent = 'Chọn tất cả';
+            } else {
+                selectAllText.textContent = 'Bỏ chọn tất cả';
+            }
+        }
+    </script>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        const finalListProduct = /*[[${finalListProduct}]]*/ 'default';
+        /*]]>*/
+    console.log(finalListProduct);
+        const links = document.querySelectorAll('.pagination a');
+
+        // Cập nhật các đường link với finalListProduct
+        links.forEach(link => {
+            const url = new URL(link.href);
+            const searchParams = url.searchParams;
+
+            // Xóa tất cả các tham số finalListProduct cũ
+            searchParams.delete('finalListProduct');
+
+            // Thêm từng giá trị trong finalListProduct dưới dạng tham số finalListProduct
+            finalListProduct.forEach(productId => {
+                searchParams.append('finalListProduct', productId);
+            });
+
+            link.href = url.toString(); // Cập nhật lại href
+        });
+
+        function updateFinalListProduct(value) {
+            // Nếu giá trị đã có trong list, xóa nó đi
+            const index = finalListProduct.indexOf(value);
+            if (index > -1) {
+                finalListProduct.splice(index, 1); // Xóa phần tử
+            } else {
+                finalListProduct.push(value); // Thêm giá trị mới
+            }
+        }
+
+        function updateLinks(finalListProduct) {
+            const links = document.querySelectorAll('.pagination a');
+
+            // Cập nhật các đường link với finalListProduct
+            links.forEach(link => {
+                const url = new URL(link.href);
+                const searchParams = url.searchParams;
+
+                // Xóa tất cả các tham số finalListProduct cũ
+                searchParams.delete('finalListProduct');
+
+                // Thêm từng giá trị trong finalListProduct dưới dạng tham số finalListProduct
+                finalListProduct.forEach(productId => {
+                    searchParams.append('finalListProduct', productId);
+                });
+
+                link.href = url.toString(); // Cập nhật lại href
+            });
+        }
+
+    const test=document.querySelectorAll('input.select-checkbox');
+    console.log(test);
+        test.forEach(input => {
+            input.addEventListener('change', function () {
+                const productId = this.value;
+                // Kiểm tra và cập nhật finalListProduct khi thay đổi trạng thái checked
+                updateFinalListProduct(productId);
+                console.log(finalListProduct);
+                updateLinks(finalListProduct);
+                const inputHidden = document.getElementById('finalListProductAdd');
+                inputHidden.value = finalListProduct;
+            });
+        });
+    </script>
+</div>
+</body>
+</html>
