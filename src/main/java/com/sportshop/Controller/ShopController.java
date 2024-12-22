@@ -1,10 +1,12 @@
 package com.sportshop.Controller;
 
 
+import com.sportshop.Converter.CartConverter;
 import com.sportshop.Modal.ProductSize;
 import com.sportshop.Modal.Result;
 import com.sportshop.Modal.SearchProduct;
 import com.sportshop.ModalDTO.*;
+import com.sportshop.Repository.CartRepository;
 import com.sportshop.Service.*;
 import com.sportshop.Service.Iml.ProductServiceIml;
 import com.sportshop.Service.Iml.ProductTypeServiceIml;
@@ -57,6 +59,10 @@ public class ShopController {
 
     @Autowired
     CartServicesIml cartServicesIml;
+    @Autowired
+    private CartConverter cartConverter;
+    @Autowired
+    private CartRepository cartRepository;
 
 //    @ModelAttribute
 //    public void checkLoginToCreateCart(HttpSession session,Model model){
@@ -323,4 +329,15 @@ public class ShopController {
         }
 
     }
+
+    @GetMapping("/cart_detail/{cart_id}")
+    public String renderDetailCart(@PathVariable("cart_id") String cart_id, Model model) {
+        System.out.println("cart: "+cart_id); // In ra để kiểm tra
+
+        CartDTO cartDTO=cartServicesIml.findCart(cart_id);
+        System.out.println("yeah"+cartDTO.getCart_id());
+        model.addAttribute("cartDTO",cartDTO);
+        return "cart-detail";
+    }
+
 }

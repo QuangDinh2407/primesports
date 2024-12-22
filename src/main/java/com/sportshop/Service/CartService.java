@@ -10,4 +10,6 @@ public interface CartService {
     CartDTO moveCart(CartDTO userCart, CartDTO newCart);
 
     CartDTO addProductToCart(HttpSession session, String productId, Integer quantity, String size);
+
+    public CartDTO findCart(String cart_id);
 }

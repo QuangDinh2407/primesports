@@ -12,14 +12,6 @@ public class CartConverter {
     @Autowired
     CartDetailConverter cartDetailConverter;
 
-//    public CartDTO toDTO(CartEntity cartEntity){
-//
-//        return CartDTO.builder()
-//                .cart_id(cartEntity.getCart_id())
-//                .cartDetailItems(cartEntity.getCartDetailItems().stream().map(cartDetailConverter::toDTO).collect(Collectors.toList()))
-//                .build();
-//    }
-
     public CartDTO toDTO(CartEntity cartEntity){
 
         Integer quantityProduct = cartEntity.getCartDetailItems().stream()

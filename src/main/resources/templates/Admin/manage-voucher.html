@@ -171,17 +171,7 @@
                 <td th:text="${voucher.productTypeName}"></td>
                 <td>
                     <div class="btn-container">
-<!--                        <a class="button edit-button"-->
-<!--                           th:data-id="${voucher.shopVoucher_id}"-->
-<!--                           th:data-name="${voucher.name}"-->
-<!--                           th:data-code="${voucher.code}"-->
-<!--                           th:data-discount="${voucher.discountAmount}"-->
-<!--                           th:data-startdate="${voucher.started_at}"-->
-<!--                           th:data-enddate="${voucher.ended_at}"-->
-<!--                           th:data-description="${voucher.description}"-->
-<!--                           data-toggle="modal" data-target="#editVoucherModal">-->
-<!--                            <i class="mdi mdi-lead-pencil"></i>-->
-<!--                        </a>-->
+
                         <a class="button edit-button"
                            th:href="@{/admin/manage-voucher/edit-page(voucher_id=${voucher.shopVoucher_id})}">
                             <i class="mdi mdi-lead-pencil"></i>
