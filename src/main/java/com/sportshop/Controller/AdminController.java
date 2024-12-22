@@ -1,5 +1,6 @@
 package com.sportshop.Controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sportshop.Modal.Result;
 import com.sportshop.ModalDTO.*;
 import com.sportshop.Repository.ProductRepository;
@@ -10,8 +11,10 @@ import com.sportshop.Service.Iml.AccountServiceIml;
 import com.sportshop.Service.Iml.ProductServiceIml;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import com.fasterxml.jackson.core.type.TypeReference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -25,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -65,6 +69,10 @@ public class AdminController {
     ServletContext context;
     @Autowired
     private AccountServiceIml accountServiceIml;
+
+    @Autowired
+    private ExportExcelService exportExcelService;
+
 
     @ModelAttribute
     public void getUser(HttpSession session, Model model) {
@@ -566,5 +574,56 @@ public class AdminController {
 
         return "Admin/orderManage";
     }
+
+//    public static String formatChartData(String rawChartData) throws Exception {
+//        System.out.println("Raw chartData: " + rawChartData);
+//
+//        // Thêm dấu ngoặc kép đúng cách và thay thế chỉ các dấu phân tách cần thiết
+//        String formattedChartData = rawChartData
+//                .replaceAll("([a-zA-Z0-9_]+)=", "\"$1\":") // Thêm dấu ngoặc kép quanh key
+//                .replaceAll("\\[", "[\"") // Thêm dấu ngoặc kép mở đầu
+//                .replaceAll("\\]", "\"]") // Thêm dấu ngoặc kép kết thúc
+//                .replaceAll(", (?=[a-zA-Z])", ","); // Xóa khoảng trắng không cần thiết sau dấu phẩy
+//
+//        // Xử lý các chuỗi không khớp
+//        formattedChartData = formattedChartData.replaceAll("\"]\"", "\"]"); // Xóa dấu ngoặc kép thừa
+//
+//        // Log chuỗi đã xử lý
+//        System.out.println("Formatted chartData: " + formattedChartData);
+//
+//        return formattedChartData;
+//    }
+
+    @PostMapping("/export")
+    public void exportDashboardData(
+            @RequestParam("revenueToday") Double revenueToday,
+            @RequestParam("revenueTotal") Double revenueTotal,
+            @RequestParam("totalImportPrice") Double totalImportPrice,
+            @RequestParam("profit") Double profit,
+            @RequestParam("chartData") String chartDataJson,
+            @RequestParam("orderStatusCounts") String orderStatusCountsJson,
+            @RequestParam("topSellingProducts") String topSellingProductsJson,
+            HttpServletResponse response
+    ) throws Exception {
+
+        // Parse JSON thành Map
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> chartData = objectMapper.readValue(chartDataJson, new TypeReference<Map<String, Object>>() {});
+        Map<String, Object> orderStatusCounts = objectMapper.readValue(orderStatusCountsJson, new TypeReference<Map<String, Object>>() {});
+        Map<String, Object> topSellingProducts = objectMapper.readValue(topSellingProductsJson, new TypeReference<Map<String, Object>>() {});
+
+        // Gọi service xuất Excel
+        exportExcelService.exportDashboardDataToExcel(
+                response,
+                chartData,
+                orderStatusCounts,
+                topSellingProducts,
+                revenueToday,
+                revenueTotal,
+                totalImportPrice,
+                profit
+        );
+    }
+
 
 }
