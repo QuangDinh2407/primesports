@@ -194,7 +194,7 @@
 <!--                                                    <td th:text="${detail.amount * detail.price}">Thành tiền</td>-->
                                                     <td th:text="${detail.amount * detail.price - detail.amount * detail.price * detail.shopVoucher.discountAmount/100}">Thành tiền</td>
                                                     <td>
-                                                        <div th:if="${orderDetails.status.trim().equals('Đã giao')}">
+                                                        <div th:if="${orderDetails.status.trim().equals('Đã giao')}">
                                                         <div th:if="${reviewStatus[detail.product.product_id]}">
                                                                 <p>Cảm ơn đánh giá của bạn.</p>
                                                             </div>
@@ -243,7 +243,7 @@
                                                 <span class="status"
                                                       th:classappend="${orderDetails.status == 'Đã giao' ? 'completed' :
                                             (orderDetails.status == 'Đang giao' ? 'in-progress' :
-                                             (orderDetails.status == 'Đã hủy' ? 'cancelled' : 'pending'))}">
+                                             (orderDetails.status == 'Đã hủy' ? 'cancelled' : 'pending'))}">
                                                     <span th:text="${orderDetails.status}"></span></span>
                                             </div>
                                             <div class="detail-row">
