@@ -29,4 +29,7 @@ public interface ShopVoucherRepository extends JpaRepository<ShopVoucherEntity, 
             "FROM ShopVoucherEntity svc " +
             "WHERE svc.shopVoucher_id = :shopVoucher_id" )
     ShopVoucherEntity findShopVoucherByID(@Param("shopVoucher_id") String shopVoucher_id);
+
+    @Query("SELECT sv FROM ShopVoucherEntity sv WHERE sv.shopVoucher_id = :shopVoucher_id")
+    ShopVoucherEntity findByShopVoucher_id(@Param("shopVoucher_id") String shopVoucher_id);
 }
