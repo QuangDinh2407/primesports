@@ -19,6 +19,8 @@ public interface ProductRepository extends JpaRepository<ProductEntity,String>, 
 
     Page<ProductEntity> findAll(Pageable pageable);
 
+    Page<ProductEntity> findByStatus(String status, Pageable pageable);
+
     List<ProductEntity> findTop5ByQuantityGreaterThanOrderByRatingDesc(int quantity);
 
     @Query("SELECT p FROM ProductEntity p WHERE p.product_id = :productId")

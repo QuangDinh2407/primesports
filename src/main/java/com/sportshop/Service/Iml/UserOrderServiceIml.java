@@ -2,6 +2,7 @@ package com.sportshop.Service.Iml;
 import com.sportshop.Converter.ProductConverter;
 import com.sportshop.Entity.AccountEntity;
 import com.sportshop.Entity.SizeDetailEntity;
+import com.sportshop.Entity.ProductEntity;
 import com.sportshop.Entity.UserOrderEntity;
 
 import com.sportshop.Converter.UserOrderConverter;
@@ -9,6 +10,11 @@ import com.sportshop.Entity.UserOrderEntity;
 import com.sportshop.Modal.ProductSize;
 import com.sportshop.Modal.Result;
 import com.sportshop.ModalDTO.*;
+import com.sportshop.Modal.Result;
+import com.sportshop.ModalDTO.ProductDTO;
+import com.sportshop.ModalDTO.UserDTO;
+import com.sportshop.ModalDTO.UserOrderDTO;
+import com.sportshop.ModalDTO.UserOrderDetailDTO;
 import com.sportshop.Repository.ProductRepository;
 import com.sportshop.Repository.SizeDetailRepository;
 import com.sportshop.Repository.UserOrderRepository;
@@ -20,10 +26,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -44,6 +53,14 @@ public class UserOrderServiceIml implements UserOrderService {
 
     @Autowired
     PaymentTypeService paymentTypeService;
+    public Date parseDate(String dateStr) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            return dateFormat.parse(dateStr);
+        } catch (ParseException e) {
+            return null;
+        }
+    }
 
     @Override
     public List<UserOrderDTO> findAllOrdersByUserId(String userInfo_id) {
@@ -152,4 +169,40 @@ public class UserOrderServiceIml implements UserOrderService {
             return new Result(false, "Hủy đơn hàng thất bại!");
         }
     }
+    public Result updateUserOrderStatus(String status, String userOrderId){
+        try{
+            Optional<UserOrderEntity> optionalOrder = userOrderRepository.findById(userOrderId);
+            if (optionalOrder.isEmpty()) {
+                return new Result(false, "Cập nhật đơn hàng không thành công");
+            }
+            UserOrderEntity order = optionalOrder.get();
+            order.setStatus(status);
+            order.setUpdated_at(new Date());
+            userOrderRepository.save(order);
+            return new Result(true, "Cập nhật đơn hàng thành công");
+        } catch (Exception e) {
+            return new Result(false, "Đã xảy ra lỗi trong quá trình cập nhật");
+        }
+
+    }
+
+    @Override
+    public List<UserOrderDTO> filterOrders(String beginPrice, String endPrice, String beginDate, String endDate, String status) {
+        Float parsedBeginPrice = beginPrice != null && !beginPrice.isEmpty() ? Float.parseFloat(beginPrice) : null;
+        Float parsedEndPrice = endPrice != null && !endPrice.isEmpty() ? Float.parseFloat(endPrice) : null;
+        Date parsedBeginDate = beginDate != null && !beginDate.isEmpty() ? parseDate(beginDate) : null;
+        Date parsedEndDate = endDate != null && !endDate.isEmpty() ? parseDate(endDate) : null;
+
+
+        List<UserOrderEntity> filteredOrders = userOrderRepository.filterOrders(status != null && !status.isEmpty() ? status : null, parsedBeginPrice, parsedEndPrice, parsedBeginDate, parsedEndDate);
+
+        return filteredOrders.stream()
+                .map(userOrderConverter::toDTO)
+                .collect(Collectors.toList());
+    }
+
+
+
+
+
 }

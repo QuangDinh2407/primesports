@@ -78,6 +78,43 @@
             color: black;
         }
 
+        /* Base styling for the select box */
+        .custom-select.status-select {
+            width: 100%;
+            padding: 8px 12px;
+            font-size: 14px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+            color: #333;
+            background-color: #fff;
+            transition: border-color 0.3s ease-in-out;
+        }
+
+        /* Colors for specific options */
+        .status-select option.status-delivered {
+            color: #28a745; /* Green for Đã giao */
+        }
+
+        .status-select option.status-shipping {
+            color: #ffc107; /* Yellow for Đang giao */
+        }
+
+        .status-select option.status-preparing {
+            color: #007bff; /* Blue for Đang chuẩn bị */
+        }
+
+        .status-select option.status-canceled {
+            color: #dc3545; /* Red for Đã hủy */
+        }
+
+        /* Highlight active option */
+        .custom-select:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+
+
 
     </style>
 </head>
@@ -153,7 +190,7 @@
                                 </div>
                             </form>
 
-                            <div class="">
+                            <div class="" >
                                 <table class="table-custom">
                                     <colgroup>
                                         <col style="width: 5%;">   <!-- Cột STT -->
@@ -193,7 +230,7 @@
                                     </thead>
                                     <tbody>
                                     <tr th:each="order, stat : ${orders}">
-                                        <td th:text="${stat.index + 1}"></td> <!-- Thứ tự -->
+                                        <td th:text="${stat.index + 1}"></td>
                                         <!--                                        <td th:text="${product.name}"></td> &lt;!&ndash; Tên sản phẩm &ndash;&gt;-->
                                         <td>
                                             <a th:href="@{/admin/order/view/{id}(id=${order.userOrder_id})}" th:text="${order.userOrder_id}"></a>
@@ -204,12 +241,18 @@
                                         <td th:text="${order.shipping_address}"></td>
 
                                         <td>
-                                        <span th:if="${order.status == 'Đã giao'}"  class="badge badge-success" th:text="${order.status}"></span>
-                                        <span th:if="${order.status == 'Đang giao'}" class="badge badge-warning" th:text="${order.status}"></span>
-                                        <span th:if="${order.status == 'Đang chuẩn bị'}" class="badge badge-info" th:text="${order.status}"></span>
-                                        <span th:if="${order.status == 'Đã hủy'}" class="badge badge-danger" th:text="${order.status}"></span>
-
+                                            <form th:action="@{/admin/order/status_update}" method="post">
+                                                <input type="hidden" name="userOrderId" th:value="${order.userOrder_id}" />
+                                                <select class="form-control custom-select status-select" name="status" onchange="this.form.submit()" th:disabled="${order.status == 'Đã giao' or order.status == 'Đã hủy'}">
+                                                    <option th:value="'Đã giao'" th:text="'Đã giao'" th:selected="${order.status == 'Đã giao'}" class="status-delivered"></option>
+                                                    <option th:value="'Đang giao'" th:text="'Đang giao'" th:selected="${order.status == 'Đang giao'}" class="status-shipping"></option>
+                                                    <option th:value="'Đang chuẩn bị'" th:text="'Đang chuẩn bị'" th:selected="${order.status == 'Đang chuẩn bị'}" class="status-preparing"></option>
+                                                    <option th:value="'Đã hủy'" th:text="'Đã hủy'" th:selected="${order.status == 'Đã hủy'}" class="status-canceled"></option>
+                                                </select>
+                                            </form>
                                         </td>
+
+
                                         <td th:text="${order.updated_at}"></td>
                                         <td>
                                             <button type="button" class="btn btn-danger btn-sm"
@@ -225,7 +268,7 @@
                                 </div>
                             </div>
 
-                            <div class="pagination">
+                            <div class="pagination" th:if="${pageSize != null and currentPage != null and totalPages != null}">
                                 <ul>
                                     <li th:if="${currentPage > 0}">
                                         <a th:href="@{/admin/orders(page=${currentPage - 1}, pageSize=${pageSize})}">&laquo; Previous</a>
@@ -275,6 +318,10 @@
     <script src="https://npmcdn.com/flatpickr/dist/flatpickr.min.js"></script>
     <script src="https://npmcdn.com/flatpickr/dist/l10n/vn.js"></script>
     <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const selects = document.querySelectorAll('.status-select');
+            selects.forEach(updateSelectStyle);
+        });
         document.getElementById("avatar-upload").addEventListener("change", function () {
             const fileName = this.files.length > 0 ? this.files[0].name : "Chưa có file nào được chọn";
             document.getElementById("file-name").textContent = fileName;
@@ -336,46 +383,36 @@
             const modal = document.getElementById("deleteModal");
             modal.style.display = "none";
         }
+
+        function updateSelectStyle(selectElement) {
+            const selectedValue = selectElement.value;
+            let color;
+
+            switch (selectedValue) {
+                case 'Đã giao':
+                    color = '#28a745'; // Xanh lá
+                    break;
+                case 'Đang giao':
+                    color = '#ffc107'; // Vàng
+                    break;
+                case 'Đang chuẩn bị':
+                    color = '#007bff'; // Xanh dương
+                    break;
+                case 'Đã hủy':
+                    color = '#dc3545'; // Đỏ
+                    break;
+                default:
+                    color = '#333'; // Màu mặc định
+            }
+
+            selectElement.style.color = color;
+            selectElement.style.fontWeight = 'bold';
+        }
+
+
+
     </script>
 
-<!--    <script th:inline="javascript">-->
-<!--        /*<![CDATA[*/-->
-<!--        const currentPage = /*[[${currentPage}]]*/ 0;-->
-<!--        const totalPages = /*[[${totalPages}]]*/ 0;-->
-<!--        const pageSize = /*[[${pageSize}]]*/ 10; // Hoặc giá trị thích hợp từ backend-->
-
-<!--        function renderPagination(currentPage, totalPages) {-->
-<!--            const pagination = document.querySelector(".pagination ul");-->
-<!--            pagination.innerHTML = ""; // Xóa nội dung cũ-->
-
-<!--            // Tạo nút "Previous"-->
-<!--            if (currentPage > 0) {-->
-<!--                const prev = document.createElement("li");-->
-<!--                prev.innerHTML = `<a href="@{/admin/orders(page=${currentPage - 1}, pageSize=${pageSize})}">&laquo; Previous</a>`;-->
-<!--                pagination.appendChild(prev);-->
-<!--            }-->
-
-<!--            // Tạo các nút số trang-->
-<!--            for (let i = 0; i < totalPages; i++) {-->
-<!--                const pageItem = document.createElement("li");-->
-<!--                pageItem.className = i === currentPage ? "active" : "";-->
-<!--                pageItem.innerHTML = `<a href="@{/admin/orders(page=${i}, pageSize=${pageSize})}">${i + 1}</a>`;-->
-<!--                pagination.appendChild(pageItem);-->
-<!--            }-->
-
-<!--            // Tạo nút "Next"-->
-<!--            if (currentPage < totalPages - 1) {-->
-<!--                const next = document.createElement("li");-->
-<!--                next.innerHTML = `<a href="@{/admin/orders(page=${currentPage + 1}, pageSize=${pageSize})}">Next &raquo;</a>`;-->
-<!--                pagination.appendChild(next);-->
-<!--            }-->
-<!--        }-->
-
-<!--        document.addEventListener("DOMContentLoaded", () => {-->
-<!--            renderPagination(currentPage, totalPages);-->
-<!--        });-->
-<!--        /*]]>*/-->
-<!--    </script>-->
 
 
 </div>

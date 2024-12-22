@@ -314,13 +314,19 @@ public class ProductServiceIml implements ProductService {
     }
 
 
-
     @Override
     public List<ProductDTO> showProducts(){
         List<ProductEntity> productEntityList = productRepository.findAll();
         return productEntityList.stream()
                 .map(productConverter::toDTO)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Page<ProductDTO> showProductsPagination(String status, int page, int pageSize){
+        Pageable pageable = PageRequest.of(page, pageSize);
+        Page<ProductEntity> productEntityList = productRepository.findByStatus(status,pageable);
+        return productEntityList.map(productConverter::toDTO);
     }
 
     @Override

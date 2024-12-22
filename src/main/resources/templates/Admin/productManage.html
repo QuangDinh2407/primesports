@@ -23,6 +23,61 @@
             z-index: 1;
         }
 
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .pagination ul {
+            list-style: none;
+            display: flex;
+            gap: 10px;
+            padding: 0;
+            margin: 0;
+        }
+
+        .pagination ul li {
+            display: inline;
+        }
+
+        .pagination ul li a {
+            display: inline-block;
+            padding: 8px 12px;
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .pagination ul li a:hover {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .pagination ul li.active a {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+            cursor: default;
+        }
+
+        .pagination ul li a[disabled] {
+            color: #aaa;
+            pointer-events: none;
+            cursor: not-allowed;
+            background-color: #f8f9fa;
+            border-color: #ddd;
+        }
+
+        #pageSize{
+            width: 210px;
+            background-color: white;
+            color: black;
+        }
+
     </style>
 </head>
 
@@ -36,13 +91,29 @@
                     <div class="card">
                         <div class="card-body">
                             <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
                                 <h4 class="card-title">Quản lý sản phẩm</h4>
-                                <a class="add-product-btn" href="/admin/product/add-product" >Thêm sản phẩm</a>
+                                    <p class="card-description">
+                                        Sản phẩm<code>.primesports</code>
+                                    </p>
+                                </div>
+                                <div class="size-page">
+                                    <form method="get" th:action="@{/admin/product}">
+                                        <div class="form-group">
+                                            <label for="pageSize">Số lượng sản phẩm hiển thị:</label>
+                                            <select id="pageSize" name="pageSize" class="form-control" onchange="this.form.submit()">
+                                                <option th:selected="${pageSize == 3}" value="3">3</option>
+                                                <option th:selected="${pageSize == 5}" value="5">5</option>
+                                                <option th:selected="${pageSize == 10}" value="10">10</option>
+                                                <option th:selected="${pageSize == 20}" value="20">20</option>
+                                            </select>
+                                        </div>
+                                    </form>
+                                    <a class="add-product-btn" href="/admin/product/add-product" >Thêm sản phẩm</a>
+                                </div>
                             </div>
 
-                            <p class="card-description">
-                                Sản phẩm<code>.primesports</code>
-                            </p>
+
                             <form th:action="@{/admin/product/filter}" method="POST" id="filterForm">
                             <div class="filter-container">
                                 <!-- Filter item to open modal -->
@@ -184,6 +255,23 @@
                                     <div th:replace="~{/Common/Admin/NoData :: NoData}"></div>
                                 </div>
                             </div>
+
+                            <div class="pagination" th:if="${pageSize != null and currentPage != null and totalPages != null}">
+                                <ul>
+                                    <li th:if="${currentPage > 0}">
+                                        <a th:href="@{/admin/product(page=${currentPage - 1}, pageSize=${pageSize})}">&laquo; Previous</a>
+                                    </li>
+                                    <li th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                                        th:classappend="${i == currentPage} ? 'active'">
+                                        <a th:href="@{/admin/product(page=${i}, pageSize=${pageSize})}" th:text="${i + 1}"></a>
+                                    </li>
+                                    <li th:if="${currentPage < totalPages - 1}">
+                                        <a th:href="@{/admin/product(page=${currentPage + 1}, pageSize=${pageSize})}">Next &raquo;</a>
+                                    </li>
+                                </ul>
+                            </div>
+
+
                         </div>
                     </div>
                 </div>
@@ -210,15 +298,6 @@
 </div>
 <!--THÊM-->
 <div layout:fragment="script">
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script src="https://npmcdn.com/flatpickr/dist/flatpickr.min.js"></script>
-    <script src="https://npmcdn.com/flatpickr/dist/l10n/vn.js"></script>
-    <script>
-        document.getElementById("avatar-upload").addEventListener("change", function () {
-            const fileName = this.files.length > 0 ? this.files[0].name : "Chưa có file nào được chọn";
-            document.getElementById("file-name").textContent = fileName;
-        });
-    </script>
     <script>
 
         const modal = document.getElementById('productModal');

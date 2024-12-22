@@ -98,7 +98,7 @@
 <!--                                    </div>-->
                                     <div class="filter-item">
                                         <label for="status">Tình trạng</label>
-                                        <select name="status" class="form-control" style="width: 347px;" th:field="*{status}">
+                                        <select name="status" class="form-control" style="width: 347px;" th:field="*{status}" th:disabled="${userOrderDTO.status == 'Đã giao' or userOrderDTO.status == 'Đã hủy'}">
                                             <option value="">Tình trạng</option>
                                             <option value="Chờ xác nhận">Chờ xác nhận</option>
                                             <option value="Đang giao">Đang giao</option>
