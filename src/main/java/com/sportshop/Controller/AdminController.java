@@ -7,6 +7,7 @@ import com.sportshop.ModalDTO.*;
 import com.sportshop.Repository.*;
 import com.sportshop.Service.*;
 import com.sportshop.Service.Iml.*;
+import com.sportshop.Utils.ValidationUtil;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -105,6 +106,11 @@ public class AdminController {
     @GetMapping("/admin-info")
     public String renderuserInfo (HttpSession session, Model model){
         return "Admin/admin-info";
+    }
+
+    @GetMapping("/change-password")
+    public String renderChangePass (HttpSession session, Model model){
+        return "Admin/change-password";
     }
 
     @GetMapping("/home")
@@ -296,6 +302,40 @@ public class AdminController {
         Result rs = userService.updateInfoAdmin(userDTO,file);
         model.addAttribute("rs",rs);
         return "Admin/admin-info";
+    }
+
+    @PostMapping("/change-password")
+    public String changePassword(
+            @RequestParam("oldPassword") String oldPassword,
+            @RequestParam("newPassword") String newPassword,
+            @RequestParam("confirmPassword") String confirmPassword,
+            HttpSession session,
+            Model model)
+    {
+        // Lấy email từ session
+        String email = (String) session.getAttribute("email");
+        if (email == null) {
+            model.addAttribute("rs", new Result(false, "Không tìm thấy email người dùng!"));
+            return "Admin/change-password";
+        }
+
+        // Kiểm tra mật khẩu mới và xác nhận mật khẩu
+        if (!newPassword.equals(confirmPassword)) {
+            model.addAttribute("rs", new Result(false, "Mật khẩu mới và xác nhận mật khẩu không khớp!"));
+            return "Admin/change-password";
+        }
+
+        // Kiểm tra điều kiện mật khẩu mới
+        if (!ValidationUtil.isValidPassword(newPassword)) {
+            model.addAttribute("rs", new Result(false, "Mật khẩu mới phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt!"));
+            return "Admin/change-password";
+        }
+        // Gọi service để thay đổi mật khẩu
+        Result result = accountServiceIml.changePassword(email, oldPassword, newPassword);
+
+        // Trả kết quả về giao diện
+        model.addAttribute("rs", result);
+        return "Admin/change-password";
     }
 
     @PostMapping("/manage-customer/edit")

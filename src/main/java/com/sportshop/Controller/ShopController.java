@@ -31,6 +31,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Controller
 public class ShopController {
@@ -67,6 +68,8 @@ public class ShopController {
     private CartConverter cartConverter;
     @Autowired
     private CartRepository cartRepository;
+    @Autowired
+    UserService userService;
 
 //    @ModelAttribute
 //    public void checkLoginToCreateCart(HttpSession session,Model model){
@@ -119,6 +122,7 @@ public class ShopController {
         if (email == null) {
             if(session.getAttribute("cartDTO")==null){
                 CartDTO newCart = new CartDTO();
+                newCart.setCart_id(UUID.randomUUID().toString());
                 session.setAttribute("cartDTO", newCart);
             }
         }
@@ -391,30 +395,54 @@ public class ShopController {
 
     @GetMapping("/cart-detail/{cart_id}")
     public String renderDetailCart(@PathVariable("cart_id") String cart_id, Model model,HttpSession session) {
-        CartDTO cartDTO=cartServicesIml.findCart(cart_id);
         String email = (String) session.getAttribute("email");
-        
-        model.addAttribute("cartDTO",cartDTO);
-        CartDTO cartDTOnew = cartServicesIml.findCart(cart_id);
-        cartDTOnew.setIsMerge(true);
-        session.setAttribute("cartDTOUpdate", cartDTOnew);
+        if (email == null)
+        {
+            List <String> listIds = cartServicesIml.getAllCartId();
+            if (listIds.contains(cart_id))
+            {
+                return "redirect:/access-denied";
+            }
+            CartDTO cartDTO=(CartDTO)  session.getAttribute("cartDTO");
+            model.addAttribute("cartDTO",cartDTO);
+        }
+        else {
+            UserDTO userDTO = userService.findbyEmail(email);
+            if (!cart_id.equals(userDTO.getCart().getCart_id()))
+            {
+                return "redirect:/access-denied";
+            }
+            CartDTO cartDTO=cartServicesIml.findCart(cart_id);
+            model.addAttribute("cartDTO",cartDTO);
+            CartDTO cartDTOnew = cartServicesIml.findCart(cart_id);
+            cartDTOnew.setIsMerge(true);
+            session.setAttribute("cartDTOUpdate", cartDTOnew);
+        }
         return "cart-detail";
     }
 
 
     @PostMapping("/action-cart")
     public String handlerAction(ActionCart actionCart, RedirectAttributes redirectAttributes,HttpSession session) {
-        CartDTO cartDTO=cartServicesIml.findCart(actionCart.getCartId());
         if (actionCart.getAction().equals("delete"))
         {
+            CartDTO cartDTO=cartServicesIml.findCart(actionCart.getCartId());
             if (!actionCart.getProductId().isEmpty())
             {
                 cartServicesIml.deleteItems(cartDTO,actionCart.getProductId(),session);
-
             }
             return "redirect:/cart-detail/"+ actionCart.getCartId();
         }
         else {
+            String email = (String) session.getAttribute("email");;
+            if (email == null)
+            {
+                return "redirect:/auth/sign-in";
+            }
+            if (actionCart.getProductId().isEmpty())
+            {
+                return "redirect:/cart-detail/"+ actionCart.getCartId();
+            }
             redirectAttributes.addAttribute("product_id",actionCart.getProductId());
             redirectAttributes.addAttribute("size", actionCart.getSize());
             redirectAttributes.addAttribute("amount",actionCart.getAmount());

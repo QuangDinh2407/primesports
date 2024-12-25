@@ -108,7 +108,7 @@
                                 </div>
                                 <article class="cart-item" th:each="productItem : ${cartDTO.cartDetailItems}">
                                     <a th:href="@{/product-detail/{id}(id=${productItem.product.product_id})}">
-                                        <img th:src="@{${productItem.product.getImagePaths[0]}}"  alt="" class="cart-item__thumb"/>
+<!--                                        <img th:src="@{${productItem.product.getImagePaths[0]}}"  alt="" class="cart-item__thumb"/>-->
                                     </a>
                                     <div class="cart-item__content">
                                         <div class="cart-item__content-left">

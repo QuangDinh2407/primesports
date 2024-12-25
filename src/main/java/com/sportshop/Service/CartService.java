@@ -20,4 +20,6 @@ public interface CartService {
     CartDTO findCart(String cart_id);
 
     void deleteItems (CartDTO cartDTO, List<String> productId,HttpSession session);
+
+    List<String> getAllCartId();
 }

@@ -170,4 +170,9 @@ public class CartServicesIml implements CartService {
         }
     }
 
+    @Override
+    public List<String> getAllCartId() {
+        return cartRepository.findAllCartIds();
+    }
+
 }
