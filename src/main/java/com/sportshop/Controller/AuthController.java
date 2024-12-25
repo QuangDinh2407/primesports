@@ -28,6 +28,12 @@ public class AuthController {
         if (error != null && error.equals("missingRecapcha")) {
             model.addAttribute("errorMessage", "Vui lòng xác minh reCAPTCHA.");
         }
+        if (error != null && error.equals("rate_limit")) {
+            model.addAttribute("errorMessage", "Bạn đăng nhập sai quá nhiều lần, vui lòng thử lại sau !");
+        }
+        if (error != null && error.equals("true")) {
+            model.addAttribute("errorMessage", "Sai tên đăng nhập hoặc mật khẩu!");
+        }
         return "Auth/sign-in";
     }
 

@@ -51,7 +51,6 @@ public class SecurityConfig {
             if (accountEntity == null || Objects.equals(accountEntity.getIs_disable(), "0")) {
                 throw new UsernameNotFoundException(username);
             }
-
             // Return a User object containing email, password, and roles
             return new org.springframework.security.core.userdetails.User(
                     accountEntity.getEmail(),
@@ -71,7 +70,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, RecaptchaAuthenticationFilter recaptchaAuthenticationFilter) throws Exception {
         //CSRF protection and configure request authorization
-       http.csrf(Customizer.withDefaults())
+        http.csrf(Customizer.withDefaults())
                 .authorizeHttpRequests(req -> req
                         .requestMatchers(WHITE_LIST_URL).permitAll()            // Permit requests to the whitelist URLs
                         .requestMatchers("/admin/**").hasAuthority("ADMIN")
@@ -84,20 +83,20 @@ public class SecurityConfig {
                         .accessDeniedPage("/access-denied") // URL cho trang từ chối quyền truy cập
                 )
                 // Configure form-based login
-               .addFilterBefore(recaptchaAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(recaptchaAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .formLogin((form) -> form
-                        .loginPage("/auth/sign-in")                             // Custom login page URL
-                        .loginProcessingUrl("/auth/sign-in")                    // URL to submit login credentials
-                        .failureUrl("/auth/sign-in?error=true")                      // Redirect on login failure
+                                .loginPage("/auth/sign-in")                             // Custom login page URL
+                                .loginProcessingUrl("/auth/sign-in")                    // URL to submit login credentials
+                                .failureUrl("/auth/sign-in?error=true")                      // Redirect on login failure
 //                        .defaultSuccessUrl("/success", true)                           // Redirect to home on successful login
-                        .successHandler(authSuccessHandler) // Custom success handler for additional actions after login
-                        .permitAll()                                            // Allow everyone to access the login page
+                                .successHandler(authSuccessHandler) // Custom success handler for additional actions after login
+                                .permitAll()                                            // Allow everyone to access the login page
                 )
-               .oauth2Login(oauth2 -> oauth2
-                       .loginPage("/auth/sign-in")  // Đặt trang login tùy chỉnh nếu cần
-                       .successHandler(authSuccessHandler)  // Sử dụng handler tùy chỉnh sau khi đăng nhập thành công
-                       .failureUrl("/auth/sign-in?error=true")    // Đặt URL khi đăng nhập thất bại
-               )
+                .oauth2Login(oauth2 -> oauth2
+                        .loginPage("/auth/sign-in")  // Đặt trang login tùy chỉnh nếu cần
+                        .successHandler(authSuccessHandler)  // Sử dụng handler tùy chỉnh sau khi đăng nhập thành công
+                        .failureUrl("/auth/sign-in?error=true")    // Đặt URL khi đăng nhập thất bại
+                )
                 .rememberMe((rememberMe) -> rememberMe
                         .key(generateRandomKey())
                         .tokenValiditySeconds(86400)
@@ -111,14 +110,7 @@ public class SecurityConfig {
                         .invalidateHttpSession(true)                                               // Invalidate session on logout
                         .clearAuthentication(true)                                                  // Clear authentication on logout
                         .permitAll()                                                                // Allow everyone to log out
-                )
-               .sessionManagement(session -> session
-                       .sessionFixation().migrateSession()
-                       .maximumSessions(1)                                                       // Set maximum sessions to 1
-                       .maxSessionsPreventsLogin(false)                                          // Allow existing session to be invalidated
-                       .expiredUrl("/auth/sign-in?session-expired=true")                         // Redirect to login page if session expired
-               );
-
+                );
         return http.build();
     }
 

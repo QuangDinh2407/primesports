@@ -10,9 +10,11 @@ public class WebConfig implements WebMvcConfigurer {
     @Autowired
     BuyItemInterceptor buyItemInterceptor;
 
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(buyItemInterceptor)
                 .addPathPatterns("/checkout");
+
     }
 }

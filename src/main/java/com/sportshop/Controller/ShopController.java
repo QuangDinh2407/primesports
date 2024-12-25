@@ -261,6 +261,34 @@ public class ShopController {
                                  @RequestParam("amount") List<Integer> amounts,
                                  HttpSession session, Model model) {
 
+        for (int i = 0; i < amounts.size(); i++) {
+            int amount = amounts.get(i);
+            String size = sizes.get(i);
+
+            // Kiểm tra amount phải là số nguyên dương
+            if (amount <= 0) {
+                model.addAttribute("error", "Số lượng phải là một số nguyên dương.");
+                return "error"; // Trả về trang lỗi hoặc một trang khác tùy thuộc vào yêu cầu
+            }
+
+            // Lấy thông tin sản phẩm từ service để kiểm tra kích thước
+            ProductDTO proDTO = productServiceIml.findProductById(productIds.get(i));
+            Map<String, Integer> sizeQuantitiesFilter = proDTO.getSizeQuantities();
+
+            // Kiểm tra size phải hợp lệ trong danh sách kích thước của sản phẩm
+            if (!sizeQuantitiesFilter.containsKey(size)) {
+                model.addAttribute("error", "Kích thước không hợp lệ.");
+                return "error"; // Trả về trang lỗi hoặc một trang khác tùy thuộc vào yêu cầu
+            }
+
+            // Kiểm tra số lượng không vượt quá số lượng tối đa của size
+            int maxQuantity = sizeQuantitiesFilter.get(size);
+            if (amount > maxQuantity) {
+                model.addAttribute("error", "Số lượng vượt quá số lượng tối đa của kích thước này.");
+                return "error"; // Trả về trang lỗi hoặc một trang khác tùy thuộc vào yêu cầu
+            }
+        }
+
         UserOrderDTO userOrderDTO = userOrderService.checkoutProduct(productIds,sizes, amounts);
         session.setAttribute("userOrderDTO",userOrderDTO);
         model.addAttribute("userOrderDTO",userOrderDTO);
@@ -393,7 +421,7 @@ public class ShopController {
     public String renderDetailCart(@PathVariable("cart_id") String cart_id, Model model,HttpSession session) {
         CartDTO cartDTO=cartServicesIml.findCart(cart_id);
         String email = (String) session.getAttribute("email");
-        
+
         model.addAttribute("cartDTO",cartDTO);
         CartDTO cartDTOnew = cartServicesIml.findCart(cart_id);
         cartDTOnew.setIsMerge(true);
