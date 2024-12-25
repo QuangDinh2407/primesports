@@ -127,13 +127,11 @@ public class ShopController {
             UserDTO userDTO= (UserDTO) session.getAttribute("userInfo");
             if (userDTO == null){
                 userDTO = userServiceIml.findbyEmail(email);
-
             }
             if (newCart == null){
                 userDTO.getCart().setIsMerge(true);
             }
             else{
-
                 if(!newCart.getIsMerge()){
                     userDTO.setCart(cartServicesIml.moveCart(userDTO.getCart(),newCart));
                 }
