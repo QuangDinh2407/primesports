@@ -51,6 +51,7 @@ public class SecurityConfig {
             if (accountEntity == null || Objects.equals(accountEntity.getIs_disable(), "0")) {
                 throw new UsernameNotFoundException(username);
             }
+
             // Return a User object containing email, password, and roles
             return new org.springframework.security.core.userdetails.User(
                     accountEntity.getEmail(),
@@ -110,7 +111,14 @@ public class SecurityConfig {
                         .invalidateHttpSession(true)                                               // Invalidate session on logout
                         .clearAuthentication(true)                                                  // Clear authentication on logout
                         .permitAll()                                                                // Allow everyone to log out
-                );
+                )
+               .sessionManagement(session -> session
+                       .sessionFixation().migrateSession()
+                       .maximumSessions(1)                                                       // Set maximum sessions to 1
+                       .maxSessionsPreventsLogin(false)                                          // Allow existing session to be invalidated
+                       .expiredUrl("/auth/sign-in?session-expired=true")                         // Redirect to login page if session expired
+               );
+
         return http.build();
     }
 

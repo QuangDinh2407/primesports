@@ -34,6 +34,7 @@ public class CustomErrorController implements ErrorController {
         if (status != null) {
             Integer statusCode = Integer.valueOf(status.toString());
 
+            // handle HTTP 404 Forbidden error
             if (statusCode == HttpStatus.NOT_FOUND.value()) {
                 errorPage = "Error/page-not-found";
 

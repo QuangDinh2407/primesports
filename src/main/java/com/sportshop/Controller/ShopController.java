@@ -392,6 +392,8 @@ public class ShopController {
     @GetMapping("/cart-detail/{cart_id}")
     public String renderDetailCart(@PathVariable("cart_id") String cart_id, Model model,HttpSession session) {
         CartDTO cartDTO=cartServicesIml.findCart(cart_id);
+        String email = (String) session.getAttribute("email");
+        
         model.addAttribute("cartDTO",cartDTO);
         CartDTO cartDTOnew = cartServicesIml.findCart(cart_id);
         cartDTOnew.setIsMerge(true);

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns="http://www.w3.org/1999/html">
+<html xmlns="http://www.w3.org/1999/html">
 
 <head>
     <meta charset="UTF-8" />
@@ -70,6 +70,20 @@
     .profile{
         margin-top: 115px;
     }
+     .flatpickr-current-month .flatpickr-monthDropdown-months {
+         padding: 0 !important;
+     }
+    #dateIcon {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        font-size: 20px;
+        color: rgba(0, 0, 0, .8);
+        z-index: 1;
+    }
+
 </style>
 <body>
 <!-- Header -->
@@ -211,8 +225,7 @@
                                         <div class="form__group">
                                             <label for="birthday" class="form__label form-card__label">Ngày sinh</label>
                                             <div class="form__text-input">
-                                                <input type="text" id="birthday" th:field="*{birth}" class="form__input" placeholder="DD-MM-YYYY" oninput="validateAndFormatDate(this)"
-                                                />
+                                                <input type="text" id="birthday" th:field="*{birth}" class="form__input"/>
                                                 <img th:src="@{/Assets/Customer_Shop/Assets/icons/form-error.svg}" alt="" class="form__input-icon-error"/>
                                             </div>
 <!--                                            <p class="form__error" id="birthday-error">Please enter your birthday in dd-mm-yyyy format.</p>-->
@@ -284,54 +297,69 @@
     </div>
 </main>
 <!--THÊM-->
-<div layout:fragment="script">
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script src="https://npmcdn.com/flatpickr/dist/flatpickr.min.js"></script>
-    <script src="https://npmcdn.com/flatpickr/dist/l10n/vn.js"></script>
-    <script>
-        document.getElementById("avatar-upload").addEventListener("change", function() {
-            const fileName = this.files.length > 0 ? this.files[0].name : "Chưa có file nào được chọn";
-            document.getElementById("file-name").textContent = fileName;
-        });
-    </script>
-    <script>
-        // Hàm kiểm tra và định dạng ngày
-        function validateAndFormatDate(input) {
-            const value = input.value;
-            const datePattern = /^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-(19|20)\d\d$/; // Kiểm tra định dạng dd-mm-yyyy
 
-            // Nếu định dạng sai, hiển thị thông báo lỗi và không thay thế dấu '-'
-            if (!datePattern.test(value) && value.length > 0) {
-                document.getElementById('birthday-error').style.display = 'block'; // Hiển thị thông báo lỗi
-                input.setCustomValidity("Invalid date format. Please use dd-mm-yyyy.");
-            } else {
-                document.getElementById('birthday-error').style.display = 'none'; // Ẩn thông báo lỗi khi đúng định dạng
-                input.setCustomValidity(""); // Xóa thông báo lỗi khi định dạng hợp lệ
-            }
-        }
-    </script>
-    <script th:inline="javascript">
-        /*<![CDATA[*/
-        const rs = /*[[${rs}]]*/ 'default';
-        /*]]>*/
-        if (rs.message)
-        {
-            console.log(rs.message);
-            if (rs.success)
-            {
-                showSuccessToast(rs.message);
-            }
-            else
-            {
-                showErrorToast(rs.message);
-            }
-        }
-    </script>
-</div>
 <!-- Footer -->
 <footer id="footer" class="footer"></footer>
 <script>
     load("#footer", "/footer");
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://npmcdn.com/flatpickr/dist/flatpickr.min.js"></script>
+<script src="https://npmcdn.com/flatpickr/dist/l10n/vn.js"></script>
+<script>
+    document.getElementById("avatar-upload").addEventListener("change", function() {
+        const fileName = this.files.length > 0 ? this.files[0].name : "Chưa có file nào được chọn";
+        document.getElementById("file-name").textContent = fileName;
+    });
+</script>
+<script>
+    // Hàm kiểm tra và định dạng ngày
+    function validateAndFormatDate(input) {
+        const value = input.value;
+        const datePattern = /^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-(19|20)\d\d$/; // Kiểm tra định dạng dd-mm-yyyy
+
+        // Nếu định dạng sai, hiển thị thông báo lỗi và không thay thế dấu '-'
+        if (!datePattern.test(value) && value.length > 0) {
+            document.getElementById('birthday-error').style.display = 'block'; // Hiển thị thông báo lỗi
+            input.setCustomValidity("Invalid date format. Please use dd-mm-yyyy.");
+        } else {
+            document.getElementById('birthday-error').style.display = 'none'; // Ẩn thông báo lỗi khi đúng định dạng
+            input.setCustomValidity(""); // Xóa thông báo lỗi khi định dạng hợp lệ
+        }
+    }
+</script>
+<script>
+    const datePicker = flatpickr("#birthday", {
+        dateFormat: "d-m-Y",
+        locale: "vn",
+        onChange: function(selectedDates, dateStr, instance) {
+            document.getElementById('birthday').value = dateStr;
+        }
+    });
+
+    // const dateIcon = document.querySelector('#dateIcon');
+    // dateIcon.addEventListener('click', function (){
+    //     datePicker.open();
+    // });
+
+</script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    const rs = /*[[${rs}]]*/ 'default';
+    /*]]>*/
+    if (rs.message)
+    {
+        console.log(rs.message);
+        if (rs.success)
+        {
+            showSuccessToast(rs.message);
+        }
+        else
+        {
+            showErrorToast(rs.message);
+        }
+    }
 </script>
 </body>
 </html>

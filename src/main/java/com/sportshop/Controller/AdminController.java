@@ -84,8 +84,9 @@ public class AdminController {
     private ShopVoucherDetailRepository shopVoucherDetailRepository;
     @Autowired
     private ShopVoucherRepository shopVoucherRepository;
-    private ExportExcelService exportExcelService;
 
+    @Autowired
+    private ExportExcelService exportExcelService;
 
     @ModelAttribute
     public void getUser(HttpSession session, Model model) {

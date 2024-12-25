@@ -58,7 +58,12 @@ public class customerController {
     }
 
     @RequestMapping("")
-    public String render() {
+    public String render(Model model,HttpSession session) {
+
+        List<UserOrderDTO> userOrders = userOrderService.findAllOrdersByUserId(userInfo_id);
+        CartDTO cartDTO = (CartDTO) session.getAttribute("cartDTO");
+        model.addAttribute("cartDTO", cartDTO);
+
         return "/Customer/customer-info";
     }
 
@@ -67,13 +72,13 @@ public class customerController {
                              BindingResult bindingResult,
                              @RequestParam("avatar") MultipartFile file,
                              Model model, HttpSession session) {
+        CartDTO cartDTO = (CartDTO) session.getAttribute("cartDTO");
+        model.addAttribute("cartDTO", cartDTO);
         if (bindingResult.hasErrors()) {
             // Nếu có lỗi validate, trả về form cùng thông báo lỗi
             model.addAttribute("errors", bindingResult.getAllErrors());
             return "/Customer/customer-info";
         }
-        CartDTO cartDTO = (CartDTO) session.getAttribute("cartDTO");
-        model.addAttribute("cartDTO", cartDTO);
         // Nếu không có lỗi validate, tiến hành cập nhật thông tin
         Result rs = userService.updateInfoUser(userDTO, file);
         model.addAttribute("rs", rs);
