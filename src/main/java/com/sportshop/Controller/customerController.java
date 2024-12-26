@@ -113,6 +113,8 @@ public class customerController {
             HttpSession session,
             Model model
     ) {
+        CartDTO cartDTO = (CartDTO) session.getAttribute("cartDTO");
+        model.addAttribute("cartDTO", cartDTO);
         // Lấy email từ session
         String email = (String) session.getAttribute("email");
         if (email == null) {
@@ -134,8 +136,6 @@ public class customerController {
 
         // Gọi service để thay đổi mật khẩu
         Result result = accountService.changePassword(email, oldPassword, newPassword);
-        CartDTO cartDTO = (CartDTO) session.getAttribute("cartDTO");
-        model.addAttribute("cartDTO", cartDTO);
         // Trả kết quả về giao diện
         model.addAttribute("rs", result);
         return "Customer/customer-change-password";

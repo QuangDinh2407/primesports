@@ -38,6 +38,12 @@ public class SecurityConfig {
     @Autowired
     private AuthSuccessHandler authSuccessHandler;
 
+    private final RateLimitFilter rateLimitFilter;
+
+    public SecurityConfig(RateLimitFilter rateLimitFilter) {
+        this.rateLimitFilter = rateLimitFilter;
+    }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -68,7 +74,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, RecaptchaAuthenticationFilter recaptchaAuthenticationFilter) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, RecaptchaAuthenticationFilter recaptchaAuthenticationFilter, RateLimitFilter rateLimitFilter) throws Exception {
         //CSRF protection and configure request authorization
         http.csrf(Customizer.withDefaults())
                 .authorizeHttpRequests(req -> req
@@ -84,6 +90,7 @@ public class SecurityConfig {
                 )
                 // Configure form-based login
                 .addFilterBefore(recaptchaAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(rateLimitFilter, UsernamePasswordAuthenticationFilter.class)
                 .formLogin((form) -> form
                                 .loginPage("/auth/sign-in")                             // Custom login page URL
                                 .loginProcessingUrl("/auth/sign-in")                    // URL to submit login credentials
