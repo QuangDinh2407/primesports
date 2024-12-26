@@ -14,6 +14,7 @@ import com.sportshop.Service.ProductService;
 import com.sportshop.Service.ProductTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -165,6 +166,7 @@ public class ProductServiceIml implements ProductService {
     }
 
     @Override
+    @Transactional
     public Page <ProductDTO> getAll(SearchProduct searchProduct, Pageable pageable) {
 
         List<String> types = (searchProduct.getTypes() == null || searchProduct.getTypes().isEmpty())
@@ -200,6 +202,7 @@ public class ProductServiceIml implements ProductService {
                 types,
                 pageable
         );
+
         return productPage.map(productConverter::toDTO);
     }
 

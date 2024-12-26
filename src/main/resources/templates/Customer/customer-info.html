@@ -280,6 +280,9 @@
                                                 <input type="file" id="avatar-upload" name="avatar" placeholder="" class="input-setting" accept="image/*">
                                                 <label class="custom-file-label" for="avatar-upload">Chọn ảnh</label>
                                                 <span id="file-name">Chưa có file nào được chọn</span>
+                                                <div th:if="${error}" style="color: red;">
+                                                    <p th:text="${error}"></p>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

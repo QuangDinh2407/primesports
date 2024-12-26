@@ -7,6 +7,8 @@ import com.sportshop.ModalDTO.*;
 import com.sportshop.Repository.*;
 import com.sportshop.Service.*;
 import com.sportshop.Service.Iml.*;
+import com.sportshop.Utils.FileUtil;
+import com.sportshop.Utils.ValidationUtil;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -105,6 +107,11 @@ public class AdminController {
     @GetMapping("/admin-info")
     public String renderuserInfo (HttpSession session, Model model){
         return "Admin/admin-info";
+    }
+
+    @GetMapping("/change-password")
+    public String renderChangePass (HttpSession session, Model model){
+        return "Admin/change-password";
     }
 
     @GetMapping("/home")
@@ -272,6 +279,9 @@ public class AdminController {
             AccountDTO accountDTO = accountServiceIml.findAccountByUserName(email);
             model.addAttribute("accountDTO", accountDTO);
         }
+        String rs = (String) model.asMap().get("errorFile");
+        System.out.println(rs);
+        model.addAttribute("errorFile", rs);
         return "Admin/account-edit";
     }
 
@@ -282,12 +292,55 @@ public class AdminController {
         return "redirect:/admin/manage-customer";
     }
 
-    @GetMapping("/manage-customer/add")
-    public String renderaddAccount (Model modal){
-        if (!modal.containsAttribute("accountDTO")) {
-            modal.addAttribute("accountDTO", new AccountDTO());
+    @PostMapping("/manage-customer/add")
+    public String addAccount(@Valid AccountDTO accountDTO,
+                             BindingResult bindingResult,
+                             @RequestParam("avatar") MultipartFile file,
+                             Model model,
+                             RedirectAttributes redirectAttribute) {
+        System.out.println("vô add rồi nè");
+        System.out.println(file);
+        // Kiểm tra mật khẩu trống
+        if (accountDTO.getPassword().isEmpty()) {
+            bindingResult.rejectValue("password", "accountDTO", "Vui lòng nhập mật khẩu!");
         }
-        return "Admin/account-add";
+        accountDTO.getUserInfo().setEmail(accountDTO.getEmail());
+        // Kiểm tra lỗi validate của AccountDTO
+        if (bindingResult.hasErrors()) {
+            if (!(bindingResult.getFieldErrors().stream()
+                    .anyMatch(error -> "userInfo.email".equals(error.getField())) && bindingResult.getFieldErrors().size() == 1))
+            {
+                model.addAttribute("accountDTO", accountDTO);
+                System.out.println(bindingResult.getFieldErrors());
+                return "Admin/account-add";
+            }
+
+        }
+
+        // Kiểm tra nếu file không rỗng
+        if (!file.isEmpty()) {
+            System.out.println("không empty");
+            // Kiểm tra định dạng file
+            if (!FileUtil.validateFileExtension(file)) {
+                System.out.println("check dinh dang: ");
+                model.addAttribute("errorFile", "Định dạng file không hợp lệ. Chỉ chấp nhận JPG, JPEG, PNG.");
+                model.addAttribute("accountDTO", accountDTO);
+                return "Admin/account-add";
+            }
+
+            // Kiểm tra kích thước file
+            if (!FileUtil.validateFileSize(file)) {
+                System.out.println("check kich thuoc");
+                model.addAttribute("errorFile", "Kích thước file vượt quá giới hạn cho phép (2MB).");
+                model.addAttribute("accountDTO", accountDTO);
+                return "Admin/account-add";
+            }
+        }
+
+        // Nếu không có lỗi, gọi service để thêm tài khoản
+        Result rs = accountServiceIml.addAccountCustomer(accountDTO, file);
+        redirectAttribute.addFlashAttribute("rs", rs);
+        return "redirect:/admin/manage-customer";
     }
 
 
@@ -298,35 +351,97 @@ public class AdminController {
         return "Admin/admin-info";
     }
 
-    @PostMapping("/manage-customer/edit")
-    public String renderEditAccount1(@Valid AccountDTO accountDTO , BindingResult bindingResult, @RequestParam("avatar") MultipartFile file,
-                                    RedirectAttributes redirectAttribute ){
-
-        if (bindingResult.hasErrors()) {
-            redirectAttribute.addFlashAttribute("org.springframework.validation.BindingResult.accountDTO", bindingResult);
-            redirectAttribute.addFlashAttribute("accountDTO", accountDTO);
-            return "redirect:/admin/manage-customer/edit-" + accountDTO.getEmail();
+    @PostMapping("/change-password")
+    public String changePassword(
+            @RequestParam("oldPassword") String oldPassword,
+            @RequestParam("newPassword") String newPassword,
+            @RequestParam("confirmPassword") String confirmPassword,
+            HttpSession session,
+            Model model)
+    {
+        // Lấy email từ session
+        String email = (String) session.getAttribute("email");
+        if (email == null) {
+            model.addAttribute("rs", new Result(false, "Không tìm thấy email người dùng!"));
+            return "Admin/change-password";
         }
-        Result rs = accountServiceIml.updateAccountCustomer(accountDTO,file);
-        redirectAttribute.addFlashAttribute("rs",rs);
-        return "redirect:/admin/manage-customer";
+
+        // Kiểm tra mật khẩu mới và xác nhận mật khẩu
+        if (!newPassword.equals(confirmPassword)) {
+            model.addAttribute("rs", new Result(false, "Mật khẩu mới và xác nhận mật khẩu không khớp!"));
+            return "Admin/change-password";
+        }
+
+        // Kiểm tra điều kiện mật khẩu mới
+        if (!ValidationUtil.isValidPassword(newPassword)) {
+            model.addAttribute("rs", new Result(false, "Mật khẩu mới phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt!"));
+            return "Admin/change-password";
+        }
+        // Gọi service để thay đổi mật khẩu
+        Result result = accountServiceIml.changePassword(email, oldPassword, newPassword);
+
+        // Trả kết quả về giao diện
+        model.addAttribute("rs", result);
+        return "Admin/change-password";
     }
 
-    @PostMapping("/manage-customer/add")
-    public String addAccount (@Valid AccountDTO accountDTO, BindingResult bindingResult, @RequestParam("avatar") MultipartFile file,
-                              Model model, RedirectAttributes redirectAttribute){
-
-        if(accountDTO.getPassword().isEmpty()){
-            bindingResult.rejectValue("password", "accountDTO", "Vui lòng nhập mật khẩu!");
-        }
+    @PostMapping("/manage-customer/edit")
+    public String renderEditAccount1(@Valid AccountDTO accountDTO,
+                                     BindingResult bindingResult,
+                                     @RequestParam("avatar") MultipartFile file,
+                                     RedirectAttributes redirectAttribute) {
+        // Kiểm tra lỗi validate của AccountDTO
         if (bindingResult.hasErrors()) {
-            model.addAttribute("accountDTO", accountDTO);
-            return "Admin/account-add";
+            if (!(bindingResult.getFieldErrors().stream()
+                    .anyMatch(error -> "userInfo.email".equals(error.getField())) && bindingResult.getFieldErrors().size() == 1))
+            {
+                redirectAttribute.addFlashAttribute("org.springframework.validation.BindingResult.accountDTO", bindingResult);
+                redirectAttribute.addFlashAttribute("accountDTO", accountDTO);
+                return "redirect:/admin/manage-customer/edit-" + accountDTO.getEmail();
+            }
+
         }
-        Result rs = accountServiceIml.addAccountCustomer(accountDTO,file);
+
+        // Kiểm tra nếu file không rỗng
+        if (!file.isEmpty()) {
+            System.out.println("cuu");
+            // Kiểm tra định dạng file
+            if (!FileUtil.validateFileExtension(file)) {
+                System.out.println("cuuws tui di");
+                redirectAttribute.addFlashAttribute("errorFile", "Định dạng file không hợp lệ. Chỉ chấp nhận JPG, JPEG, PNG.");
+                redirectAttribute.addFlashAttribute("accountDTO", accountDTO);
+                return "redirect:/admin/manage-customer/edit-" + accountDTO.getEmail();
+            }
+
+            // Kiểm tra kích thước file (Ví dụ: 2MB)
+            if (!FileUtil.validateFileSize(file)) {
+                redirectAttribute.addFlashAttribute("errorFile", "Kích thước file vượt quá giới hạn cho phép (2MB).");
+                redirectAttribute.addFlashAttribute("accountDTO", accountDTO);
+                return "redirect:/admin/manage-customer/edit-" + accountDTO.getEmail();
+            }
+        }
+
+        // Gọi service để cập nhật tài khoản sau khi kiểm tra file và validate
+        Result rs = accountServiceIml.updateAccountCustomer(accountDTO, file);
         redirectAttribute.addFlashAttribute("rs", rs);
         return "redirect:/admin/manage-customer";
     }
+
+//    @PostMapping("/manage-customer/add")
+//    public String addAccount (@Valid AccountDTO accountDTO, BindingResult bindingResult, @RequestParam("avatar") MultipartFile file,
+//                              Model model, RedirectAttributes redirectAttribute){
+//
+//        if(accountDTO.getPassword().isEmpty()){
+//            bindingResult.rejectValue("password", "accountDTO", "Vui lòng nhập mật khẩu!");
+//        }
+//        if (bindingResult.hasErrors()) {
+//            model.addAttribute("accountDTO", accountDTO);
+//            return "Admin/account-add";
+//        }
+//        Result rs = accountServiceIml.addAccountCustomer(accountDTO,file);
+//        redirectAttribute.addFlashAttribute("rs", rs);
+//        return "redirect:/admin/manage-customer";
+//    }
 
     @GetMapping("/product")
     public String renderProductManage(@RequestParam(value = "page", defaultValue = "0") int page,

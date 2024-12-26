@@ -9,6 +9,7 @@ import com.sportshop.ModalDTO.UserOrderDTO;
 import com.sportshop.ModalDTO.UserOrderDetailDTO;
 import com.sportshop.Service.*;
 import com.sportshop.Service.Iml.CartServicesIml;
+import com.sportshop.Utils.FileUtil;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,16 +73,36 @@ public class customerController {
                              BindingResult bindingResult,
                              @RequestParam("avatar") MultipartFile file,
                              Model model, HttpSession session) {
-        CartDTO cartDTO = (CartDTO) session.getAttribute("cartDTO");
-        model.addAttribute("cartDTO", cartDTO);
+
+        // Kiểm tra lỗi validate của UserDTO
         if (bindingResult.hasErrors()) {
-            // Nếu có lỗi validate, trả về form cùng thông báo lỗi
             model.addAttribute("errors", bindingResult.getAllErrors());
             return "/Customer/customer-info";
         }
-        // Nếu không có lỗi validate, tiến hành cập nhật thông tin
+
+        // Kiểm tra nếu file không rỗng
+        if (!file.isEmpty()) {
+            // Kiểm tra định dạng file
+            if (!FileUtil.validateFileExtension(file)) {
+                model.addAttribute("error", "Định dạng file không hợp lệ. Chỉ chấp nhận JPG, JPEG, PNG.");
+                return "/Customer/customer-info";
+            }
+
+            // Kiểm tra kích thước file
+            if (!FileUtil.validateFileSize(file)) {
+                model.addAttribute("error", "Kích thước file vượt quá giới hạn cho phép (2MB).");
+                return "/Customer/customer-info";
+            }
+        }
+
+        // Lấy thông tin giỏ hàng từ session
+        CartDTO cartDTO = (CartDTO) session.getAttribute("cartDTO");
+        model.addAttribute("cartDTO", cartDTO);
+
+        // Gọi service để cập nhật thông tin người dùng
         Result rs = userService.updateInfoUser(userDTO, file);
         model.addAttribute("rs", rs);
+
         return "/Customer/customer-info";
     }
 

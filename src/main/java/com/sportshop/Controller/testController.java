@@ -8,6 +8,8 @@ import com.sportshop.Entity.ProductEntity;
 import com.sportshop.Entity.ProductImageEntity;
 import com.sportshop.Modal.Mail;
 import com.sportshop.Modal.ProductSize;
+import com.sportshop.Modal.Result;
+import com.sportshop.Modal.SearchProduct;
 import com.sportshop.ModalDTO.*;
 import com.sportshop.Repository.*;
 import com.sportshop.Service.*;
@@ -19,6 +21,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,6 +30,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -44,8 +48,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-//@RestController
-@Controller
+@RestController
+//@Controller
 public class testController {
 
     @Autowired
@@ -418,7 +422,23 @@ public class testController {
         System.out.println(results.getFirst()[0]);
         return "cuu";
     }
-    
 
+    @Autowired
+    ProductService productService;
+
+    @GetMapping("/cuu-tui-troi-oi")
+    @Transactional
+    public List<ProductDTO>  renderAllProduct(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @Valid SearchProduct searchProduct,
+            BindingResult bindingResult,
+            Model model) {
+
+        Pageable pageable = page > 1 ? PageRequest.of(page-1, size) : PageRequest.of(page, size) ;
+
+        Page <ProductDTO> listPro = productService.getAll(searchProduct, pageable);
+        return listPro.getContent();
+    }
 
 }
