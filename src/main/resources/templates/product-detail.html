@@ -122,7 +122,7 @@
                     <div class="prod-preview">
                         <div class="prod-preview__list">
                             <div class="prod-preview__item">
-<!--                                <img th:src="@{${productDTO.getImagePaths[0]}}" alt="" class="prod-preview__img" />-->
+                                <img th:src="@{${productDTO.getImagePaths[0]}}" alt="" class="prod-preview__img" />
                             </div>
                             <!--                            <div class="prod-preview__item">-->
                             <!--                                <img src="./assets/img/product/item-2.png" alt="" class="prod-preview__img" />-->
@@ -135,14 +135,14 @@
                             <!--                            </div>-->
                         </div>
                         <div class="prod-preview__thumbs">
-<!--                            <div th:each="path, iterStat : ${productDTO.imagePaths}">-->
-<!--                                <img-->
-<!--                                        th:src="${path}"-->
-<!--                                        th:classappend="${iterStat.index == 0} ? 'prod-preview__thumb-img&#45;&#45;current' : ''"-->
-<!--                                        alt="Thumbnail ${iterStat.index + 1}"-->
-<!--                                        class="prod-preview__thumb-img"-->
-<!--                                />-->
-<!--                            </div>-->
+                            <div th:each="path, iterStat : ${productDTO.imagePaths}">
+                                <img
+                                        th:src="${path}"
+                                        th:classappend="${iterStat.index == 0} ? 'prod-preview__thumb-img--current' : ''"
+                                        alt="Thumbnail ${iterStat.index + 1}"
+                                        class="prod-preview__thumb-img"
+                                />
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -273,11 +273,11 @@
                                     <article class="product-card">
                                         <div class="product-card__img-wrap">
                                             <a th:href="@{/product-detail/{id}(id=${product.product_id})}">
-<!--                                                <img-->
-<!--                                                        th:src="@{${product.getImagePaths[0]}}"-->
-<!--                                                        alt=""-->
-<!--                                                        class="product-card__thumb"-->
-<!--                                                />-->
+                                                <img
+                                                        th:src="@{${product.getImagePaths[0]}}"
+                                                        alt=""
+                                                        class="product-card__thumb"
+                                                />
                                             </a>
                                             <button class="like-btn product-card__like-btn">
                                                 <img
