@@ -28,7 +28,7 @@ public interface ProductRepositoryCustom {
             @Param("rating") Float rating,
             @Param("types") List<String> types,
             Pageable pageable);
-    
+
 
     @Query("""
         SELECT SUM(p.quantity * p.import_price) 
