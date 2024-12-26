@@ -427,6 +427,14 @@ public class AdminController {
         return "redirect:/admin/manage-customer";
     }
 
+    @GetMapping("/manage-customer/add")
+    public String renderaddAccount (Model modal){
+        if (!modal.containsAttribute("accountDTO")) {
+            modal.addAttribute("accountDTO", new AccountDTO());
+        }
+        return "Admin/account-add";
+    }
+
 //    @PostMapping("/manage-customer/add")
 //    public String addAccount (@Valid AccountDTO accountDTO, BindingResult bindingResult, @RequestParam("avatar") MultipartFile file,
 //                              Model model, RedirectAttributes redirectAttribute){

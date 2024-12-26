@@ -68,12 +68,16 @@ public class customerController {
         return "/Customer/customer-info";
     }
 
+
+
     @PostMapping("/customer-info")
     public String updateInfo(@Valid @ModelAttribute("userDTO") UserDTO userDTO,
                              BindingResult bindingResult,
                              @RequestParam("avatar") MultipartFile file,
                              Model model, HttpSession session) {
 
+        CartDTO cartDTO = (CartDTO) session.getAttribute("cartDTO");
+        model.addAttribute("cartDTO", cartDTO);
         // Kiểm tra lỗi validate của UserDTO
         if (bindingResult.hasErrors()) {
             model.addAttribute("errors", bindingResult.getAllErrors());
@@ -95,9 +99,7 @@ public class customerController {
             }
         }
 
-        // Lấy thông tin giỏ hàng từ session
-        CartDTO cartDTO = (CartDTO) session.getAttribute("cartDTO");
-        model.addAttribute("cartDTO", cartDTO);
+
 
         // Gọi service để cập nhật thông tin người dùng
         Result rs = userService.updateInfoUser(userDTO, file);
