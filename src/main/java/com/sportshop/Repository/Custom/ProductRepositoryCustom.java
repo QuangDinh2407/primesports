@@ -4,6 +4,7 @@ import com.sportshop.Entity.ProductEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
@@ -27,6 +28,7 @@ public interface ProductRepositoryCustom {
             @Param("rating") Float rating,
             @Param("types") List<String> types,
             Pageable pageable);
+    
 
     @Query("""
         SELECT SUM(p.quantity * p.import_price) 

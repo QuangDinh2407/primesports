@@ -210,6 +210,7 @@ public class ShopController {
             Model model) {
 
         Result rs = (Result) model.asMap().get("rs");
+//        Pageable pageable = page > 0 ? PageRequest.of(page-1, size) : PageRequest.of(page, size) ;
         Pageable pageable = page > 0 ? PageRequest.of(page-1, size) : PageRequest.of(page, size) ;
 
         Page <ProductDTO> listPro = productService.getAll(searchProduct, pageable);
@@ -221,6 +222,7 @@ public class ShopController {
         if (bindingResult.hasErrors()) {
             model.addAttribute("bindingResult", bindingResult);
         }
+        System.out.println(listPro.getNumber());
         return "all-product";
     }
 
